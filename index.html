@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Drakthon</title>
+<meta name="description" content="Drakthon scripts. Paste one line into your executor.">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="stylesheet" href="/index.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <pre class="art"> _____            _    _   _                  ____  ____  ____
+ |  __ \          | |  | | | |                / __ \|  _ \|  _
+ | |  | |_ __ __ _| | _| |_| |__   ___  _ __ | |  | | |_) | |_
+ | |  | | '__/ _` | |/ / __| '_ \ / _ \| '_ \| |  | |  _ <|  _
+ | |__| | | | (_| |   <| |_| | | | (_) | | | | |__| | |_) | |
+ |_____/|_|  \__,_|_|\_\\__|_| |_|\___/|_| |_|\____/|____/|_| </pre>
+    <p class="tag">Two scripts. One line each. Nothing to install.</p>
+  </header>
+
+  <main>
+
+    <section class="card">
+      <div class="row">
+        <h2>Hub</h2>
+        <span class="size">1.23 MB</span>
+      </div>
+      <p class="desc">Full menu UI, 54 buttons, game detection across 30+ games, and a
+        scripts panel that fetches 93 sources at click time. Pick the game card,
+        then RUN.</p>
+      <div class="paste">
+        <code id="hub">loadstring(game:HttpGet("https://raw.githubusercontent.com/fisal-new/drakthontest/main/drakthon-ui.lua"))()</code>
+        <button data-copy="hub">copy</button>
+      </div>
+      <p class="meta"><a href="https://raw.githubusercontent.com/fisal-new/drakthontest/main/drakthon-ui.lua">direct download</a></p>
+    </section>
+
+    <section class="card">
+      <div class="row">
+        <h2>Spy</h2>
+        <span class="size">427 KB</span>
+      </div>
+      <p class="desc">Property inspector and remote spy. Loads its own UI layer on
+        start, so give it a moment after the executor reports it running.</p>
+      <div class="paste">
+        <code id="spy">loadstring(game:HttpGet("https://raw.githubusercontent.com/fisal-new/drakthon-spy/main/DrakthonSpy.lua"))()</code>
+        <button data-copy="spy">copy</button>
+      </div>
+      <p class="meta"><a href="https://raw.githubusercontent.com/fisal-new/drakthon-spy/main/DrakthonSpy.lua">direct download</a></p>
+    </section>
+
+    <section class="card">
+      <div class="row">
+        <h2>Before you run it</h2>
+      </div>
+      <ul class="notes">
+        <li>These run in your executor, not in Roblox. Anyone who can run a script
+          can also read it &mdash; that is true of every script, including paid ones.</li>
+        <li>Use an account you can afford to lose. Exploits get accounts flagged, and
+          so do the scripts people load into them.</li>
+        <li>Both files are served over plain HTTPS from GitHub. If a link 404s, the
+          file moved; check the repos rather than trusting a mirror.</li>
+      </ul>
+    </section>
+
+    <!-- Ad slot. Paste the network's own announcement code below this line.
+         Keep it inside the labelled container so it is visibly an ad, not
+         part of the download flow. -->
+    <section class="adslot" aria-label="Advertisement">
+      <span class="adlabel">ad</span>
+      <!-- ad code goes here -->
+    </section>
+
+    <footer>
+      <a class="btn" href="https://discord.gg/W3VwkUj6kf">Discord</a>
+      <p class="fine">Drakthon. Scripts are provided as is, with no warranty.</p>
+    </footer>
+
+  </main>
+</div>
+
+<script>
+document.querySelectorAll("button[data-copy]").forEach(function (btn) {
+  btn.addEventListener("click", function () {
+    var el = document.getElementById(btn.dataset.copy);
+    var text = el.textContent;
+    var done = function () {
+      var old = btn.textContent;
+      btn.textContent = "copied";
+      setTimeout(function () { btn.textContent = old; }, 1200);
+    };
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(text).then(done, function () { fallback(el, done); });
+    } else {
+      fallback(el, done);
+    }
+  });
+});
+function fallback(el, done) {
+  var sel = window.getSelection();
+  var r = document.createRange();
+  r.selectNodeContents(el);
+  sel.removeAllRanges();
+  sel.addRange(r);
+  try { document.execCommand("copy"); done(); } catch (e) { }
+  sel.removeAllRanges();
+}
+</script>
+</body>
+</html>
