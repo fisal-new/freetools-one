@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Free Developer Tools for Open Source Maintainers (No Signup)</title>
+  <meta name="description" content="Free developer APIs for open source maintainers: count LOC, track stars, check TLS and headers, geolocate IPs and generate test data. No keys.">
+  <link rel="stylesheet" href="/theme.css?v=8">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="canonical" href="https://freetools.one/_tools_guides/free-developer-tools-for-open-source.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="FreeTools">
+  <meta property="og:title" content="Free Developer Tools for Open Source Maintainers (No Signup)">
+  <meta property="og:description" content="Free developer APIs for open source maintainers: count LOC, track stars, check TLS and headers, geolocate IPs and generate test data. No keys.">
+  <meta property="og:url" content="https://freetools.one/_tools_guides/free-developer-tools-for-open-source.html">
+  <meta property="og:image" content="https://freetools.one/_public/og-image.jpeg">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:image" content="https://freetools.one/_public/og-image.jpeg">
+  <meta name="twitter:title" content="Free Developer Tools for Open Source Maintainers (No Signup)">
+  <meta name="twitter:description" content="Free developer APIs for open source maintainers: count LOC, track stars, check TLS and headers, geolocate IPs and generate test data. No keys.">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "Free Developer Tools for Open Source Maintainers (No Signup)",
+  "description": "Free developer APIs for open source maintainers: count LOC, track stars, check TLS and headers, geolocate IPs and generate test data. No keys.",
+  "url": "https://freetools.one/_tools_guides/free-developer-tools-for-open-source.html",
+  "datePublished": "2026-09-25",
+  "dateModified": "2026-09-25",
+  "author": {
+    "@type": "Organization",
+    "name": "FreeTools"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "FreeTools",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://freetools.one/_public/logo.jpeg"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://freetools.one/_tools_guides/free-developer-tools-for-open-source.html"
+  },
+  "inLanguage": "en"
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://freetools.one/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Guides",
+      "item": "https://freetools.one/tools/guides/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Developer Tools",
+      "item": "https://freetools.one/_tools_guides/free-developer-tools-for-open-source.html"
+    }
+  ]
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Are these developer tools really free with no signup?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Every tool is a plain GET request with no API key, no account and no tracking. The limit is 30 requests per minute per IP address; LOC and star-history results are cached for six hours."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I script all of these tools together?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. They are REST endpoints returning JSON, so any language with an HTTP client can call them, and an MCP server at /mcp exposes six of them as native tools for AI agents."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the rate limit on the free APIs?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "30 requests per minute per IP address for the general endpoints, and 300 per minute for the random-data endpoints. Cacheable repository endpoints include X-Cache; all responses include X-Elapsed-Ms."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is the CORS proxy safe to use in production?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It is SSRF-guarded and capped at 5 MB, which makes it safe for testing, but it is a third party that can see every request you route through it. For production, proxy from your own server instead."
+      }
+    }
+  ]
+}
+  </script>
+  <link rel="stylesheet" href="/apis.css?v=8">
+  <style>
+    article{max-width:760px;margin:0 auto;padding:0 4px}
+    article h1{font-size:1.55em;line-height:1.25em;margin:10px 0 4px}
+    article h2{font-size:1.1em;margin:22px 0 6px;color:var(--accent)}
+    article h3{font-size:.98em;margin:16px 0 4px}
+    article p,article li{line-height:1.65em;font-size:.94em}
+    article pre.code{margin:6px 0 0;white-space:pre}
+    .meta{color:var(--muted);font-size:.84em;margin-bottom:10px}
+    .tldr{border:1px solid var(--input-border);border-left:4px solid var(--accent);
+      border-radius:var(--radius);background:var(--card);padding:10px 14px;margin:12px 0}
+    .cta{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:16px 0}
+    .cta a{display:inline-block;padding:7px 14px;border:1px solid var(--input-border);
+      border-radius:var(--radius-sm);background:var(--card);text-decoration:none;
+      font-weight:600;font-size:.9em;color:var(--link)}
+    .cta a:hover{border-color:var(--accent)}
+    .hdrTable{width:100%;border-collapse:collapse;font-size:.84em;margin:8px 0;
+      display:block;overflow-x:auto}
+    .hdrTable th,.hdrTable td{padding:5px 8px;border-bottom:1px solid var(--divider);
+      text-align:left;white-space:nowrap}
+    .hdrTable th{color:var(--muted);font-size:.92em;text-transform:uppercase;letter-spacing:.03em}
+    .yes{color:var(--success);font-weight:600}
+    .no{color:var(--danger);font-weight:600}
+    .warn{color:var(--warn);font-weight:600}
+    code{background:var(--card-alt);border-radius:4px;padding:1px 4px;font-size:.9em}
+    .upNext{margin-top:26px;border-top:1px solid var(--divider);padding-top:12px}
+  </style>
+</head>
+<body>
+  <header class="header pageHeader">
+    <p class="siteMark">
+      <img class="verticalImage" alt="FreeTools logo" src="/_public/logo.jpeg" width="30" height="30" style="border-radius:50%">
+      <span>FreeTools Guides</span>
+    </p>
+  </header>
+  <article>
+    <h1>Free tools every open source maintainer should bookmark</h1>
+    <p class="meta">Updated 2026-09-25 &middot; FreeTools</p>
+
+    <p class="tldr"><strong>In short:</strong> eight browser tools and a matching JSON API, all
+    free with no key, no signup and no tracking. Each one solves a problem maintainers hit
+    repeatedly: understanding a codebase, watching growth, and keeping a domain healthy.</p>
+
+    <p>Running an open source project means answering questions like "how big is this codebase
+    really", "is interest growing or was that one spike", and "is the site still serving valid
+    certificates". These tools answer each of those without installing anything.</p>
+
+    <h2>Understanding a codebase</h2>
+    <h3><a href="/count-loc/count-loc-online.html">Count LOC</a></h3>
+    <p>Counts lines of code in any public GitHub or GitLab repository by language, splitting code,
+    comments and blanks, and skipping vendor and generated directories. Useful for triage: a
+    dependency with 8,000 lines of code and 40,000 lines total is mostly generated output, and that
+    changes how you read its maintenance burden.</p>
+    <pre class="code"><code>curl 'https://freetools.one/v1/loc?github=torvalds/linux'</code></pre>
+
+    <h2>Tracking project growth</h2>
+    <h3><a href="/github-stars/github-star-history.html">Star History</a></h3>
+    <p>Plots cumulative stars over time for up to six repositories at once, with totals and
+    30-day growth per repo. The useful question is not "how many stars" but "what is the trend" —
+    and the exportable SVG goes straight into a README:</p>
+    <pre class="code"><code>![Stars](https://freetools.one/v1/stars/chart?github=your/repo)</code></pre>
+
+    <h2>Keeping the domain healthy</h2>
+    <h3><a href="/tls-checker/tls-checker.html">TLS checker</a></h3>
+    <p>Reports protocol version, cipher strength, certificate subject, issuer, SANs and days until
+    expiry. Renewal automation that fails silently is the classic cause of an outage, and a
+    <code>days_left</code> check twice a day prevents it.</p>
+
+    <h3><a href="/http-headers/headers.html">HTTP headers checker</a></h3>
+    <p>Returns every response header plus the full redirect chain, which is how you confirm
+    HSTS and CSP are actually deployed, and spot a redirect that adds a second of latency.</p>
+
+    <h2>Diagnostics and data</h2>
+    <h3><a href="/ip-geolocation/ip-geolocation.html">IP geolocation</a></h3>
+    <p>Resolves an IP or hostname to country, city, timezone and coordinates. Useful for choosing
+    CDN regions or making sense of an unexpected traffic spike.</p>
+
+    <h3><a href="/weather/weather.html">Weather API</a></h3>
+    <p>Current conditions by city or by the caller's own IP, in both Celsius and Fahrenheit. It
+    looks out of place in a developer toolkit until you wire it into a demo or an uptime page.</p>
+
+    <h3><a href="/random-data/random-data.html">Random data API</a></h3>
+    <p>Random integers, shuffled lists and names from the OS CSPRNG, for fixtures, seeding and
+    load tests. Ten thousand values in one request:</p>
+    <pre class="code"><code>curl 'https://freetools.one/v1/random/integer?min=1&amp;max=6&amp;times=10000'</code></pre>
+
+    <h3><a href="/cors-proxy/cors-proxy.html">CORS proxy</a></h3>
+    <p>For debugging cross-origin requests from the browser. It is SSRF-guarded, so it is safe to
+    point at test URLs — but do not route production traffic or secrets through it.</p>
+
+    <h2>One API for all of them</h2>
+    <p>Every tool is a plain <code>GET</code> endpoint, which means the whole toolkit is scriptable
+    without an SDK. LOC and star-history results are cached for six hours, so repeated repository
+    calls are fast; cache other responses in your application when appropriate.</p>
+    <pre class="code"><code># stars + LOC + certificate health in one shell loop
+for repo in cli/cli BurntSushi/ripgrep; do
+  loc=$(curl -s "https://freetools.one/v1/loc?github=$repo" \
+        | jq -r '.[]|select(.language=="Total")|.linesOfCode')
+  stars=$(curl -s "https://freetools.one/v1/stars?github=$repo" | jq '.[-1].y')
+  printf '%-24s %8s LOC  %7s stars\n' "$repo" "$loc" "$stars"
+done</code></pre>
+
+    <h2>Connect an AI agent to them</h2>
+    <p>There is an <a href="/mcp">MCP server</a> at <code>/mcp</code> exposing six of these as
+    native tools, plus a machine-readable <a href="/api.json">API index</a> and an
+    <a href="/openapi.json">OpenAPI spec</a>. Adding one line of JSON to an MCP client gives the
+    agent repository analysis, certificate checks and diagnostics directly.</p>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faqList">
+    <details class="faqItem"><summary>Are these developer tools really free with no signup?</summary><p>Yes. Every tool is a plain GET request with no API key, no account and no tracking. The limit is 30 requests per minute per IP address; LOC and star-history results are cached for six hours.</p></details>
+    <details class="faqItem"><summary>Can I script all of these tools together?</summary><p>Yes. They are REST endpoints returning JSON, so any language with an HTTP client can call them, and an MCP server at /mcp exposes six of them as native tools for AI agents.</p></details>
+    <details class="faqItem"><summary>What is the rate limit on the free APIs?</summary><p>30 requests per minute per IP address for the general endpoints, and 300 per minute for the random-data endpoints. Cacheable repository endpoints include X-Cache; all responses include X-Elapsed-Ms.</p></details>
+    <details class="faqItem"><summary>Is the CORS proxy safe to use in production?</summary><p>It is SSRF-guarded and capped at 5 MB, which makes it safe for testing, but it is a third party that can see every request you route through it. For production, proxy from your own server instead.</p></details>
+    </div>
+    <div class="cta"><a href="/api.json">API index</a><a href="/mcp">MCP server</a><a href="/tools/guides/">All guides</a></div>
+  </article>
+  <br>
+  <section class="related-tools"><h2>More guides</h2><ul><li><a href="/_tools_guides/check-tls-certificate-expiry.html">How to Check TLS Certificate Expiry with a Free API</a></li><li><a href="/_tools_guides/count-lines-of-code-github-api.html">Count Lines of Code in a GitHub Repository with a Free API</a></li><li><a href="/_tools_guides/free-cors-proxy-for-developers.html">Free CORS Proxy for Developers: Bypass Cross-Origin Errors Safely</a></li><li><a href="/_tools_guides/free-ip-geolocation-api-without-key.html">Free IP Geolocation API With No Key (2026 Guide)</a></li><li><a href="/_tools_guides/free-weather-api-no-api-key.html">Free Weather API With No API Key (City or IP Lookup)</a></li><li><a href="/_tools_guides/github-api-rate-limits.html">GitHub API Rate Limits: 5000 Requests an Hour, Explained</a></li><li><a href="/_tools_guides/github-star-history-api.html">GitHub Star History API: Chart Repo Growth for Free</a></li><li><a href="/_tools_guides/http-security-headers-checklist.html">HTTP Security Headers Checklist: CSP, HSTS and CORS (2026)</a></li><li><a href="/_tools_guides/readme-badges-for-your-repo.html">README Badges and Widgets for Your GitHub Repository</a></li><li><a href="/_tools_guides/ssrf-prevention-for-public-apis.html">SSRF Prevention for APIs: Block Server-Side Request Forgery</a></li></ul></section>
+  <br>
+  <span id="footer"></span>
+  <script type="module">
+    import { head, footer, data } from "/templates.js?v=5"
+    document.getElementById("head").innerHTML = head
+    document.getElementById("footer").innerHTML = footer
+    data.init()
+  </script>
+</body>
+</html>

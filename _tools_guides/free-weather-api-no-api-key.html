@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Free Weather API With No API Key (City or IP Lookup)</title>
+  <meta name="description" content="Get current weather by city name or IP address using a free weather API. No key, no signup. Includes curl, JavaScript and Python examples plus response format.">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="canonical" href="https://freetools.one/_tools_guides/free-weather-api-no-api-key.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="FreeTools">
+  <meta property="og:title" content="Free Weather API With No API Key (City or IP Lookup)">
+  <meta property="og:description" content="Get current weather by city name or IP address using a free weather API. No key, no signup. Includes curl, JavaScript and Python examples plus response format.">
+  <meta property="og:url" content="https://freetools.one/_tools_guides/free-weather-api-no-api-key.html">
+  <meta property="og:image" content="https://freetools.one/_public/og-image.jpeg">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:image" content="https://freetools.one/_public/og-image.jpeg">
+  <meta name="twitter:title" content="Free Weather API With No API Key (City or IP Lookup)">
+  <meta name="twitter:description" content="Get current weather by city name or IP address using a free weather API. No key, no signup. Includes curl, JavaScript and Python examples plus response format.">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "Free Weather API With No API Key (City or IP Lookup)",
+  "description": "Get current weather by city name or IP address using a free weather API. No key, no signup. Includes curl, JavaScript and Python examples plus response format.",
+  "url": "https://freetools.one/_tools_guides/free-weather-api-no-api-key.html",
+  "datePublished": "2026-09-25",
+  "dateModified": "2026-09-25",
+  "author": {
+    "@type": "Organization",
+    "name": "FreeTools"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "FreeTools",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://freetools.one/_public/logo.jpeg"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://freetools.one/_tools_guides/free-weather-api-no-api-key.html"
+  },
+  "inLanguage": "en"
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://freetools.one/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Guides",
+      "item": "https://freetools.one/tools/guides/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Weather",
+      "item": "https://freetools.one/_tools_guides/free-weather-api-no-api-key.html"
+    }
+  ]
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is there a free weather API with no API key?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. /v1/weather?city=london returns the current temperature without registration, API key or quota signup, so you can use it directly from a script or a web page."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What units does the weather API return?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Both. Every response includes tempC in Celsius and tempF in Fahrenheit, plus the resolved city, country and the exact latitude and longitude used for the lookup."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I get the weather for the visitor's own location?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Call /v1/weather without the city parameter and it resolves the caller's public IP address and returns the local weather."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How many weather requests can I make?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "30 requests per minute per IP address. The weather endpoint performs a live lookup, so cache the response in your application when you poll it repeatedly."
+      }
+    }
+  ]
+}
+  </script>
+  <link rel="stylesheet" href="/theme.css?v=8">
+  <link rel="stylesheet" type="text/css" href="/apis.css?v=8">
+  <style>
+    article{max-width:760px;margin:0 auto;padding:0 14px}
+    article h1{font-size:1.6em;line-height:1.25em;margin:10px 0 4px}
+    article h2{font-size:1.12em;margin:22px 0 6px;color:var(--accent)}
+    article h3{font-size:1em;margin:16px 0 4px}
+    article p,article li{line-height:1.65em;font-size:.95em}
+    article pre{background:var(--card);border:1px solid var(--input-border);border-radius:6px;
+      padding:10px 12px;overflow-x:auto;font-size:.8em;line-height:1.5em;white-space:pre}
+    article code{background:var(--table-even,#f6f8fa);border-radius:4px;padding:1px 4px}
+    article pre code{background:none;padding:0}
+    .meta{opacity:.7;font-size:.85em;margin-bottom:10px}
+    .tldr{border:1px solid var(--input-border);border-left:4px solid var(--accent);border-radius:6px;
+      background:var(--card);padding:10px 14px;margin:10px 0}
+    .toolCta{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:14px 0}
+    .toolCta a{display:inline-block;padding:7px 14px;border:1px solid var(--input-border);
+      border-radius:6px;background:var(--card);text-decoration:none;font-weight:600;font-size:.9em}
+    .toolCta a:hover{border-color:var(--accent);color:var(--accent)}
+    table{width:100%;border-collapse:collapse;font-size:.86em;margin:8px 0}
+    th,td{padding:5px 8px;border-bottom:1px solid var(--input-border);text-align:left}
+    .upNext{margin-top:26px;border-top:1px solid var(--input-border);padding-top:12px}
+  </style>
+</head>
+<body>
+  <header class="header pageHeader">
+    <p class="siteMark">
+      <img class="verticalImage" alt="FreeTools logo" src="/_public/logo.jpeg" width="30" height="30" style="border-radius:50%">
+      <span>FreeTools Guides</span>
+    </p>
+  </header>
+  <article>
+    <h1>Get weather data with a <strong>free API and no key</strong></h1>
+    <p class="meta">Updated 2026-09-25 · FreeTools</p>
+
+    <p class="tldr"><strong>In short:</strong>
+    <code>curl 'https://freetools.one/v1/weather?city=london'</code> returns the current temperature
+    in Celsius and Fahrenheit, the resolved city, country and coordinates. No signup, no key.</p>
+
+    <p>Most free weather APIs start the same way: sign up, confirm an email, copy a key from a
+    dashboard, then paste that key into every request. Open-Meteo changed that by dropping the key
+    requirement, and this endpoint wraps it so the whole thing is one GET with no setup at all.</p>
+
+    <h2>The response</h2>
+    <pre><code>{
+  "tempC": 15.0,
+  "tempF": 59.0,
+  "city": "London",
+  "country": "United Kingdom",
+  "latitude": 51.50853,
+  "longitude": -0.12574
+}</code></pre>
+    <p>Both temperature units are always included, so you never convert by hand. The city name you
+    pass in is geocoded first, and the response tells you exactly which city was matched — useful
+    when a name is ambiguous.</p>
+
+    <h2>By city</h2>
+    <pre><code>curl 'https://freetools.one/v1/weather?city=london'</code></pre>
+
+    <h2>By the caller's location</h2>
+    <p>Omit <code>city</code> and the weather for the caller's own location is returned:</p>
+    <pre><code>curl 'https://freetools.one/v1/weather'</code></pre>
+
+    <h2>XML output</h2>
+    <pre><code>curl 'https://freetools.one/v1/weather?city=paris&amp;format=xml'</code></pre>
+
+    <h2>From JavaScript</h2>
+    <pre><code>const w = await (await fetch('https://freetools.one/v1/weather?city=paris')).json();
+document.querySelector('#temp').textContent = w.tempC + '°C in ' + w.city;</code></pre>
+
+    <h2>From Python</h2>
+    <pre><code>import requests
+
+w = requests.get('https://freetools.one/v1/weather',
+                 params={'city': 'paris'}).json()
+print(w['city'], w['tempC'], 'C')</code></pre>
+
+    <h2>Building a "local weather" banner</h2>
+    <p>The common pattern is to show weather for whoever is looking, with no input at all:</p>
+    <pre><code>&lt;div id="w"&gt;Loading…&lt;/div&gt;
+&lt;script&gt;
+fetch('https://freetools.one/v1/weather')
+  .then(r =&gt; r.json())
+  .then(w =&gt; document.getElementById('w').textContent =
+        w.city + ': ' + w.tempC + '°C');
+&lt;/script&gt;</code></pre>
+    <p>Because the lookup happens server-side, the browser's own CORS rules never come into it.</p>
+
+    <h2>Limits</h2>
+    <p>30 requests per minute per IP address. The weather endpoint performs a live lookup. If you
+    are polling frequently, cache the response for an hour or two — current temperature does not
+    change minute to minute.</p>
+
+    <div class="toolCta">
+      <a href="/weather/weather.html">Open the weather tool</a>
+      <a href="/_tools_guides/free-ip-geolocation-api-without-key.html">Geolocate an IP</a>
+    </div>
+
+<h2>Why the key-free approach works now</h2>
+    <p>For years, weather data came almost exclusively from providers that gate it behind an
+    account. Open-Meteo changed that by publishing an open API over the ECMWF and national model
+    output, with no key required and no request cap for non-commercial use. This endpoint adds
+    city geocoding and a normalised response shape on top, which is the part people actually
+    wanted.</p>
+
+    <h2>Handling ambiguous city names</h2>
+    <p>"Springfield" exists in dozens of places, so the geocoder returns one match. The response
+    tells you which city and country it picked, so you can confirm:</p>
+    <pre><code>curl -s 'https://freetools.one/v1/weather?city=springfield'
+  | jq '{city, country, latitude, longitude}'</code></pre>
+    <p>If you need a different one, disambiguate in the query itself — <code>"Springfield, US"</code>
+    or <code>"Springfield, GB"</code> — which is the standard geocoder convention.</p>
+
+    <h2>Caching for anything that polls</h2>
+    <p>Current temperature does not change second to second. If your page polls, cache on your side
+    for at least 15 minutes and an hour for a city dashboard:</p>
+    <pre><code>const CACHE_MS = 15 * 60 * 1000;
+let hit = JSON.parse(localStorage.getItem('w') || 'null');
+if (!hit || Date.now() - hit.at > CACHE_MS) {{
+  hit = {{ at: Date.now(), data: await (await fetch(
+    'https://freetools.one/v1/weather?city=paris')).json() }};
+  localStorage.setItem('w', JSON.stringify(hit));
+}}
+render(hit.data);</code></pre>
+
+    <h2>What this endpoint does not do</h2>
+    <p>It returns <em>current</em> conditions only. There is no hourly forecast, no daily forecast,
+    no precipitation and no alerts in the response. If you need a multi-day forecast, call
+    Open-Meteo's forecast endpoint directly — it is equally key-free — and use this endpoint when a
+    single current reading is all you need.</p>
+
+    <h2>Displaying temperatures correctly</h2>
+    <p>Both units arrive pre-rounded, but a little care goes a long way when rendering:</p>
+    <pre><code>function show(w) {{
+  const c = Math.round(w.tempC);
+  return `${{c}}°C / ${{Math.round(w.tempF)}}°F in ${{w.city}}, ${{w.country}}`;
+}}</code></pre>
+    <p>Rounding the Fahrenheit value rather than truncating avoids showing 59°F next to 15°C, which
+    do not correspond exactly.</p>
+
+    <h2>Regional fallbacks</h2>
+    <p>Combine the city lookup with IP geolocation to serve a sensible default before the user
+    chooses anything: call <a href="/_tools_guides/free-ip-geolocation-api-without-key.html">the
+    geolocation endpoint</a> for the visitor's country, then pick a default city for it.</p>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faqList">
+    <details class="faqItem"><summary>Is there a free weather API with no API key?</summary><p>Yes. /v1/weather?city=london returns the current temperature without registration, API key or quota signup, so you can use it directly from a script or a web page.</p></details>
+    <details class="faqItem"><summary>What units does the weather API return?</summary><p>Both. Every response includes tempC in Celsius and tempF in Fahrenheit, plus the resolved city, country and the exact latitude and longitude used for the lookup.</p></details>
+    <details class="faqItem"><summary>Can I get the weather for the visitor's own location?</summary><p>Yes. Call /v1/weather without the city parameter and it resolves the caller's public IP address and returns the local weather.</p></details>
+    <details class="faqItem"><summary>How many weather requests can I make?</summary><p>30 requests per minute per IP address. The weather endpoint performs a live lookup, so cache the response in your application when you poll it repeatedly.</p></details>
+    </div>
+  </article>
+  <br>
+  <nav class="guideLinks"><a href="/tools/guides/">Guides &amp; tutorials</a> &middot; <a href="/_tools_guides/free-ip-geolocation-api-without-key.html">IP geolocation API</a> &middot; <a href="/_tools_guides/free-cors-proxy-for-developers.html">CORS proxy</a> &middot; <a href="/_tools_guides/check-tls-certificate-expiry.html">TLS certificates</a> &middot; <a href="/_tools_guides/count-lines-of-code-github-api.html">Count LOC</a> &middot; <a href="/_tools_guides/github-star-history-api.html">Star history</a> &middot; <a href="/_tools_guides/free-weather-api-no-api-key.html">Weather API</a></nav>
+
+  <section class="related-tools"><h2>More guides</h2><ul><li><a href="/_tools_guides/free-ip-geolocation-api-without-key.html">Free IP Geolocation API With No Key (2026 Guide)</a></li><li><a href="/_tools_guides/count-lines-of-code-github-api.html">Count Lines of Code in a GitHub Repository with a Free API</a></li><li><a href="/_tools_guides/free-cors-proxy-for-developers.html">Free CORS Proxy for Developers: Bypass Cross-Origin Errors Safely</a></li><li><a href="/_tools_guides/check-tls-certificate-expiry.html">How to Check TLS Certificate Expiry with a Free API</a></li><li><a href="/_tools_guides/github-star-history-api.html">GitHub Star History API: Chart Repo Growth for Free</a></li></ul></section>
+  <br>
+  <span id="footer"></span>
+  <script type="module">
+    import { head, footer, data } from "/templates.js?v=5"
+    document.getElementById("head").innerHTML = head
+    document.getElementById("footer").innerHTML = footer
+    data.init()
+  </script>
+</body>
+</html>

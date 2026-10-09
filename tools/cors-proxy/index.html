@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Bypass same-origin policy for AJAX requests. SSRF-guarded, 5MB max. Free, no key.">
+  <meta name="theme-color" content="#f6f8fa" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0d1117" media="(prefers-color-scheme: dark)">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="canonical" href="https://freetools.one/cors-proxy/cors-proxy.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="FreeTools">
+  <meta property="og:title" content="Free CORS Proxy API | FreeTools">
+  <meta property="og:description" content="Bypass same-origin policy for AJAX requests. SSRF-guarded, 5MB max. Free, no key.">
+  <meta property="og:url" content="https://freetools.one/cors-proxy/cors-proxy.html">
+  <meta property="og:image" content="https://freetools.one/_public/og-image.jpeg">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:image" content="https://freetools.one/_public/og-image.jpeg">
+  <meta name="twitter:title" content="Free CORS Proxy API | FreeTools">
+  <meta name="twitter:description" content="Bypass same-origin policy for AJAX requests. SSRF-guarded, 5MB max. Free, no key.">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebApplication","name":"Free CORS Proxy API","url":"https://freetools.one/cors-proxy/cors-proxy.html","applicationCategory":"DeveloperApplication","operatingSystem":"Any","description":"Bypass same-origin policy for AJAX requests. SSRF-guarded, 5MB max. Free, no key.","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+  </script>
+
+  <script type="application/ld+json">
+  {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How do I bypass the CORS error in JavaScript?", "acceptedAnswer": {"@type": "Answer", "text": "Send your request to /v1/proxy?quest=<encoded URL> instead of the target host. FreeTools fetches it server-side and returns the body with CORS enabled, so the browser accepts it."}}, {"@type": "Question", "name": "Is the proxy safe to call from untrusted users?", "acceptedAnswer": {"@type": "Answer", "text": "Every request is checked against an SSRF guard that resolves the hostname and rejects loopback, link-local, private and cloud metadata ranges on every redirect hop."}}, {"@type": "Question", "name": "How large a response can I fetch?", "acceptedAnswer": {"@type": "Answer", "text": "Up to 5 MB. Anything larger is rejected with HTTP 413 rather than being buffered indefinitely."}}, {"@type": "Question", "name": "Does the proxy follow redirects?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, up to 5 hops, and each destination is re-validated so a public URL cannot bounce to an internal address."}}]}
+  </script>
+  <script type="application/ld+json">
+  {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://freetools.one/"}, {"@type": "ListItem", "position": 2, "name": "CORS Proxy", "item": "https://freetools.one/cors-proxy/cors-proxy.html"}]}
+  </script>
+  <link rel="stylesheet" href="/theme.css?v=8">
+  <link rel="stylesheet" type="text/css" href="./../apis.css?v=8">
+  <title>Free CORS Proxy API | FreeTools</title>
+
+  <!--Head -->
+  <span id="head"></span>
+
+</head>
+
+<body class="toolPage">
+
+  <header class="header pageHeader">
+    <h1>
+      <img class="verticalImage" alt="FreeTools logo" src="/_public/logo.jpeg" width="36" height="36" style="border-radius:50%">
+      <span>CORS Proxy</span>
+    </h1>
+  </header>
+  <p class="toolHint">Use the form above. Parameters, code examples and FAQ are grouped in the documentation section below.</p>
+
+  <div>
+    <br><br>
+  </div>
+
+  <section class="description">
+    <div class="centerText">
+      <strong>Description</strong>
+    </div>
+    <div class="leftText">
+      <span>
+        - Free CORS proxy server to bypass same-origin policy related to performing standard AJAX requests to 3rd party
+        services.<br>
+        You can use it to prevent mixed content of images and JSON data proxying the resources to serve them under https.
+      </span>
+      <br>
+      <span>
+        - API URL =>
+        <code class="red">"/v1/proxy?quest=URL"</code>
+      </span>
+      <br>
+      <span>
+        - Each request is limited to 5mb size download to avoid abuse. Private/internal IPs are blocked (SSRF guard).
+      </span>
+      <br>
+      <span>
+        - Only supports GET request.<br>
+      </span>
+      <span>
+        -
+<span class="red">Limit</span> : 30 requests per minute. Once reached subsequent requests will result in
+        error 429 (too many requests)
+        until your quota is cleared.
+        <br>
+      </span>
+    </div>
+  </section>
+
+  <section class="endpoint old">
+    <div class="centerText">
+      <strong>Endpoint - Do cors proxy</strong>
+    </div>
+    <div class="leftText">
+      <strong>HTTP Request: </strong>
+      <br>
+      <code class="red">
+    GET /v1/proxy?quest=URL
+      </code>
+      <br>
+      <strong>Examples</strong>
+      <br>Access resources from other website :
+      <br>
+      <span>
+        <code>
+  <a href="/v1/proxy?quest=https://api.github.com/zen" target="_blank" rel="noopener">/v1/proxy?quest=https://api.github.com/zen</a>
+        </code>
+      </span>
+      <br>Serve an http image as https preventing mixed content :
+      <br>
+      <span>
+        <code>
+<a href="/v1/proxy?quest=https://httpbin.org/image/png" target="_blank" rel="noopener">/v1/proxy?quest=https://httpbin.org/image/png</a>
+        </code>
+      </span>
+    </div>
+  </section>
+
+  <section class="endpoint interactive">
+    <div class="centerText"><strong>Try it live</strong></div>
+    <div class="leftText centerText">
+      <form onsubmit="return false">
+      <label for="pxUrl" class="notSeen">url</label>
+      <input type="text" id="pxUrl" placeholder="https://api.github.com/zen" size="32">
+      <button id="pxGo" class="action">Fetch via proxy</button>
+      <button id="pxCopy" class="action">Copy</button>
+      </form>
+      <pre class="marginLeft" id="pxOut" style="text-align:left"></pre>
+    </div>
+  </section>
+
+  <br>
+
+  <!-- Footer -->
+  <nav class="guideLinks"><a href="/_tools_guides/">Guides &amp; tutorials</a> &middot; <a href="/_tools_guides/free-ip-geolocation-api-without-key.html">IP geolocation API</a> &middot; <a href="/_tools_guides/free-cors-proxy-for-developers.html">CORS proxy</a> &middot; <a href="/_tools_guides/check-tls-certificate-expiry.html">TLS certificates</a> &middot; <a href="/_tools_guides/count-lines-of-code-github-api.html">Count LOC</a> &middot; <a href="/_tools_guides/github-star-history-api.html">Star history</a> &middot; <a href="/_tools_guides/free-weather-api-no-api-key.html">Weather API</a></nav>
+
+  <section class="related-tools"><h2>Related tools</h2><ul><li><a href="/tools/http-headers/">HTTP Headers</a></li><li><a href="/tools/count-loc/">Count LOC online</a></li><li><a href="/tools/tls-checker/">TLS Checker</a></li></ul></section>
+  <br>
+  <details class="docsWrap" id="tool-docs">
+  <summary class="docsToggle">Documentation &amp; API reference</summary>
+  <section class="docs">
+  <h2>How to use the CORS Proxy</h2>
+  <p>Fetch a cross-origin URL from the browser by proxying the request server-side, with SSRF protection and a 5 MB cap.</p>
+  <h3>Endpoints</h3>
+  <div class="tblScroll"><table class="apiTable"><thead><tr><th>Endpoint</th><th>Returns</th><th>Example</th></tr></thead><tbody>
+  <tr><td><code>/v1/proxy</code></td><td>proxied body</td><td><a href="https://freetools.one/v1/proxy?quest=https://example.com" rel="nofollow"><code>quest=https://example.com</code></a></td></tr>
+  </tbody></table></div>
+  <h3>Parameters</h3>
+  <div class="tblScroll"><table class="apiTable"><thead><tr><th>Name</th><th>Type</th><th>Default</th><th>Description</th></tr></thead><tbody>
+  <tr><td><code>quest</code></td><td>string</td><td>required</td><td>Full URL to fetch. A bare domain is upgraded to https automatically.</td></tr>
+  </tbody></table></div>
+  <h3>Code examples</h3>
+  <div class="tabs codeTabs" role="tablist"><button class="tab active" data-ctab="curl" role="tab" aria-selected="true">cURL</button><button class="tab" data-ctab="js" role="tab" aria-selected="false">JavaScript</button><button class="tab" data-ctab="py" role="tab" aria-selected="false">Python</button></div>
+  <div class="codePane active" data-cpane="curl"><pre class="code"><code class="lang-curl">curl 'https://freetools.one/v1/proxy?quest=https://example.com'</code></pre></div>
+  <div class="codePane" data-cpane="js"><pre class="code"><code class="lang-js">// same request works from a browser despite CORS
+const res = await fetch('https://freetools.one/v1/proxy?quest=https://example.com');
+console.log(await res.text());</code></pre></div>
+  <div class="codePane" data-cpane="py"><pre class="code"><code class="lang-py">import requests
+
+body = requests.get('https://freetools.one/v1/proxy',
+                  params={'quest': 'https://example.com'}).text
+print(body[:200])</code></pre></div>
+  <h3>Example response</h3>
+  <pre class="code"><code class="lang-json">HTTP/1.1 200 OK
+Content-Type: text/html; charset=utf-8
+
+&lt;!-- the upstream body, unmodified --&gt;</code></pre>
+  <h3>Frequently asked questions</h3>
+  <div class="faqList">
+  <details class="faqItem"><summary>How do I bypass the CORS error in JavaScript?</summary><p>Send your request to /v1/proxy?quest=&lt;encoded URL&gt; instead of the target host. FreeTools fetches it server-side and returns the body with CORS enabled, so the browser accepts it.</p></details>
+  <details class="faqItem"><summary>Is the proxy safe to call from untrusted users?</summary><p>Every request is checked against an SSRF guard that resolves the hostname and rejects loopback, link-local, private and cloud metadata ranges on every redirect hop.</p></details>
+  <details class="faqItem"><summary>How large a response can I fetch?</summary><p>Up to 5 MB. Anything larger is rejected with HTTP 413 rather than being buffered indefinitely.</p></details>
+  <details class="faqItem"><summary>Does the proxy follow redirects?</summary><p>Yes, up to 5 hops, and each destination is re-validated so a public URL cannot bounce to an internal address.</p></details>
+  </div>
+  </section>
+  </details>
+
+  <span id="footer"></span>
+
+
+  <script type="module">
+    import { head, footer, data } from "./../templates.js?v=5"
+    document.getElementById("head").innerHTML = head
+    document.getElementById("footer").innerHTML = footer
+    data.init()
+    // code-example tabs
+    document.querySelectorAll(".codeTabs").forEach(function (nav) {
+      nav.addEventListener("click", function (e) {
+        var b = e.target.closest(".tab");
+        if (!b) return;
+        var box = nav.parentNode;
+        nav.querySelectorAll(".tab").forEach(function (x) {
+          var on = x === b;
+          x.classList.toggle("active", on);
+          x.setAttribute("aria-selected", on ? "true" : "false");
+        });
+        box.querySelectorAll(".codePane").forEach(function (p) {
+          p.classList.toggle("active", p.dataset.cpane === b.dataset.ctab);
+        });
+      });
+    });
+
+    const go = document.getElementById("pxGo");
+    if (go) go.addEventListener("click", async () => {
+      const out = document.getElementById("pxOut");
+      const u = document.getElementById("pxUrl").value.trim() || "https://api.github.com/zen";
+      out.textContent = "loading…";
+      try {
+        const r = await fetch("/v1/proxy?quest=" + encodeURIComponent(u));
+        const ct = r.headers.get("content-type") || "";
+        const ms = r.headers.get("x-elapsed-ms");
+        const tail = ms ? "\n\n(" + ms + " ms server-side)" : "";
+        if (!r.ok) {
+          out.textContent = JSON.stringify(await r.json(), null, 2) + tail;
+          return;
+        }
+        if (ct.startsWith("image/")) {
+          out.innerHTML = "";
+          const img = document.createElement("img");
+          img.alt = "proxied image";
+          img.style.maxWidth = "100%";
+          img.src = URL.createObjectURL(await r.blob());
+          img.onload = () => URL.revokeObjectURL(img.src);
+          out.appendChild(img);
+          return;
+        }
+        const t = await r.text();
+        out.textContent = (t.length > 2000 ? t.slice(0, 2000) + "\n…(truncated)" : t) + tail;
+      } catch (e) { out.textContent = "request failed"; }
+    });
+    document.getElementById("pxCopy").onclick = (e) => data.copyOut("pxOut", e.target);
+  </script>
+
+</body>
+
+</html>

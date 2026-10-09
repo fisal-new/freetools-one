@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Free IP Geolocation API With No Key (2026 Guide)</title>
+  <meta name="description" content="Look up any IPv4 or IPv6 address with a free geolocation API that needs no key, no signup and no quota. Includes curl, JavaScript and Python examples.">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="canonical" href="https://freetools.one/_tools_guides/free-ip-geolocation-api-without-key.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="FreeTools">
+  <meta property="og:title" content="Free IP Geolocation API With No Key (2026 Guide)">
+  <meta property="og:description" content="Look up any IPv4 or IPv6 address with a free geolocation API that needs no key, no signup and no quota. Includes curl, JavaScript and Python examples.">
+  <meta property="og:url" content="https://freetools.one/_tools_guides/free-ip-geolocation-api-without-key.html">
+  <meta property="og:image" content="https://freetools.one/_public/og-image.jpeg">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:image" content="https://freetools.one/_public/og-image.jpeg">
+  <meta name="twitter:title" content="Free IP Geolocation API With No Key (2026 Guide)">
+  <meta name="twitter:description" content="Look up any IPv4 or IPv6 address with a free geolocation API that needs no key, no signup and no quota. Includes curl, JavaScript and Python examples.">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "Free IP Geolocation API With No Key (2026 Guide)",
+  "description": "Look up any IPv4 or IPv6 address with a free geolocation API that needs no key, no signup and no quota. Includes curl, JavaScript and Python examples.",
+  "url": "https://freetools.one/_tools_guides/free-ip-geolocation-api-without-key.html",
+  "datePublished": "2026-09-25",
+  "dateModified": "2026-09-25",
+  "author": {
+    "@type": "Organization",
+    "name": "FreeTools"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "FreeTools",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://freetools.one/_public/logo.jpeg"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://freetools.one/_tools_guides/free-ip-geolocation-api-without-key.html"
+  },
+  "inLanguage": "en"
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://freetools.one/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Guides",
+      "item": "https://freetools.one/tools/guides/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "IP Geolocation",
+      "item": "https://freetools.one/_tools_guides/free-ip-geolocation-api-without-key.html"
+    }
+  ]
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is the best free IP geolocation API with no key?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "FreeTools exposes /v1/geolocation/json with no signup: it returns country, region, city, timezone and coordinates for any IPv4, IPv6 address or hostname, limited to 30 requests per minute."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is there really no rate limit for free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "There is a limit of 30 requests per minute per IP address, and 300 per minute for the random-data endpoints. Cache repeated addresses in your application when you need higher volume."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I geolocate an IPv6 address?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. IPv4, IPv6 and hostnames are all accepted by the same endpoint, and hostnames are resolved before the lookup is performed."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How accurate is the location data?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It resolves to city level rather than to a street address, which is what free IP geolocation data is generally good for. Treat coordinates as an approximate city centroid."
+      }
+    }
+  ]
+}
+  </script>
+  <link rel="stylesheet" href="/theme.css?v=8">
+  <link rel="stylesheet" type="text/css" href="/apis.css?v=8">
+  <style>
+    article{max-width:760px;margin:0 auto;padding:0 14px}
+    article h1{font-size:1.6em;line-height:1.25em;margin:10px 0 4px}
+    article h2{font-size:1.12em;margin:22px 0 6px;color:var(--accent)}
+    article h3{font-size:1em;margin:16px 0 4px}
+    article p,article li{line-height:1.65em;font-size:.95em}
+    article pre{background:var(--card);border:1px solid var(--input-border);border-radius:6px;
+      padding:10px 12px;overflow-x:auto;font-size:.8em;line-height:1.5em;white-space:pre}
+    article code{background:var(--table-even,#f6f8fa);border-radius:4px;padding:1px 4px}
+    article pre code{background:none;padding:0}
+    .meta{opacity:.7;font-size:.85em;margin-bottom:10px}
+    .tldr{border:1px solid var(--input-border);border-left:4px solid var(--accent);border-radius:6px;
+      background:var(--card);padding:10px 14px;margin:10px 0}
+    .toolCta{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:14px 0}
+    .toolCta a{display:inline-block;padding:7px 14px;border:1px solid var(--input-border);
+      border-radius:6px;background:var(--card);text-decoration:none;font-weight:600;font-size:.9em}
+    .toolCta a:hover{border-color:var(--accent);color:var(--accent)}
+    table{width:100%;border-collapse:collapse;font-size:.86em;margin:8px 0}
+    th,td{padding:5px 8px;border-bottom:1px solid var(--input-border);text-align:left}
+    .upNext{margin-top:26px;border-top:1px solid var(--input-border);padding-top:12px}
+  </style>
+</head>
+<body>
+  <header class="header pageHeader">
+    <p class="siteMark">
+      <img class="verticalImage" alt="FreeTools logo" src="/_public/logo.jpeg" width="30" height="30" style="border-radius:50%">
+      <span>FreeTools Guides</span>
+    </p>
+  </header>
+  <article>
+    <h1>How to get <strong>free IP geolocation</strong> without an API key</h1>
+    <p class="meta">Updated 2026-09-25 · FreeTools</p>
+
+    <p class="tldr"><strong>In short:</strong> send a GET request to
+    <code>/v1/geolocation/json?q=8.8.8.8</code> and you get country, region, city, timezone and
+    coordinates back as JSON. There is no signup step, no API key, and the limit is a generous
+    30 requests per minute per IP address.</p>
+
+    <p>Almost every "free tier" geolocation service has the same catch: you create an account,
+    copy a key out of a dashboard, paste it into a query string, and then watch the quota burn down.
+    For a weekend project or a small script, that friction is not worth it. There is a simpler way —
+    an endpoint that returns the data from the URL alone.</p>
+
+    <h2>What you get back</h2>
+    <p>The response is deliberately flat and predictable, which makes it easy to consume from any
+    language. Every field is always present, so you never have to guard against missing keys.</p>
+    <table>
+      <thead><tr><th>Field</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td><code>ip</code></td><td>The address that was looked up, normalised</td></tr>
+        <tr><td><code>country_code</code> / <code>country_name</code></td><td>ISO code and full name</td></tr>
+        <tr><td><code>region_name</code></td><td>State or province</td></tr>
+        <tr><td><code>city</code>, <code>zip_code</code></td><td>City and postal code</td></tr>
+        <tr><td><code>time_zone</code></td><td>IANA zone, e.g. <code>America/New_York</code></td></tr>
+        <tr><td><code>latitude</code>, <code>longitude</code></td><td>Approximate coordinates</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Making the request</h2>
+    <h3>cURL</h3>
+    <pre><code>curl 'https://freetools.one/v1/geolocation/json?q=8.8.8.8'</code></pre>
+    <h3>JavaScript</h3>
+    <pre><code>const g = await (await fetch('https://freetools.one/v1/geolocation/json?q=8.8.8.8')).json();
+console.log(g.city, g.country_name);</code></pre>
+    <h3>Python</h3>
+    <pre><code>import requests
+
+g = requests.get('https://freetools.one/v1/geolocation/json',
+                 params={'q': '8.8.8.8'}).json()
+print(g['city'], g['country_name'])</code></pre>
+
+    <h2>Finding your own IP address</h2>
+    <p>Leave the <code>q</code> parameter out entirely and the service locates the caller's public
+    IP instead. This is the quickest way to build a "where am I" banner:</p>
+    <pre><code>curl 'https://freetools.one/v1/geolocation/json'</code></pre>
+    <p>Because the lookup happens server-side, this works from a browser as well as from a terminal —
+    there is no CORS problem, unlike calling the upstream provider directly.</p>
+
+    <h2>Looking up a hostname</h2>
+    <p>You do not have to resolve the name yourself. Passing a hostname works:</p>
+    <pre><code>curl 'https://freetools.one/v1/geolocation/json?q=example.com'</code></pre>
+    <p>IPv6 works the same way as IPv4, with no separate endpoint.</p>
+
+    <h2>XML when you need it</h2>
+    <p>An XML variant is available for older stacks and CMS integrations:</p>
+    <pre><code>curl 'https://freetools.one/v1/geolocation/xml?q=8.8.8.8'</code></pre>
+
+    <h2>Limits and caching</h2>
+    <p>The limit is 30 requests per minute per IP address, which is far more than a typical
+    page load needs. This endpoint performs a live upstream lookup, so if your application
+    repeats the same address, cache the JSON response locally for a few hours.</p>
+
+    <div class="toolCta">
+      <a href="/ip-geolocation/ip-geolocation.html">Open the IP geolocation tool</a>
+      <a href="/api.json">See all API endpoints</a>
+    </div>
+
+    <h2>Where to go next</h2>
+    <p>If you are building a page that shows weather, the <a href="/_tools_guides/free-weather-api-no-api-key.html">free weather API guide</a>
+    picks up from the same geocoding step and is the natural next piece.</p>
+
+<h2>Common use cases</h2>
+    <h3>Default currency and language</h3>
+    <p>Pairing a geolocation lookup with a currency or language default is one of the most common
+    uses. Because the response includes <code>country_code</code>, you can pick a sensible default
+    and let the visitor override it:</p>
+    <pre><code>const DEFAULTS = { US: 'USD', GB: 'GBP', DE: 'EUR', JP: 'JPY' };
+const g = await (await fetch('https://freetools.one/v1/geolocation/json')).json();
+const currency = DEFAULTS[g.country_code] || 'USD';</code></pre>
+
+    <h3>Analytics without a third-party script</h3>
+    <p>Server-side logging of a country code per request gives you geographic distribution without
+    embedding a tracking pixel. Because the lookup happens over plain HTTPS, it works from a
+    worker, a function or a CLI.</p>
+
+    <h3>Regional content routing</h3>
+    <p>You can branch on <code>country_code</code> to pick a default currency, a legal notice or a
+    store. Keep the override in the URL so the choice is shareable and testable.</p>
+
+    <h2>Edge cases worth knowing</h2>
+    <table>
+      <thead><tr><th>Situation</th><th>What happens</th></tr></thead>
+      <tbody>
+        <tr><td>Private or reserved address</td><td>Rejected — internal ranges are not geolocated</td></tr>
+        <tr><td>Hostname that does not resolve</td><td>HTTP 400 with an "unknown host" error</td></tr>
+        <tr><td>Anycast/CDN address</td><td>Reports the network owner, not the end user</td></tr>
+        <tr><td>Mobile carrier CGNAT</td><td>Often resolves to the carrier, not the user</td></tr>
+        <tr><td>VPN or proxy</td><td>Reports the exit node's location</td></tr>
+      </tbody>
+    </table>
+    <p>The last three are worth internalising: IP geolocation is approximate by nature, and
+    infrastructure-level addresses (CDN, VPN, carrier NAT) deliberately obscure the end user. Use
+    it for regional defaults, not for identity or access control.</p>
+
+    <h2>Performance and caching</h2>
+    <p>IP geolocation is a live lookup, so FreeTools does not promise a shared six-hour cache for
+    this endpoint. The response does include <code>X-Elapsed-Ms</code> for timing. If your app
+    performs repeated lookups, cache the result by IP and choose a TTL appropriate for your use
+    case; CDN and VPN addresses can change location over time.</p>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faqList">
+    <details class="faqItem"><summary>What is the best free IP geolocation API with no key?</summary><p>FreeTools exposes /v1/geolocation/json with no signup: it returns country, region, city, timezone and coordinates for any IPv4, IPv6 address or hostname, limited to 30 requests per minute.</p></details>
+    <details class="faqItem"><summary>Is there really no rate limit for free?</summary><p>There is a limit of 30 requests per minute per IP address, and 300 per minute for the random-data endpoints. Cache repeated addresses in your application when you need higher volume.</p></details>
+    <details class="faqItem"><summary>Can I geolocate an IPv6 address?</summary><p>Yes. IPv4, IPv6 and hostnames are all accepted by the same endpoint, and hostnames are resolved before the lookup is performed.</p></details>
+    <details class="faqItem"><summary>How accurate is the location data?</summary><p>It resolves to city level rather than to a street address, which is what free IP geolocation data is generally good for. Treat coordinates as an approximate city centroid.</p></details>
+    </div>
+  </article>
+  <br>
+  <nav class="guideLinks"><a href="/tools/guides/">Guides &amp; tutorials</a> &middot; <a href="/_tools_guides/free-ip-geolocation-api-without-key.html">IP geolocation API</a> &middot; <a href="/_tools_guides/free-cors-proxy-for-developers.html">CORS proxy</a> &middot; <a href="/_tools_guides/check-tls-certificate-expiry.html">TLS certificates</a> &middot; <a href="/_tools_guides/count-lines-of-code-github-api.html">Count LOC</a> &middot; <a href="/_tools_guides/github-star-history-api.html">Star history</a> &middot; <a href="/_tools_guides/free-weather-api-no-api-key.html">Weather API</a></nav>
+
+  <section class="related-tools"><h2>More guides</h2><ul><li><a href="/_tools_guides/count-lines-of-code-github-api.html">Count Lines of Code in a GitHub Repository with a Free API</a></li><li><a href="/_tools_guides/free-cors-proxy-for-developers.html">Free CORS Proxy for Developers: Bypass Cross-Origin Errors Safely</a></li><li><a href="/_tools_guides/check-tls-certificate-expiry.html">How to Check TLS Certificate Expiry with a Free API</a></li><li><a href="/_tools_guides/github-star-history-api.html">GitHub Star History API: Chart Repo Growth for Free</a></li><li><a href="/_tools_guides/free-weather-api-no-api-key.html">Free Weather API With No API Key (City or IP Lookup)</a></li></ul></section>
+  <br>
+  <span id="footer"></span>
+  <script type="module">
+    import { head, footer, data } from "/templates.js?v=5"
+    document.getElementById("head").innerHTML = head
+    document.getElementById("footer").innerHTML = footer
+    data.init()
+  </script>
+</body>
+</html>

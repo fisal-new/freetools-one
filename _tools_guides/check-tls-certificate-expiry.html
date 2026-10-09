@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>How to Check TLS Certificate Expiry with a Free API</title>
+  <meta name="description" content="Check any domain's TLS certificate expiry date, protocol version and cipher strength with a free API. Includes OpenSSL alternatives, curl and code examples.">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="canonical" href="https://freetools.one/_tools_guides/check-tls-certificate-expiry.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="FreeTools">
+  <meta property="og:title" content="How to Check TLS Certificate Expiry with a Free API">
+  <meta property="og:description" content="Check any domain's TLS certificate expiry date, protocol version and cipher strength with a free API. Includes OpenSSL alternatives, curl and code examples.">
+  <meta property="og:url" content="https://freetools.one/_tools_guides/check-tls-certificate-expiry.html">
+  <meta property="og:image" content="https://freetools.one/_public/og-image.jpeg">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:image" content="https://freetools.one/_public/og-image.jpeg">
+  <meta name="twitter:title" content="How to Check TLS Certificate Expiry with a Free API">
+  <meta name="twitter:description" content="Check any domain's TLS certificate expiry date, protocol version and cipher strength with a free API. Includes OpenSSL alternatives, curl and code examples.">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "How to Check TLS Certificate Expiry with a Free API",
+  "description": "Check any domain's TLS certificate expiry date, protocol version and cipher strength with a free API. Includes OpenSSL alternatives, curl and code examples.",
+  "url": "https://freetools.one/_tools_guides/check-tls-certificate-expiry.html",
+  "datePublished": "2026-09-25",
+  "dateModified": "2026-09-25",
+  "author": {
+    "@type": "Organization",
+    "name": "FreeTools"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "FreeTools",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://freetools.one/_public/logo.jpeg"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://freetools.one/_tools_guides/check-tls-certificate-expiry.html"
+  },
+  "inLanguage": "en"
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://freetools.one/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Guides",
+      "item": "https://freetools.one/tools/guides/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "TLS Checker",
+      "item": "https://freetools.one/_tools_guides/check-tls-certificate-expiry.html"
+    }
+  ]
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I check a TLS certificate expiry date?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Call /v1/tls?domain=example.com and read days_left and not_after. The endpoint performs a real TLS handshake, so it reports the certificate your server is currently presenting."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is a good TLS cipher to look for?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Look for AEAD suites: TLS_AES_256_GCM_SHA384 or TLS_CHACHA20_POLY1305 under TLS 1.3, or ECDHE with AES-GCM under TLS 1.2. CBC and RC4 suites are rated legacy or weak by the API."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I check a certificate on a non-standard port?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Pass port=8443 or any port from 1 to 65535 and the probe connects there instead of 443."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need OpenSSL installed to check a certificate?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. The handshake and certificate parsing happen inside the API, so it works from any machine with plain HTTPS and returns structured JSON rather than text to parse."
+      }
+    }
+  ]
+}
+  </script>
+  <link rel="stylesheet" href="/theme.css?v=8">
+  <link rel="stylesheet" type="text/css" href="/apis.css?v=8">
+  <style>
+    article{max-width:760px;margin:0 auto;padding:0 14px}
+    article h1{font-size:1.6em;line-height:1.25em;margin:10px 0 4px}
+    article h2{font-size:1.12em;margin:22px 0 6px;color:var(--accent)}
+    article h3{font-size:1em;margin:16px 0 4px}
+    article p,article li{line-height:1.65em;font-size:.95em}
+    article pre{background:var(--card);border:1px solid var(--input-border);border-radius:6px;
+      padding:10px 12px;overflow-x:auto;font-size:.8em;line-height:1.5em;white-space:pre}
+    article code{background:var(--table-even,#f6f8fa);border-radius:4px;padding:1px 4px}
+    article pre code{background:none;padding:0}
+    .meta{opacity:.7;font-size:.85em;margin-bottom:10px}
+    .tldr{border:1px solid var(--input-border);border-left:4px solid var(--accent);border-radius:6px;
+      background:var(--card);padding:10px 14px;margin:10px 0}
+    .toolCta{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:14px 0}
+    .toolCta a{display:inline-block;padding:7px 14px;border:1px solid var(--input-border);
+      border-radius:6px;background:var(--card);text-decoration:none;font-weight:600;font-size:.9em}
+    .toolCta a:hover{border-color:var(--accent);color:var(--accent)}
+    table{width:100%;border-collapse:collapse;font-size:.86em;margin:8px 0}
+    th,td{padding:5px 8px;border-bottom:1px solid var(--input-border);text-align:left}
+    .upNext{margin-top:26px;border-top:1px solid var(--input-border);padding-top:12px}
+  </style>
+</head>
+<body>
+  <header class="header pageHeader">
+    <p class="siteMark">
+      <img class="verticalImage" alt="FreeTools logo" src="/_public/logo.jpeg" width="30" height="30" style="border-radius:50%">
+      <span>FreeTools Guides</span>
+    </p>
+  </header>
+  <article>
+    <h1>Check when a <strong>TLS certificate expires</strong> — and what else to inspect</h1>
+    <p class="meta">Updated 2026-09-25 · FreeTools</p>
+
+    <p class="tldr"><strong>In short:</strong>
+    <code>curl 'https://freetools.one/v1/tls?domain=example.com'</code> performs a real TLS handshake
+    and returns the protocol version, negotiated cipher, certificate issuer, subject, SANs and days
+    remaining. No OpenSSL required.</p>
+
+    <p>An expired certificate breaks a site outright, but the more common failure is quieter: a
+    certificate that is still valid, issued to the wrong hostname, or negotiated with a cipher
+    strong enough to pass a scan two years ago and weak enough to fail today.</p>
+
+    <h2>Checking with the command line</h2>
+    <p>If you have OpenSSL, the traditional one-liner is:</p>
+    <pre><code>echo | openssl s_client -connect example.com:443 -servername example.com 2>/dev/null \
+  | openssl x509 -noout -dates</code></pre>
+    <p>That works, but it needs OpenSSL installed, and parsing the output is awkward in scripts. The
+    API does the same handshake and returns JSON:</p>
+    <pre><code>curl 'https://fretools.one/v1/tls?domain=example.com'</code></pre>
+
+    <h2>What the response contains</h2>
+    <table>
+      <thead><tr><th>Field</th><th>Why it matters</th></tr></thead>
+      <tbody>
+        <tr><td><code>tls_version</code></td><td>TLS 1.3 is preferred; 1.0 and 1.1 are deprecated</td></tr>
+        <tr><td><code>cipher</code> / <code>cipher_strength</code></td><td>AEAD suites such as AES-GCM or ChaCha20 rank <em>strong</em>; CBC and RC4 suites rank <em>legacy</em> or <em>weak</em></td></tr>
+        <tr><td><code>cert_subject</code> / <code>cert_issuer</code></td><td>Confirms who the certificate is for and who issued it</td></tr>
+        <tr><td><code>san</code></td><td>The hostname list the certificate actually covers</td></tr>
+        <tr><td><code>not_before</code> / <code>not_after</code></td><td>Validity window in UTC</td></tr>
+        <tr><td><code>days_left</code> / <code>expired</code></td><td>What you alert on</td></tr>
+      </tbody>
+    </table>
+    <p>The SAN list is the one people most often skip. A certificate can be perfectly valid and
+    still fail hostname verification if the domain is missing from <code>san</code> — which is
+    exactly what happens after a rename or a new subdomain.</p>
+
+    <h2>Non-standard ports</h2>
+    <pre><code>curl 'https://freetools.one/v1/tls?domain=example.com&amp;port=8443'</code></pre>
+
+    <h2>From Python, for monitoring</h2>
+    <pre><code>import requests
+
+t = requests.get('https://freetools.one/v1/tls',
+                 params={'domain': 'example.com'}).json()
+if t['days_left'] &lt; 15:
+    print("renew certificate now:", t['not_after'])</code></pre>
+    <p>Because the endpoint performs a genuine handshake, this reflects the certificate the server
+    is actually presenting — not what a cached scan recorded weeks ago.</p>
+
+    <h2>Automating expiry checks</h2>
+    <p>Most certificate failures are avoidable with two alerts: one at 30 days remaining and one at
+    7. Anything that can make an HTTP request can read <code>days_left</code>, so a cron job, a CI
+    step or a status page is all you need.</p>
+
+    <h2>Related checks</h2>
+    <p>Certificate validity is only one part of a healthy HTTPS setup. The
+    <a href="/http-headers/headers.html">HTTP headers checker</a> shows whether
+    <code>Strict-Transport-Security</code> and the other security headers are present on the same
+    domain.</p>
+
+    <div class="toolCta">
+      <a href="/tls-checker/tls-checker.html">Open the TLS checker</a>
+      <a href="/http-headers/headers.html">Check response headers</a>
+    </div>
+
+<h2>What "expiry" actually means</h2>
+    <p>A certificate is valid between <code>not_before</code> and <code>not_after</code>. The catch
+    that surprises people is clock skew: a freshly issued certificate is not valid
+    <em>immediately</em>. Browsers also cache the decision, so a machine with a wrong clock can
+    reject a certificate that is objectively still current.</p>
+
+    <h2>Certificates and hostnames</h2>
+    <p>Validity and identity are separate. A certificate can be inside its validity window and
+    still be wrong for your domain if that hostname is missing from the
+    <code>subjectAltName</code> list. This is the failure behind nearly every "works in curl but
+    not in the browser" report, because curl historically does not verify hostnames the way
+    browsers do.</p>
+    <p>The <code>san</code> array in the response is the list the server is actually authorised
+    for. Check that the name you are visiting appears in it.</p>
+
+    <h2>What counts as a good cipher</h2>
+    <table>
+      <thead><tr><th>Rating</th><th>Typical suites</th><th>Verdict</th></tr></thead>
+      <tbody>
+        <tr><td>strong</td><td>TLS 1.3 AES-GCM, ChaCha20-Poly1305</td><td>Use this</td></tr>
+        <tr><td>good</td><td>TLS 1.2 ECDHE + AES-128-GCM</td><td>Fine</td></tr>
+        <tr><td>moderate</td><td>ECDHE + AES-CBC</td><td>Acceptable, consider dropping</td></tr>
+        <tr><td>legacy</td><td>Any CBC suite on TLS 1.2</td><td>Plan to remove</td></tr>
+        <tr><td>weak</td><td>RC4, DES, export, NULL, anonymous</td><td>Broken</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Automating renewal alerts</h2>
+    <p>A minimal but effective setup alerts at 30 days and again at 7 days, because a 30-day alert
+    gives you time to fix a broken automated renewal without emergency changes:</p>
+    <pre><code># cron: twice daily
+for d in example.com www.example.com api.example.com; do
+  left=$(curl -s "https://freetools.one/v1/tls?domain=$d" | jq -r .days_left)
+  case "$left" in
+    ''|*[!0-9]*) echo "check failed: $d" &gt;&amp;2 ;;
+    *) [ "$left" -le 30 ] &amp;&amp; echo "WARNING: $d expires in $left days" ;;
+  esac
+done</code></pre>
+
+    <h2>Other certificate checks worth doing</h2>
+    <ul>
+      <li><strong>Chain completeness.</strong> An intermediate certificate missing from the server
+          chain works in some clients and fails in others.</li>
+      <li><strong>Hostname coverage.</strong> Add every environment hostname to the SAN list.</li>
+      <li><strong>Protocol support.</strong> TLS 1.0 and 1.1 are deprecated; disable them.</li>
+      <li><strong>Security headers.</strong> A valid certificate does not help if
+          <code>Strict-Transport-Security</code> is missing — check with the
+          <a href="/http-headers/headers.html">HTTP headers tool</a>.</li>
+    </ul>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faqList">
+    <details class="faqItem"><summary>How do I check a TLS certificate expiry date?</summary><p>Call /v1/tls?domain=example.com and read days_left and not_after. The endpoint performs a real TLS handshake, so it reports the certificate your server is currently presenting.</p></details>
+    <details class="faqItem"><summary>What is a good TLS cipher to look for?</summary><p>Look for AEAD suites: TLS_AES_256_GCM_SHA384 or TLS_CHACHA20_POLY1305 under TLS 1.3, or ECDHE with AES-GCM under TLS 1.2. CBC and RC4 suites are rated legacy or weak by the API.</p></details>
+    <details class="faqItem"><summary>Can I check a certificate on a non-standard port?</summary><p>Yes. Pass port=8443 or any port from 1 to 65535 and the probe connects there instead of 443.</p></details>
+    <details class="faqItem"><summary>Do I need OpenSSL installed to check a certificate?</summary><p>No. The handshake and certificate parsing happen inside the API, so it works from any machine with plain HTTPS and returns structured JSON rather than text to parse.</p></details>
+    </div>
+  </article>
+  <br>
+  <nav class="guideLinks"><a href="/tools/guides/">Guides &amp; tutorials</a> &middot; <a href="/_tools_guides/free-ip-geolocation-api-without-key.html">IP geolocation API</a> &middot; <a href="/_tools_guides/free-cors-proxy-for-developers.html">CORS proxy</a> &middot; <a href="/_tools_guides/check-tls-certificate-expiry.html">TLS certificates</a> &middot; <a href="/_tools_guides/count-lines-of-code-github-api.html">Count LOC</a> &middot; <a href="/_tools_guides/github-star-history-api.html">Star history</a> &middot; <a href="/_tools_guides/free-weather-api-no-api-key.html">Weather API</a></nav>
+
+  <section class="related-tools"><h2>More guides</h2><ul><li><a href="/_tools_guides/free-ip-geolocation-api-without-key.html">Free IP Geolocation API With No Key (2026 Guide)</a></li><li><a href="/_tools_guides/count-lines-of-code-github-api.html">Count Lines of Code in a GitHub Repository with a Free API</a></li><li><a href="/_tools_guides/free-cors-proxy-for-developers.html">Free CORS Proxy for Developers: Bypass Cross-Origin Errors Safely</a></li><li><a href="/_tools_guides/github-star-history-api.html">GitHub Star History API: Chart Repo Growth for Free</a></li><li><a href="/_tools_guides/free-weather-api-no-api-key.html">Free Weather API With No API Key (City or IP Lookup)</a></li></ul></section>
+  <br>
+  <span id="footer"></span>
+  <script type="module">
+    import { head, footer, data } from "/templates.js?v=5"
+    document.getElementById("head").innerHTML = head
+    document.getElementById("footer").innerHTML = footer
+    data.init()
+  </script>
+</body>
+</html>

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HTTP Security Headers Checklist: CSP, HSTS and CORS (2026)</title>
+  <meta name="description" content="A practical checklist of the HTTP security headers that matter, with curl commands to check them and an explanation of what each header actually prevents.">
+  <link rel="stylesheet" href="/theme.css?v=8">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="canonical" href="https://freetools.one/_tools_guides/http-security-headers-checklist.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="FreeTools">
+  <meta property="og:title" content="HTTP Security Headers Checklist: CSP, HSTS and CORS (2026)">
+  <meta property="og:description" content="A practical checklist of the HTTP security headers that matter, with curl commands to check them and an explanation of what each header actually prevents.">
+  <meta property="og:url" content="https://freetools.one/_tools_guides/http-security-headers-checklist.html">
+  <meta property="og:image" content="https://freetools.one/_public/og-image.jpeg">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:image" content="https://freetools.one/_public/og-image.jpeg">
+  <meta name="twitter:title" content="HTTP Security Headers Checklist: CSP, HSTS and CORS (2026)">
+  <meta name="twitter:description" content="A practical checklist of the HTTP security headers that matter, with curl commands to check them and an explanation of what each header actually prevents.">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "HTTP Security Headers Checklist: CSP, HSTS and CORS (2026)",
+  "description": "A practical checklist of the HTTP security headers that matter, with curl commands to check them and an explanation of what each header actually prevents.",
+  "url": "https://freetools.one/_tools_guides/http-security-headers-checklist.html",
+  "datePublished": "2026-09-25",
+  "dateModified": "2026-09-25",
+  "author": {
+    "@type": "Organization",
+    "name": "FreeTools"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "FreeTools",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://freetools.one/_public/logo.jpeg"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://freetools.one/_tools_guides/http-security-headers-checklist.html"
+  },
+  "inLanguage": "en"
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://freetools.one/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Guides",
+      "item": "https://freetools.one/tools/guides/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "HTTP Security Headers",
+      "item": "https://freetools.one/_tools_guides/http-security-headers-checklist.html"
+    }
+  ]
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I check if my site has security headers?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Call https://freetools.one/v1/headers?domain=example.com. Every response header is returned as key/value pairs, so you can check for Strict-Transport-Security, Content-Security-Policy, X-Content-Type-Options, Referrer-Policy and Permissions-Policy in one request."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which HTTP security headers are most important?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Strict-Transport-Security, Content-Security-Policy, X-Content-Type-Options and Referrer-Policy form the core set. Permissions-Policy and Cross-Origin-Opener-Policy are strong additions. X-Frame-Options is now superseded by the CSP frame-ancestors directive."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I add a Content-Security-Policy without breaking my site?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Deploy it first as Content-Security-Policy-Report-Only with a report-uri, collect violations for several days, then promote the same policy to enforcing. Going straight to an enforcing policy is the most common reason teams abandon CSP."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does HSTS stop SSL stripping?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Strict-Transport-Security tells browsers to rewrite http:// to https:// for a fixed period, which prevents an attacker on a hostile network from downgrading the connection to plain HTTP."
+      }
+    }
+  ]
+}
+  </script>
+  <link rel="stylesheet" href="/apis.css?v=8">
+  <style>
+    article{max-width:760px;margin:0 auto;padding:0 4px}
+    article h1{font-size:1.55em;line-height:1.25em;margin:10px 0 4px}
+    article h2{font-size:1.1em;margin:22px 0 6px;color:var(--accent)}
+    article h3{font-size:.98em;margin:16px 0 4px}
+    article p,article li{line-height:1.65em;font-size:.94em}
+    article pre.code{margin:6px 0 0;white-space:pre}
+    .meta{color:var(--muted);font-size:.84em;margin-bottom:10px}
+    .tldr{border:1px solid var(--input-border);border-left:4px solid var(--accent);
+      border-radius:var(--radius);background:var(--card);padding:10px 14px;margin:12px 0}
+    .cta{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:16px 0}
+    .cta a{display:inline-block;padding:7px 14px;border:1px solid var(--input-border);
+      border-radius:var(--radius-sm);background:var(--card);text-decoration:none;
+      font-weight:600;font-size:.9em;color:var(--link)}
+    .cta a:hover{border-color:var(--accent)}
+    .hdrTable{width:100%;border-collapse:collapse;font-size:.84em;margin:8px 0;
+      display:block;overflow-x:auto}
+    .hdrTable th,.hdrTable td{padding:5px 8px;border-bottom:1px solid var(--divider);
+      text-align:left;white-space:nowrap}
+    .hdrTable th{color:var(--muted);font-size:.92em;text-transform:uppercase;letter-spacing:.03em}
+    .yes{color:var(--success);font-weight:600}
+    .no{color:var(--danger);font-weight:600}
+    .warn{color:var(--warn);font-weight:600}
+    code{background:var(--card-alt);border-radius:4px;padding:1px 4px;font-size:.9em}
+    .upNext{margin-top:26px;border-top:1px solid var(--divider);padding-top:12px}
+  </style>
+</head>
+<body>
+  <header class="header pageHeader">
+    <p class="siteMark">
+      <img class="verticalImage" alt="FreeTools logo" src="/_public/logo.jpeg" width="30" height="30" style="border-radius:50%">
+      <span>FreeTools Guides</span>
+    </p>
+  </header>
+  <article>
+    <h1>The HTTP security headers that <strong>actually reduce risk</strong></h1>
+    <p class="meta">Updated 2026-09-25 &middot; FreeTools</p>
+
+    <p class="tldr"><strong>In short:</strong> call
+    <code>/v1/headers?domain=example.com</code> and check the response for
+    <code>Strict-Transport-Security</code>, <code>Content-Security-Policy</code>,
+    <code>X-Content-Type-Options</code>, <code>Referrer-Policy</code> and
+    <code>Permissions-Policy</code>. A missing header is a finding you can act on today.</p>
+
+    <p>Security headers are the cheapest hardening available: a few lines in a reverse proxy
+    configuration that remove entire classes of attack. They are also the most commonly skipped,
+    because nothing breaks visibly when they are absent — which is precisely the problem.</p>
+
+    <h2>Check what you have today</h2>
+    <pre class="code"><code>curl -sI https://example.com | grep -iE 
+  'strict-transport|content-security|x-content-type|referrer-policy|permissions-policy|x-frame'</code></pre>
+
+    <p>The headers endpoint returns every response header, so you can also capture the whole
+    picture in one call:</p>
+    <pre class="code"><code>curl 'https://freetools.one/v1/headers?domain=example.com' | jq '.[0] | with_entries(select(.key|test("security|policy|frame|transport";"i")))'</code></pre>
+
+    <h2>The checklist</h2>
+    <table class="hdrTable">
+      <thead><tr><th>Header</th><th>What it prevents</th><th>Priority</th></tr></thead>
+      <tbody>
+        <tr><td><code>Strict-Transport-Security</code></td><td>SSL-strip downgrade attacks</td><td class="yes">Must have</td></tr>
+        <tr><td><code>Content-Security-Policy</code></td><td>Injected script execution (XSS)</td><td class="yes">Must have</td></tr>
+        <tr><td><code>X-Content-Type-Options</code></td><td>MIME sniffing turning uploads into script</td><td class="yes">Must have</td></tr>
+        <tr><td><code>Referrer-Policy</code></td><td>URLs leaking to third parties</td><td class="yes">Must have</td></tr>
+        <tr><td><code>Permissions-Policy</code></td><td>Abuse of camera, mic, geolocation</td><td class="yes">Strongly recommended</td></tr>
+        <tr><td><code>X-Frame-Options</code></td><td>Clickjacking via iframes</td><td class="warn">Use CSP frame-ancestors instead</td></tr>
+        <tr><td><code>Cross-Origin-Opener-Policy</code></td><td>Cross-tab reference attacks</td><td class="warn">Recommended</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Starting values that work</h2>
+    <p>These are safe defaults for most sites. Tighten them once you understand what breaks.</p>
+    <pre class="code"><code>Strict-Transport-Security: max-age=31536000; includeSubDomains
+Content-Security-Policy: default-src 'self'; img-src 'self' data: https:; \
+  style-src 'self' 'unsafe-inline'; script-src 'self'; frame-ancestors 'none'
+X-Content-Type-Options: nosniff
+Referrer-Policy: strict-origin-when-cross-origin
+Permissions-Policy: geolocation=(), microphone=(), camera=()</code></pre>
+
+    <h2>Content-Security-Policy without breaking production</h2>
+    <p>CSP is the highest-value header and the easiest to get wrong. Start in report-only mode so
+    violations are logged instead of blocked:</p>
+    <pre class="code"><code>Content-Security-Policy-Report-Only: default-src 'self'; report-uri /csp-report</code></pre>
+
+    <p>Collect violations for a few days, then promote the policy to enforcing. Skipping
+    report-only is the single most common reason teams give up on CSP.</p>
+
+    <h2>Why <code>X-Frame-Options</code> is the wrong tool now</h2>
+    <p>It only blocks framing from other origins and has no reporting. The CSP directive
+    <code>frame-ancestors 'none'</code> supersedes it and works consistently across browsers:</p>
+    <pre class="code"><code>Content-Security-Policy: frame-ancestors 'none'</code></pre>
+
+    <h2>Header or certificate first?</h2>
+    <p>Headers are irrelevant on a site whose certificate is broken, and a perfect header set
+    cannot compensate for an expired certificate. Check the
+    <a href="/tls-checker/tls-checker.html">TLS certificate</a> first, then the headers — both are
+    one call each.</p>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faqList">
+    <details class="faqItem"><summary>How do I check if my site has security headers?</summary><p>Call https://freetools.one/v1/headers?domain=example.com. Every response header is returned as key/value pairs, so you can check for Strict-Transport-Security, Content-Security-Policy, X-Content-Type-Options, Referrer-Policy and Permissions-Policy in one request.</p></details>
+    <details class="faqItem"><summary>Which HTTP security headers are most important?</summary><p>Strict-Transport-Security, Content-Security-Policy, X-Content-Type-Options and Referrer-Policy form the core set. Permissions-Policy and Cross-Origin-Opener-Policy are strong additions. X-Frame-Options is now superseded by the CSP frame-ancestors directive.</p></details>
+    <details class="faqItem"><summary>How do I add a Content-Security-Policy without breaking my site?</summary><p>Deploy it first as Content-Security-Policy-Report-Only with a report-uri, collect violations for several days, then promote the same policy to enforcing. Going straight to an enforcing policy is the most common reason teams abandon CSP.</p></details>
+    <details class="faqItem"><summary>Does HSTS stop SSL stripping?</summary><p>Yes. Strict-Transport-Security tells browsers to rewrite http:// to https:// for a fixed period, which prevents an attacker on a hostile network from downgrading the connection to plain HTTP.</p></details>
+    </div>
+    <div class="cta"><a href="/http-headers/headers.html">Check your headers</a><a href="/tls-checker/tls-checker.html">Check your certificate</a></div>
+  </article>
+  <br>
+  <section class="related-tools"><h2>More guides</h2><ul><li><a href="/_tools_guides/check-tls-certificate-expiry.html">How to Check TLS Certificate Expiry with a Free API</a></li><li><a href="/_tools_guides/count-lines-of-code-github-api.html">Count Lines of Code in a GitHub Repository with a Free API</a></li><li><a href="/_tools_guides/free-cors-proxy-for-developers.html">Free CORS Proxy for Developers: Bypass Cross-Origin Errors Safely</a></li><li><a href="/_tools_guides/free-developer-tools-for-open-source.html">Free Developer Tools for Open Source Maintainers (No Signup)</a></li><li><a href="/_tools_guides/free-ip-geolocation-api-without-key.html">Free IP Geolocation API With No Key (2026 Guide)</a></li><li><a href="/_tools_guides/free-weather-api-no-api-key.html">Free Weather API With No API Key (City or IP Lookup)</a></li><li><a href="/_tools_guides/github-api-rate-limits.html">GitHub API Rate Limits: 5000 Requests an Hour, Explained</a></li><li><a href="/_tools_guides/github-star-history-api.html">GitHub Star History API: Chart Repo Growth for Free</a></li><li><a href="/_tools_guides/readme-badges-for-your-repo.html">README Badges and Widgets for Your GitHub Repository</a></li><li><a href="/_tools_guides/ssrf-prevention-for-public-apis.html">SSRF Prevention for APIs: Block Server-Side Request Forgery</a></li></ul></section>
+  <br>
+  <span id="footer"></span>
+  <script type="module">
+    import { head, footer, data } from "/templates.js?v=5"
+    document.getElementById("head").innerHTML = head
+    document.getElementById("footer").innerHTML = footer
+    data.init()
+  </script>
+</body>
+</html>

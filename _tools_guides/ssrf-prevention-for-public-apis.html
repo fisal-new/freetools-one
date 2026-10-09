@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SSRF Prevention for APIs: Block Server-Side Request Forgery</title>
+  <meta name="description" content="Learn what SSRF is, why open proxies and URL-fetching endpoints are the main cause, and how DNS resolution plus per-hop validation blocks it.">
+  <link rel="stylesheet" href="/theme.css?v=8">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="canonical" href="https://freetools.one/_tools_guides/ssrf-prevention-for-public-apis.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="FreeTools">
+  <meta property="og:title" content="SSRF Prevention for APIs: Block Server-Side Request Forgery">
+  <meta property="og:description" content="Learn what SSRF is, why open proxies and URL-fetching endpoints are the main cause, and how DNS resolution plus per-hop validation blocks it.">
+  <meta property="og:url" content="https://freetools.one/_tools_guides/ssrf-prevention-for-public-apis.html">
+  <meta property="og:image" content="https://freetools.one/_public/og-image.jpeg">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:image" content="https://freetools.one/_public/og-image.jpeg">
+  <meta name="twitter:title" content="SSRF Prevention for APIs: Block Server-Side Request Forgery">
+  <meta name="twitter:description" content="Learn what SSRF is, why open proxies and URL-fetching endpoints are the main cause, and how DNS resolution plus per-hop validation blocks it.">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "SSRF Prevention for APIs: Block Server-Side Request Forgery",
+  "description": "Learn what SSRF is, why open proxies and URL-fetching endpoints are the main cause, and how DNS resolution plus per-hop validation blocks it.",
+  "url": "https://freetools.one/_tools_guides/ssrf-prevention-for-public-apis.html",
+  "datePublished": "2026-09-25",
+  "dateModified": "2026-09-25",
+  "author": {
+    "@type": "Organization",
+    "name": "FreeTools"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "FreeTools",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://freetools.one/_public/logo.jpeg"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://freetools.one/_tools_guides/ssrf-prevention-for-public-apis.html"
+  },
+  "inLanguage": "en"
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://freetools.one/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Guides",
+      "item": "https://freetools.one/tools/guides/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "SSRF Prevention",
+      "item": "https://freetools.one/_tools_guides/ssrf-prevention-for-public-apis.html"
+    }
+  ]
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is server-side request forgery?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "SSRF is when an attacker controls a URL your server fetches, using your server's network position to reach systems it cannot access directly. It commonly targets cloud metadata endpoints at 169.254.169.254 to steal instance credentials."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I prevent SSRF in a URL-fetching API?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Resolve the hostname yourself, reject the request if any resolved IP is loopback, link-local, private, multicast or reserved, and repeat that check after every redirect. Also set a timeout, a response size cap and a port allowlist."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why is checking the hostname string not enough?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Hostnames can resolve to private addresses through public DNS services, decimal or obfuscated IP notation can bypass naive string matching, and a public URL can redirect to an internal one. Only inspecting the resolved IP addresses is reliable."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do open CORS proxies allow SSRF?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A naive one does, which is why open proxies are among the most abused server misconfigurations. A safe proxy resolves and validates the target, and re-validates on every redirect hop, as the FreeTools proxy does."
+      }
+    }
+  ]
+}
+  </script>
+  <link rel="stylesheet" href="/apis.css?v=8">
+  <style>
+    article{max-width:760px;margin:0 auto;padding:0 4px}
+    article h1{font-size:1.55em;line-height:1.25em;margin:10px 0 4px}
+    article h2{font-size:1.1em;margin:22px 0 6px;color:var(--accent)}
+    article h3{font-size:.98em;margin:16px 0 4px}
+    article p,article li{line-height:1.65em;font-size:.94em}
+    article pre.code{margin:6px 0 0;white-space:pre}
+    .meta{color:var(--muted);font-size:.84em;margin-bottom:10px}
+    .tldr{border:1px solid var(--input-border);border-left:4px solid var(--accent);
+      border-radius:var(--radius);background:var(--card);padding:10px 14px;margin:12px 0}
+    .cta{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:16px 0}
+    .cta a{display:inline-block;padding:7px 14px;border:1px solid var(--input-border);
+      border-radius:var(--radius-sm);background:var(--card);text-decoration:none;
+      font-weight:600;font-size:.9em;color:var(--link)}
+    .cta a:hover{border-color:var(--accent)}
+    .hdrTable{width:100%;border-collapse:collapse;font-size:.84em;margin:8px 0;
+      display:block;overflow-x:auto}
+    .hdrTable th,.hdrTable td{padding:5px 8px;border-bottom:1px solid var(--divider);
+      text-align:left;white-space:nowrap}
+    .hdrTable th{color:var(--muted);font-size:.92em;text-transform:uppercase;letter-spacing:.03em}
+    .yes{color:var(--success);font-weight:600}
+    .no{color:var(--danger);font-weight:600}
+    .warn{color:var(--warn);font-weight:600}
+    code{background:var(--card-alt);border-radius:4px;padding:1px 4px;font-size:.9em}
+    .upNext{margin-top:26px;border-top:1px solid var(--divider);padding-top:12px}
+  </style>
+</head>
+<body>
+  <header class="header pageHeader">
+    <p class="siteMark">
+      <img class="verticalImage" alt="FreeTools logo" src="/_public/logo.jpeg" width="30" height="30" style="border-radius:50%">
+      <span>FreeTools Guides</span>
+    </p>
+  </header>
+  <article>
+    <h1>SSRF: the vulnerability hiding in your <strong>URL-fetching endpoint</strong></h1>
+    <p class="meta">Updated 2026-09-25 &middot; FreeTools</p>
+
+    <p class="tldr"><strong>In short:</strong> SSRF is what happens when your server fetches a URL
+    a user chose. If you pass that URL to <code>fetch()</code> unchecked, the attacker asks your
+    server for <code>http://169.254.169.254/</code> and receives the result. The fix is to resolve
+    the hostname yourself and reject private and link-local addresses.</p>
+
+    <p>Server-Side Request Forgery sounds exotic but it is the most common serious flaw in any API
+    that accepts a URL. It matters even more now, because cloud instance metadata endpoints hand
+    out credentials that let an attacker move sideways into your whole account.</p>
+
+    <h2>What the attacker actually gets</h2>
+    <p>An endpoint that fetches a user-supplied URL, such as a CORS proxy, a link previewer or a
+    webhook tester, can be pointed at:</p>
+    <ul>
+      <li><strong>Cloud metadata</strong> — <code>169.254.169.254</code> returns IAM credentials
+          on AWS and similar credentials on other clouds.</li>
+      <li><strong>Internal services</strong> — databases, admin panels and dashboards that are not
+          exposed to the internet but are reachable from your server.</li>
+      <li><strong>Localhost</strong> — services bound to <code>127.0.0.1</code> that assume they
+          are unreachable from outside.</li>
+      <li><strong>Private ranges</strong> — the whole RFC 1918 space, plus IPv6 equivalents.</li>
+    </ul>
+
+    <h2>Why a blocklist on the hostname is not enough</h2>
+    <p>The naive guard checks the string you were given. That fails in three ways:</p>
+    <pre class="code"><code># 1. the name looks public...
+http://internal-service.corp/
+
+# 2. ...but resolves to a private address
+http://foo.example.com.127.0.0.1.nip.io/
+
+# 3. it looks private but the redirect goes public then back in
+https://evil.example/ -&gt; http://169.254.169.254/</code></pre>
+
+    <p>The fix is to resolve the hostname, inspect the resulting IP addresses, and only then
+    connect. And you must repeat the check after every redirect, because the destination of hop two
+    is entirely under the remote server's control.</p>
+
+    <h2>The resolution step</h2>
+    <pre class="code"><code>import socket, ipaddress
+
+def is_public(host):
+    try:
+        infos = socket.getaddrinfo(host, None)
+    except socket.gaierror:
+        return False
+    for info in infos:
+        ip = ipaddress.ip_address(info[4][0])
+        if (ip.is_private or ip.is_loopback or ip.is_link_local
+                or ip.is_multicast or ip.is_reserved or ip.is_unspecified):
+            return False
+    return True
+
+if not is_public(user_url_hostname):
+    raise ValueError("blocked: internal address")</code></pre>
+
+    <p>Note that this returns false if <em>any</em> resolved address is private. A hostname with a
+    mix of public and private records is a classic bypass, and a checker that only inspects the
+    first address will let it through.</p>
+
+    <h2>Re-check on every redirect</h2>
+    <p>Disable automatic redirects and follow them manually, validating each hop:</p>
+    <pre class="code"><code>client = build_client(redirect=Policy.none())
+for _ in range(5):
+    assert is_public(current_host)     # every hop, not just the first
+    resp = client.get(current_url)
+    if not resp.is_redirect:
+        break
+    current_url = urljoin(current_url, resp.headers["Location"])</code></pre>
+
+    <h2>Other limits worth setting</h2>
+    <ul>
+      <li><strong>Response size cap</strong> — stop streaming at a few megabytes.</li>
+      <li><strong>Timeout</strong> — a slow internal port should not hold a worker open.</li>
+      <li><strong>Port allowlist</strong> — if you only fetch HTTPS on 443, say so.</li>
+      <li><strong>No internal hostnames</strong> — reject anything ending in <code>.internal</code>
+          or <code>.local</code> before resolving.</li>
+    </ul>
+
+    <h2>How FreeTools handles it</h2>
+    <p>The <a href="/cors-proxy/cors-proxy.html">FreeTools proxy</a> resolves every hostname,
+    rejects loopback, link-local, private and cloud metadata ranges, follows at most five
+    redirects, and re-validates the destination on every hop. The same guard covers the header
+    checker, so you can test that pattern without exposing your own server.</p>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faqList">
+    <details class="faqItem"><summary>What is server-side request forgery?</summary><p>SSRF is when an attacker controls a URL your server fetches, using your server's network position to reach systems it cannot access directly. It commonly targets cloud metadata endpoints at 169.254.169.254 to steal instance credentials.</p></details>
+    <details class="faqItem"><summary>How do I prevent SSRF in a URL-fetching API?</summary><p>Resolve the hostname yourself, reject the request if any resolved IP is loopback, link-local, private, multicast or reserved, and repeat that check after every redirect. Also set a timeout, a response size cap and a port allowlist.</p></details>
+    <details class="faqItem"><summary>Why is checking the hostname string not enough?</summary><p>Hostnames can resolve to private addresses through public DNS services, decimal or obfuscated IP notation can bypass naive string matching, and a public URL can redirect to an internal one. Only inspecting the resolved IP addresses is reliable.</p></details>
+    <details class="faqItem"><summary>Do open CORS proxies allow SSRF?</summary><p>A naive one does, which is why open proxies are among the most abused server misconfigurations. A safe proxy resolves and validates the target, and re-validates on every redirect hop, as the FreeTools proxy does.</p></details>
+    </div>
+    <div class="cta"><a href="/cors-proxy/cors-proxy.html">Test the CORS proxy</a><a href="/http-headers/headers.html">Check response headers</a></div>
+  </article>
+  <br>
+  <section class="related-tools"><h2>More guides</h2><ul><li><a href="/_tools_guides/check-tls-certificate-expiry.html">How to Check TLS Certificate Expiry with a Free API</a></li><li><a href="/_tools_guides/count-lines-of-code-github-api.html">Count Lines of Code in a GitHub Repository with a Free API</a></li><li><a href="/_tools_guides/free-cors-proxy-for-developers.html">Free CORS Proxy for Developers: Bypass Cross-Origin Errors Safely</a></li><li><a href="/_tools_guides/free-developer-tools-for-open-source.html">Free Developer Tools for Open Source Maintainers (No Signup)</a></li><li><a href="/_tools_guides/free-ip-geolocation-api-without-key.html">Free IP Geolocation API With No Key (2026 Guide)</a></li><li><a href="/_tools_guides/free-weather-api-no-api-key.html">Free Weather API With No API Key (City or IP Lookup)</a></li><li><a href="/_tools_guides/github-api-rate-limits.html">GitHub API Rate Limits: 5000 Requests an Hour, Explained</a></li><li><a href="/_tools_guides/github-star-history-api.html">GitHub Star History API: Chart Repo Growth for Free</a></li><li><a href="/_tools_guides/http-security-headers-checklist.html">HTTP Security Headers Checklist: CSP, HSTS and CORS (2026)</a></li><li><a href="/_tools_guides/readme-badges-for-your-repo.html">README Badges and Widgets for Your GitHub Repository</a></li></ul></section>
+  <br>
+  <span id="footer"></span>
+  <script type="module">
+    import { head, footer, data } from "/templates.js?v=5"
+    document.getElementById("head").innerHTML = head
+    document.getElementById("footer").innerHTML = footer
+    data.init()
+  </script>
+</body>
+</html>

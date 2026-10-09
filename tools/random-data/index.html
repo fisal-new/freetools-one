@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Free random data API for developers: random integers, shuffled lists and names. No key, no signup, ideal for testing and load generation.">>
+  <meta name="theme-color" content="#f6f8fa" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0d1117" media="(prefers-color-scheme: dark)">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="canonical" href="https://freetools.one/random-data/random-data.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="FreeTools">
+  <meta property="og:title" content="Free Random Data API — Integers, Lists, Names | FreeTools">
+  <meta property="og:description" content="Random integers, shuffled lists and names API. Free, no key needed.">
+  <meta property="og:url" content="https://freetools.one/random-data/random-data.html">
+  <meta property="og:image" content="https://freetools.one/_public/og-image.jpeg">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:image" content="https://freetools.one/_public/og-image.jpeg">
+  <meta name="twitter:title" content="Free Random Data API — Integers, Lists, Names | FreeTools">
+  <meta name="twitter:description" content="Random integers, shuffled lists and names API. Free, no key needed.">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebApplication","name":"Free Random Data API","url":"https://freetools.one/random-data/random-data.html","applicationCategory":"DeveloperApplication","operatingSystem":"Any","description":"Random integers, shuffled lists and names API. Free, no key needed.","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+  </script>
+
+  <script type="application/ld+json">
+  {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How do I simulate a dice roll in code?", "acceptedAnswer": {"@type": "Answer", "text": "Call /v1/random/integer?min=1&max=6 and read data[0]. That is exactly a standard six-sided die."}}, {"@type": "Question", "name": "Is the random data API suitable for load testing?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. /v1/random/* allows 300 requests per minute, and /v1/random/integer?times=10000 returns ten thousand values in a single call, which is far cheaper than looping."}}, {"@type": "Question", "name": "What randomness source is used?", "acceptedAnswer": {"@type": "Answer", "text": "Values come from the operating system CSPRNG (/dev/urandom) on the server, not from a seeded PRNG, so results are not predictable."}}, {"@type": "Question", "name": "Can I get random names?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. /v1/random/name returns a random surname from a built-in list."}}]}
+  </script>
+  <script type="application/ld+json">
+  {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://freetools.one/"}, {"@type": "ListItem", "position": 2, "name": "Random Data", "item": "https://freetools.one/random-data/random-data.html"}]}
+  </script>
+  <link rel="stylesheet" href="/theme.css?v=8">
+  <link rel="stylesheet" type="text/css" href="./../apis.css?v=8">
+  <title>Free Random Data API — Integers, Lists, Names | FreeTools</title>
+
+  <!--Head -->
+  <span id="head"></span>
+
+</head>
+
+<body class="toolPage">
+
+  <header class="header pageHeader">
+    <h1>
+      <img class="verticalImage" alt="FreeTools logo" src="/_public/logo.jpeg" width="36" height="36" style="border-radius:50%">
+      <span> Random Data</span>
+    </h1>
+  </header>
+  <p class="toolHint">Use the form above. Parameters, code examples and FAQ are grouped in the documentation section below.</p>
+
+  <!--<h2 class="centerText deprecated" style="border: 5px solid #ff6565;
+  background-color: #ff6565;">NEW</h2>-->
+
+  <section class="description">
+    <div class="centerText">
+      <strong>Description</strong>
+    </div>
+    <div class="leftText">
+      <span>
+        - API to generate random data
+        <br>
+      </span>
+      <span>
+        - Only supports GET request.
+      </span>
+      <br>
+      <span>
+        -
+<span class="red">Limit</span> : 300 requests per minute. Once reached subsequent requests will result in
+        error 429 (too many requests)
+        until your quota is cleared.
+        <br>
+      </span>
+    </div>
+  </section>
+
+  <section class="endpoint">
+
+    <div class="centerText">
+      <strong>Endpoint - Get Random Integers</strong>
+    </div>
+    <div class="leftText">
+      <strong>HTTP Request: </strong>
+      <br>
+      <code class="red">
+    GET /v1/random/integer?min=X&max=Y[&times=N]
+      </code>
+      <br>
+      <strong>Examples</strong>
+      <br>Get random number between 1-10 both inclusive
+      <br>
+      <span>
+        <code>
+  <a href="/v1/random/integer?min=1&max=10" target="_blank" rel="noopener"> /v1/random/integer?min=1&max=10</a> 
+        </code>
+      </span><br>
+      <span>Valid Range: 0 - 10,000,000,000<br>
+        You can also specify how many times you want the result with the parameter <code>times</code>.<br>
+        Default is 1 and there is no need to specify it. Max times = 10,000<br>
+        <code>
+  <a href="/v1/random/integer?min=1&max=10&times=50" target="_blank" rel="noopener">/v1/random/integer?min=1&max=10&times=50</a>
+        </code>
+      </span><br>
+      <strong>response</strong>
+      <pre class="marginLeft">
+        {
+          "quest": "Random Integer between 1-10",
+          "data": [
+           10
+          ]
+         }      
+        
+         {
+          "quest": "50 Random Integers between 1-10",
+          "data": [
+           7,
+           8,
+           ...
+           4
+          ]
+         }
+            </pre>
+    </div>
+
+  </section>
+
+  <section class="endpoint">
+
+    <div class="centerText">
+      <strong>Endpoint - List with randomized order</strong>
+    </div>
+    <div class="leftText">
+      <strong>HTTP Request: </strong>
+      <br>
+      <code class="red">
+    GET /v1/random/list?len=X 
+      </code>
+      <br>
+      Min list elements = 2. Max list elements : 10,000<br>
+      <strong>Examples</strong>
+      <br>Get randomized order list with 1000 elements
+      <br>
+      <span>
+        <code>
+  <a href="/v1/random/list?len=1000" target="_blank" rel="noopener"> /v1/random/list?len=1000</a> 
+        </code>
+      </span><br>
+      <strong>response</strong>
+      <pre class="marginLeft">
+        {
+          "quest": "Randomized order list with 1000 elements",
+          "data": [
+           612,
+           422,
+           ...
+           820
+           ]
+        }
+            </pre>
+    </div>
+
+  </section>
+
+  <section class="endpoint">
+
+    <div class="centerText">
+      <strong>Endpoint - Get Random Name</strong>
+    </div>
+    <div class="leftText">
+      <strong>HTTP Request: </strong>
+      <br>
+      <code class="red">
+    GET /v1/random/name 
+      </code>
+      <br>
+      <strong>Examples</strong>
+      <br>Get random name from a list of nearly 90.000
+      <br>
+      <span>
+        <code>
+  <a href="/v1/random/name" target="_blank" rel="noopener"> /v1/random/name</a> 
+        </code>
+      </span><br>
+      <strong>response</strong>
+      <pre class="marginLeft">
+        {
+          "quest": "Random Name",
+          "name": "POETKER"
+        }
+             </pre>
+    </div>
+
+  </section>
+
+  <br>
+
+  <section class="endpoint interactive">
+    <div class="centerText"><strong>Try it live</strong></div>
+    <div class="leftText centerText">
+      <form onsubmit="return false">
+      <button id="rnInt" class="action">Random 1-10</button>
+      <button id="rnName" class="action">Random name</button>
+      <button id="rnList" class="action">List ×10</button>
+      <button id="rnCopy" class="action">Copy</button>
+      </form>
+      <pre class="marginLeft" id="rnOut" style="text-align:left"></pre>
+    </div>
+  </section>
+
+  <br>
+
+  <!-- Footer -->
+  <nav class="guideLinks"><a href="/_tools_guides/">Guides &amp; tutorials</a> &middot; <a href="/_tools_guides/free-ip-geolocation-api-without-key.html">IP geolocation API</a> &middot; <a href="/_tools_guides/free-cors-proxy-for-developers.html">CORS proxy</a> &middot; <a href="/_tools_guides/check-tls-certificate-expiry.html">TLS certificates</a> &middot; <a href="/_tools_guides/count-lines-of-code-github-api.html">Count LOC</a> &middot; <a href="/_tools_guides/github-star-history-api.html">Star history</a> &middot; <a href="/_tools_guides/free-weather-api-no-api-key.html">Weather API</a></nav>
+
+  <section class="related-tools"><h2>Related tools</h2><ul><li><a href="/tools/github-stars/">Star History</a></li><li><a href="/tools/ip-geolocation/">IP Geolocation</a></li><li><a href="/tools/weather/">Weather</a></li></ul></section>
+  <br>
+  <details class="docsWrap" id="tool-docs">
+  <summary class="docsToggle">Documentation &amp; API reference</summary>
+  <section class="docs">
+  <h2>How to use the Random Data API</h2>
+  <p>Generate random integers, shuffled lists and names for testing, seeding and load generation.</p>
+  <h3>Endpoints</h3>
+  <div class="tblScroll"><table class="apiTable"><thead><tr><th>Endpoint</th><th>Returns</th><th>Example</th></tr></thead><tbody>
+  <tr><td><code>/v1/random/integer</code></td><td>JSON</td><td><a href="https://freetools.one/v1/random/integer?min=1&amp;max=10" rel="nofollow"><code>min=1&amp;max=10</code></a></td></tr>
+  <tr><td><code>/v1/random/list</code></td><td>JSON</td><td><a href="https://freetools.one/v1/random/list?len=10" rel="nofollow"><code>len=10</code></a></td></tr>
+  <tr><td><code>/v1/random/name</code></td><td>JSON</td><td><a href="https://freetools.one/v1/random/name?" rel="nofollow"><code></code></a></td></tr>
+  </tbody></table></div>
+  <h3>Parameters</h3>
+  <div class="tblScroll"><table class="apiTable"><thead><tr><th>Name</th><th>Type</th><th>Default</th><th>Description</th></tr></thead><tbody>
+  <tr><td><code>min</code></td><td>integer</td><td>required</td><td>Lowest value for /v1/random/integer.</td></tr>
+  <tr><td><code>max</code></td><td>integer</td><td>required</td><td>Highest value for /v1/random/integer.</td></tr>
+  <tr><td><code>times</code></td><td>integer</td><td>1</td><td>How many integers to generate, 1-10000.</td></tr>
+  <tr><td><code>len</code></td><td>integer</td><td>required</td><td>Length of the shuffled list for /v1/random/list, 2-10000.</td></tr>
+  </tbody></table></div>
+  <h3>Code examples</h3>
+  <div class="tabs codeTabs" role="tablist"><button class="tab active" data-ctab="curl" role="tab" aria-selected="true">cURL</button><button class="tab" data-ctab="js" role="tab" aria-selected="false">JavaScript</button><button class="tab" data-ctab="py" role="tab" aria-selected="false">Python</button></div>
+  <div class="codePane active" data-cpane="curl"><pre class="code"><code class="lang-curl">curl 'https://freetools.one/v1/random/integer?min=1&amp;max=100&amp;times=5'</code></pre></div>
+  <div class="codePane" data-cpane="js"><pre class="code"><code class="lang-js">const r = await (await fetch('https://freetools.one/v1/random/integer?min=1&amp;max=6')).json();
+console.log(r.data[0]); // dice roll</code></pre></div>
+  <div class="codePane" data-cpane="py"><pre class="code"><code class="lang-py">import requests
+
+r = requests.get('https://freetools.one/v1/random/integer',
+                 params={'min': 1, 'max': 6}).json()
+print(r['data'][0])</code></pre></div>
+  <h3>Example response</h3>
+  <pre class="code"><code class="lang-json">{
+  "quest": "Random Integer between 1-100",
+  "data": [42, 7, 93, 18, 60]
+}</code></pre>
+  <h3>Frequently asked questions</h3>
+  <div class="faqList">
+  <details class="faqItem"><summary>How do I simulate a dice roll in code?</summary><p>Call /v1/random/integer?min=1&amp;max=6 and read data[0]. That is exactly a standard six-sided die.</p></details>
+  <details class="faqItem"><summary>Is the random data API suitable for load testing?</summary><p>Yes. /v1/random/* allows 300 requests per minute, and /v1/random/integer?times=10000 returns ten thousand values in a single call, which is far cheaper than looping.</p></details>
+  <details class="faqItem"><summary>What randomness source is used?</summary><p>Values come from the operating system CSPRNG (/dev/urandom) on the server, not from a seeded PRNG, so results are not predictable.</p></details>
+  <details class="faqItem"><summary>Can I get random names?</summary><p>Yes. /v1/random/name returns a random surname from a built-in list.</p></details>
+  </div>
+  </section>
+  </details>
+
+  <span id="footer"></span>
+
+
+  <script type="module">
+    import { head, footer, data } from "./../templates.js?v=5"
+    document.getElementById("head").innerHTML = head
+    document.getElementById("footer").innerHTML = footer
+    data.init()
+    // code-example tabs
+    document.querySelectorAll(".codeTabs").forEach(function (nav) {
+      nav.addEventListener("click", function (e) {
+        var b = e.target.closest(".tab");
+        if (!b) return;
+        var box = nav.parentNode;
+        nav.querySelectorAll(".tab").forEach(function (x) {
+          var on = x === b;
+          x.classList.toggle("active", on);
+          x.setAttribute("aria-selected", on ? "true" : "false");
+        });
+        box.querySelectorAll(".codePane").forEach(function (p) {
+          p.classList.toggle("active", p.dataset.cpane === b.dataset.ctab);
+        });
+      });
+    });
+
+    const out = () => document.getElementById("rnOut");
+    const show = async (u) => {
+      out().textContent = "loading…";
+      try {
+        const r = await fetch(u);
+        const ms = r.headers.get("x-elapsed-ms");
+        out().textContent = JSON.stringify(await r.json(), null, 2) + (ms ? "\n\n(" + ms + " ms server-side)" : "");
+      } catch (e) { out().textContent = "request failed"; }
+    };
+    document.getElementById("rnCopy").onclick = (e) => data.copyOut("rnOut", e.target);
+    document.getElementById("rnInt").onclick = () => show("/v1/random/integer?min=1&max=10");
+    document.getElementById("rnName").onclick = () => show("/v1/random/name");
+    document.getElementById("rnList").onclick = () => show("/v1/random/list?len=10");
+  </script>
+
+</body>
+
+</html>

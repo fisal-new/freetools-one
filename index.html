@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Drakthon</title>
-<meta name="description" content="Drakthon scripts. Paste one line into your executor.">
+<meta name="description" content="Drakthon. One line to run in your executor.">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="stylesheet" href="/index.css">
 </head>
@@ -18,38 +18,38 @@
  | |  | | '__/ _` | |/ / __| '_ \ / _ \| '_ \| |  | |  _ <|  _
  | |__| | | | (_| |   <| |_| | | | (_) | | | | |__| | |_) | |
  |_____/|_|  \__,_|_|\_\\__|_| |_|\___/|_| |_|\____/|____/|_| </pre>
-    <p class="tag">Two scripts. One line each. Nothing to install.</p>
+    <p class="tag">One line. It asks for a key, then runs.</p>
   </header>
 
   <main>
 
     <section class="card">
       <div class="row">
-        <h2>Hub</h2>
-        <span class="size">1.23 MB</span>
+        <h2>Loader</h2>
+        <span class="size">27 KB</span>
       </div>
-      <p class="desc">Full menu UI, 54 buttons, game detection across 30+ games, and a
-        scripts panel that fetches 93 sources at click time. Pick the game card,
-        then RUN.</p>
+      <p class="desc">Opens a small window. Press <b>get code</b>, open the link it
+        copies, finish the offer, paste the key back, press <b>activate</b>. The
+        Hub and the Spy load from there.</p>
       <div class="paste">
-        <code id="hub">loadstring(game:HttpGet("https://raw.githubusercontent.com/fisal-new/drakthontest/main/drakthon-ui.lua"))()</code>
-        <button data-copy="hub">copy</button>
+        <code id="ldr">loadstring(game:HttpGet("https://freetools.one/k/loader.lua"))()</code>
+        <button data-copy="ldr">copy</button>
       </div>
-      <p class="meta"><a href="https://raw.githubusercontent.com/fisal-new/drakthontest/main/drakthon-ui.lua">direct download</a></p>
+      <p class="meta"><a href="https://freetools.one/k/loader.lua">direct download</a></p>
     </section>
 
     <section class="card">
       <div class="row">
-        <h2>Spy</h2>
-        <span class="size">427 KB</span>
+        <h2>What you get</h2>
       </div>
-      <p class="desc">Property inspector and remote spy. Loads its own UI layer on
-        start, so give it a moment after the executor reports it running.</p>
-      <div class="paste">
-        <code id="spy">loadstring(game:HttpGet("https://raw.githubusercontent.com/fisal-new/drakthon-spy/main/DrakthonSpy.lua"))()</code>
-        <button data-copy="spy">copy</button>
-      </div>
-      <p class="meta"><a href="https://raw.githubusercontent.com/fisal-new/drakthon-spy/main/DrakthonSpy.lua">direct download</a></p>
+      <ul class="notes">
+        <li><b>Hub</b> &mdash; full menu UI, game detection across 30+ games, and a
+          scripts panel that fetches 93 sources at click time.</li>
+        <li><b>Spy</b> &mdash; property inspector and remote spy. It builds its own UI
+          layer on start, so give it a moment after the executor reports it running.</li>
+        <li>A key lasts a day, works every time you use it, and goes to the first
+          account that activates it. After that nobody else can use it.</li>
+      </ul>
     </section>
 
     <section class="card">
@@ -61,27 +61,19 @@
           can also read it &mdash; that is true of every script, including paid ones.</li>
         <li>Use an account you can afford to lose. Exploits get accounts flagged, and
           so do the scripts people load into them.</li>
-        <li>Both files are served over plain HTTPS from GitHub. If a link 404s, the
-          file moved; check the repos rather than trusting a mirror.</li>
+        <li>If a link 404s, the file moved. Check the repos rather than trusting a
+          mirror.</li>
       </ul>
     </section>
 
-    <!-- Ad slot. Paste the network's own announcement code below this line.
-         Keep it inside the labelled container so it is visibly an ad, not
-         part of the download flow. -->
-    <section class="adslot" aria-label="Advertisement">
-      <span class="adlabel">ad</span>
-      <!-- ad code goes here -->
-    </section>
-
     <footer>
+      <a class="btn" href="/tools/">Developer tools</a>
       <a class="btn" href="https://discord.gg/W3VwkUj6kf">Discord</a>
       <p class="fine">Drakthon. Scripts are provided as is, with no warranty.</p>
     </footer>
 
   </main>
 </div>
-
 <script>
 document.querySelectorAll("button[data-copy]").forEach(function (btn) {
   btn.addEventListener("click", function () {

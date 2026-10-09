@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Count Lines of Code in a GitHub Repository with a Free API</title>
+  <meta name="description" content="Count lines of code in any public GitHub or GitLab repo from the command line or code, with a free API. See blanks, comments and generated files.">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="canonical" href="https://freetools.one/_tools_guides/count-lines-of-code-github-api.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="FreeTools">
+  <meta property="og:title" content="Count Lines of Code in a GitHub Repository with a Free API">
+  <meta property="og:description" content="Count lines of code in any public GitHub or GitLab repo from the command line or code, with a free API. See blanks, comments and generated files.">
+  <meta property="og:url" content="https://freetools.one/_tools_guides/count-lines-of-code-github-api.html">
+  <meta property="og:image" content="https://freetools.one/_public/og-image.jpeg">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:image" content="https://freetools.one/_public/og-image.jpeg">
+  <meta name="twitter:title" content="Count Lines of Code in a GitHub Repository with a Free API">
+  <meta name="twitter:description" content="Count lines of code in any public GitHub or GitLab repo from the command line or code, with a free API. See blanks, comments and generated files.">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "Count Lines of Code in a GitHub Repository with a Free API",
+  "description": "Count lines of code in any public GitHub or GitLab repo from the command line or code, with a free API. See blanks, comments and generated files.",
+  "url": "https://freetools.one/_tools_guides/count-lines-of-code-github-api.html",
+  "datePublished": "2026-09-25",
+  "dateModified": "2026-09-25",
+  "author": {
+    "@type": "Organization",
+    "name": "FreeTools"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "FreeTools",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://freetools.one/_public/logo.jpeg"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://freetools.one/_tools_guides/count-lines-of-code-github-api.html"
+  },
+  "inLanguage": "en"
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://freetools.one/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Guides",
+      "item": "https://freetools.one/tools/guides/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Count LOC",
+      "item": "https://freetools.one/_tools_guides/count-lines-of-code-github-api.html"
+    }
+  ]
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I count lines of code in a GitHub repository?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Send GET /v1/loc?github=user/repo. The response lists files, lines, blanks, comments and lines of code for every detected language, plus a Total row, without needing to clone the repository."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I count a single file's lines of code?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The API counts whole repositories because it reads the source archive. Request detail=1 and filter the files[] array by path to get the exact numbers for one file."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which files are excluded automatically?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Common dependency and build directories (node_modules, vendor, dist, build, target, out, .next, coverage, venv, .venv), generated bundles like *.min.js, and any file containing binary data are skipped."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How large a repository can the LOC API handle?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Up to 300 MB compressed, 1.5 GB uncompressed and 200,000 files. Larger repositories are rejected with HTTP 413 rather than timing out."
+      }
+    }
+  ]
+}
+  </script>
+  <link rel="stylesheet" href="/theme.css?v=8">
+  <link rel="stylesheet" type="text/css" href="/apis.css?v=8">
+  <style>
+    article{max-width:760px;margin:0 auto;padding:0 14px}
+    article h1{font-size:1.6em;line-height:1.25em;margin:10px 0 4px}
+    article h2{font-size:1.12em;margin:22px 0 6px;color:var(--accent)}
+    article h3{font-size:1em;margin:16px 0 4px}
+    article p,article li{line-height:1.65em;font-size:.95em}
+    article pre{background:var(--card);border:1px solid var(--input-border);border-radius:6px;
+      padding:10px 12px;overflow-x:auto;font-size:.8em;line-height:1.5em;white-space:pre}
+    article code{background:var(--table-even,#f6f8fa);border-radius:4px;padding:1px 4px}
+    article pre code{background:none;padding:0}
+    .meta{opacity:.7;font-size:.85em;margin-bottom:10px}
+    .tldr{border:1px solid var(--input-border);border-left:4px solid var(--accent);border-radius:6px;
+      background:var(--card);padding:10px 14px;margin:10px 0}
+    .toolCta{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:14px 0}
+    .toolCta a{display:inline-block;padding:7px 14px;border:1px solid var(--input-border);
+      border-radius:6px;background:var(--card);text-decoration:none;font-weight:600;font-size:.9em}
+    .toolCta a:hover{border-color:var(--accent);color:var(--accent)}
+    table{width:100%;border-collapse:collapse;font-size:.86em;margin:8px 0}
+    th,td{padding:5px 8px;border-bottom:1px solid var(--input-border);text-align:left}
+    .upNext{margin-top:26px;border-top:1px solid var(--input-border);padding-top:12px}
+  </style>
+</head>
+<body>
+  <header class="header pageHeader">
+    <p class="siteMark">
+      <img class="verticalImage" alt="FreeTools logo" src="/_public/logo.jpeg" width="30" height="30" style="border-radius:50%">
+      <span>FreeTools Guides</span>
+    </p>
+  </header>
+  <article>
+    <h1>Count lines of code in a GitHub repository <strong>without cloning it</strong></h1>
+    <p class="meta">Updated 2026-09-25 · FreeTools</p>
+
+    <p class="tldr"><strong>In short:</strong>
+    <code>curl 'https://freetools.one/v1/loc?github=torvalds/linux'</code> returns a per-language
+    breakdown with files, lines, blanks, comments and lines of code. No key, no clone, no install.</p>
+
+    <p>Counting lines of code sounds trivial until you try to do it consistently. <code>cloc</code>
+    and <code>scc</code> give you a number, but they want the repository on disk and they disagree
+    about what counts. The harder problem is doing it for a repository you do not have — a
+    dependency, a candidate you are evaluating, or a public repo behind a link.</p>
+
+    <h2>The basic request</h2>
+    <pre><code>curl 'https://freetools.one/v1/loc?github=torvalds/linux'</code></pre>
+    <p>The response is a flat array of language objects, with a final <code>Total</code> entry.
+    Keeping the shape flat means you can pipe it straight into <code>jq</code>:</p>
+    <pre><code>curl -s 'https://freetools.one/v1/loc?github=cli/cli' \
+  | jq '.[] | select(.language=="Total") | .linesOfCode'</code></pre>
+
+    <h2>Understanding the numbers</h2>
+    <table>
+      <thead><tr><th>Field</th><th>What it counts</th></tr></thead>
+      <tbody>
+        <tr><td><code>files</code></td><td>Files of that type that were counted</td></tr>
+        <tr><td><code>lines</code></td><td>Every physical line, including blanks and comments</td></tr>
+        <tr><td><code>blanks</code></td><td>Lines that are empty or whitespace only</td></tr>
+        <tr><td><code>comments</code></td><td>Line and block comment lines</td></tr>
+        <tr><td><code>linesOfCode</code></td><td><code>lines − blanks − comments</code></td></tr>
+        <tr><td><code>percent</code></td><td>Share of total code lines</td></tr>
+      </tbody>
+    </table>
+    <p>Knowing the split matters. A repository with 40,000 lines but only 8,000 lines of code is
+    mostly documentation or generated output, and the plain "lines" number hides that.</p>
+
+    <h2>Excluding directories and files</h2>
+    <p>Use <code>ignored</code> for anything you do not want counted. It accepts a comma-separated
+    list of files and directories:</p>
+    <pre><code>curl 'https://freetools.one/v1/loc?github=org/repo&amp;ignored=vendor,dist,*.snap'</code></pre>
+    <p>A small set of directories is skipped automatically because they are almost never source
+    code: <code>node_modules</code>, <code>vendor</code>, <code>dist</code>, <code>build</code>,
+    <code>target</code>, <code>out</code>, <code>.next</code>, <code>coverage</code>,
+    <code>venv</code> and <code>.venv</code>. Generated bundles such as <code>*.min.js</code> and
+    any file that looks binary are also excluded.</p>
+
+    <h2>Counting a specific branch</h2>
+    <pre><code>curl 'https://freetools.one/v1/loc?github=org/repo&amp;branch=develop'</code></pre>
+    <p>Omit the parameter to use the repository's default branch, which is detected automatically.</p>
+
+    <h2>Getting the file list and extensions</h2>
+    <p>Add <code>detail=1</code> when you need to go below the language level. The response then
+    contains three keys: <code>languages</code>, <code>extensions</code> and <code>files</code>.</p>
+    <pre><code>curl -s 'https://freetools.one/v1/loc?github=cli/cli&amp;detail=1' | jq '.extensions[:5]'</code></pre>
+    <p><code>extensions</code> is the breakdown by file type, which is often more revealing than the
+    language breakdown — a repository that is mostly <code>.json</code> or <code>.yml</code> is a
+    very different project from its language mix suggests. <code>files</code> gives a row per file
+    with its path, size and line counts, which is what you want to find the biggest file in a
+    codebase.</p>
+
+    <h2>GitLab works the same way</h2>
+    <p>Nested groups are supported, so pass the full namespace path:</p>
+    <pre><code>curl 'https://freetools.one/v1/loc?gitlab=gitlab-org/gitlab-runner'</code></pre>
+
+    <h2>From Python, for a CI job</h2>
+    <pre><code>import requests
+
+stats = requests.get('https://freetools.one/v1/loc',
+                     params={'github': 'cli/cli'}).json()
+total = [s for s in stats if s['language'] == 'Total'][0]
+print(f"{total['linesOfCode']} LOC in {total['files']} files")</code></pre>
+
+    <h2>Size limits</h2>
+    <p>Repositories up to 300&nbsp;MB compressed and 1.5&nbsp;GB uncompressed with up to 200,000
+    files are supported. Anything larger is rejected with HTTP 413 instead of timing out, so your
+    script gets a clear error rather than hanging.</p>
+
+    <div class="toolCta">
+      <a href="/count-loc/count-loc-online.html">Open the LOC counter</a>
+      <a href="/_tools_guides/github-star-history-api.html">Compare with star history</a>
+    </div>
+
+<h2>Reading the result well</h2>
+    <p>The most common mistake is reading <code>lines</code> and calling it "lines of code". For a
+    documentation-heavy repository those numbers can differ by an order of magnitude. A quick
+    health check looks like this:</p>
+    <pre><code>curl -s 'https://freetools.one/v1/loc?github=org/repo' | jq '
+  (.[-1]) as $t |
+  { files: $t.files,
+    code_share: (($t.linesOfCode / $t.lines * 100) | floor) }'</code></pre>
+    <p>A repository under 50% code share is usually carrying a lot of generated or documentation
+    content, which is worth knowing before you draw conclusions from the total.</p>
+
+    <h2>Finding the biggest files</h2>
+    <p>With <code>detail=1</code> the <code>files</code> array carries a row per file, so the ten
+    largest files in a repository are one <code>jq</code> call:</p>
+    <pre><code>curl -s 'https://freetools.one/v1/loc?github=org/repo&amp;detail=1' | jq '
+  .files | sort_by(-.linesOfCode)[:10]
+  | .[] | "\(.linesOfCode)\t\(.path)"'</code></pre>
+
+    <h2>Comparing repositories</h2>
+    <p>Because the response is plain JSON, comparing two projects is a loop:</p>
+    <pre><code>for repo in torvalds/linux cli/cli BurntSushi/ripgrep; do
+  n=$(curl -s "https://freetools.one/v1/loc?github=$repo" \
+      | jq -r '.[] | select(.language=="Total") | .linesOfCode')
+  printf "%-28s %s LOC\n" "$repo" "$n"
+done</code></pre>
+    <p>Results are cached for six hours, so a loop over twenty repositories finishes in about a
+    second rather than twenty seconds.</p>
+
+    <h2>Which languages are recognised</h2>
+    <p>The counter understands around 35 languages by extension, plus files with no extension where
+    a shebang identifies them — a <code>runme</code> script starting with
+    <code>#!/usr/bin/env python</code> is counted as Python, not skipped.</p>
+    <p>Comment syntax is handled per language, including C-style block comments, SQL
+    <code>--</code> and <code>/* */</code>, Lua's <code>--[[ ]]</code>, and HTML or Markdown
+    <code>&lt;!-- --&gt;</code>. If a language is not recognised its files are simply not counted,
+    which is why the sum of the per-language numbers always equals the Total row.</p>
+
+    <h2>Why line counts differ between tools</h2>
+    <p>You will eventually compare this number with <code>cloc</code> or <code>tokei</code> and see a
+    difference. That is expected, and it comes down to three decisions:</p>
+    <ul>
+      <li><strong>Blank lines inside block comments.</strong> This counter counts them as blanks.</li>
+      <li><strong>Generated code.</strong> Bundles and dependency directories are excluded by default.</li>
+      <li><strong>Binary and oversized files.</strong> Anything over 1&nbsp;MB or containing a null
+          byte is skipped rather than guessed at.</li>
+    </ul>
+    <p>None of these choices is universally right. What matters is that they are consistent, so
+    numbers stay comparable across runs and across repositories.</p>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faqList">
+    <details class="faqItem"><summary>How do I count lines of code in a GitHub repository?</summary><p>Send GET /v1/loc?github=user/repo. The response lists files, lines, blanks, comments and lines of code for every detected language, plus a Total row, without needing to clone the repository.</p></details>
+    <details class="faqItem"><summary>Can I count a single file's lines of code?</summary><p>The API counts whole repositories because it reads the source archive. Request detail=1 and filter the files[] array by path to get the exact numbers for one file.</p></details>
+    <details class="faqItem"><summary>Which files are excluded automatically?</summary><p>Common dependency and build directories (node_modules, vendor, dist, build, target, out, .next, coverage, venv, .venv), generated bundles like *.min.js, and any file containing binary data are skipped.</p></details>
+    <details class="faqItem"><summary>How large a repository can the LOC API handle?</summary><p>Up to 300 MB compressed, 1.5 GB uncompressed and 200,000 files. Larger repositories are rejected with HTTP 413 rather than timing out.</p></details>
+    </div>
+  </article>
+  <br>
+  <nav class="guideLinks"><a href="/tools/guides/">Guides &amp; tutorials</a> &middot; <a href="/_tools_guides/free-ip-geolocation-api-without-key.html">IP geolocation API</a> &middot; <a href="/_tools_guides/free-cors-proxy-for-developers.html">CORS proxy</a> &middot; <a href="/_tools_guides/check-tls-certificate-expiry.html">TLS certificates</a> &middot; <a href="/_tools_guides/count-lines-of-code-github-api.html">Count LOC</a> &middot; <a href="/_tools_guides/github-star-history-api.html">Star history</a> &middot; <a href="/_tools_guides/free-weather-api-no-api-key.html">Weather API</a></nav>
+
+  <section class="related-tools"><h2>More guides</h2><ul><li><a href="/_tools_guides/free-ip-geolocation-api-without-key.html">Free IP Geolocation API With No Key (2026 Guide)</a></li><li><a href="/_tools_guides/free-cors-proxy-for-developers.html">Free CORS Proxy for Developers: Bypass Cross-Origin Errors Safely</a></li><li><a href="/_tools_guides/check-tls-certificate-expiry.html">How to Check TLS Certificate Expiry with a Free API</a></li><li><a href="/_tools_guides/github-star-history-api.html">GitHub Star History API: Chart Repo Growth for Free</a></li><li><a href="/_tools_guides/free-weather-api-no-api-key.html">Free Weather API With No API Key (City or IP Lookup)</a></li></ul></section>
+  <br>
+  <span id="footer"></span>
+  <script type="module">
+    import { head, footer, data } from "/templates.js?v=5"
+    document.getElementById("head").innerHTML = head
+    document.getElementById("footer").innerHTML = footer
+    data.init()
+  </script>
+</body>
+</html>

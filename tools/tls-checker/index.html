@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Check TLS version, cipher strength and certificate expiry for any domain. Free API, no signup.">
+  <meta name="theme-color" content="#f6f8fa" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0d1117" media="(prefers-color-scheme: dark)">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="stylesheet" href="/theme.css?v=8">
+  <link rel="stylesheet" type="text/css" href="./../apis.css?v=8">
+  <link rel="canonical" href="https://freetools.one/tls-checker/tls-checker.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="FreeTools">
+  <meta property="og:title" content="Free TLS &amp; SSL Certificate Checker | FreeTools">
+  <meta property="og:description" content="Check TLS version, cipher strength and certificate expiry for any domain. Free API, no signup.">
+  <meta property="og:url" content="https://freetools.one/tls-checker/tls-checker.html">
+  <meta property="og:image" content="https://freetools.one/_public/og-image.jpeg">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:image" content="https://freetools.one/_public/og-image.jpeg">
+  <meta name="twitter:title" content="Free TLS &amp; SSL Certificate Checker | FreeTools">
+  <meta name="twitter:description" content="Check TLS version, cipher strength and certificate expiry for any domain. Free API, no signup.">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebApplication","name":"Free TLS & SSL Certificate Checker","url":"https://freetools.one/tls-checker/tls-checker.html","applicationCategory":"DeveloperApplication","operatingSystem":"Any","description":"Check TLS version, cipher strength and certificate expiry for any domain. Free API, no signup.","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+  </script>
+
+  <script type="application/ld+json">
+  {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How do I check when a TLS certificate expires?", "acceptedAnswer": {"@type": "Answer", "text": "Call /v1/tls?domain=example.com and read the days_left and not_after fields. The checker performs a real handshake, so it reports the certificate the server actually presents."}}, {"@type": "Question", "name": "Does the TLS checker support non-standard ports?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Pass port=8443 (or any port from 1 to 65535) and the probe connects there instead of 443."}}, {"@type": "Question", "name": "Is a weak cipher flagged automatically?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Each negotiated cipher is rated strong, good, moderate, legacy or weak, so outdated suites are easy to spot in monitoring."}}, {"@type": "Question", "name": "Do I need to install OpenSSL?", "acceptedAnswer": {"@type": "Answer", "text": "No. The TLS handshake and certificate parsing happen inside the API, so it works from any platform with plain HTTPS."}}]}
+  </script>
+  <script type="application/ld+json">
+  {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://freetools.one/"}, {"@type": "ListItem", "position": 2, "name": "TLS Checker", "item": "https://freetools.one/tls-checker/tls-checker.html"}]}
+  </script>
+  <title>Free TLS &amp; SSL Certificate Checker | FreeTools</title>
+
+  <!--Head -->
+  <span id="head"></span>
+
+</head>
+
+<body class="toolPage">
+
+  <header class="header pageHeader">
+    <h1>
+      <img class="verticalImage" alt="FreeTools logo" src="/_public/logo.jpeg" width="36" height="36" style="border-radius:50%">
+      <span> TLS Check</span>
+    </h1>
+  </header>
+  <p class="toolHint">Use the form above. Parameters, code examples and FAQ are grouped in the documentation section below.</p>
+
+  <section class="description">
+    <div class="centerText">
+      <strong>Description</strong>
+    </div>
+    <div class="leftText">
+      <span>- Negotiated TLS version, cipher suite and certificate expiry for any public domain.</span>
+      <br>
+      <span>- Catches expired certificates before your users do. Internal hosts are blocked.</span>
+      <br>
+      <span>- Note: this tool <strong>displays</strong> certificate data (including expired or self-signed certs) but does <strong>not</strong> validate the chain of trust — a shown certificate is not necessarily trusted.</span>
+      <br>
+      <span>- Only supports GET request.</span>
+      <br>
+      <span>
+        -
+        <span class="red">Limit</span> : 30 requests per minute. Once reached subsequent requests will result in
+        error 429 (too many requests)
+        until your quota is cleared.
+        <br>
+      </span>
+    </div>
+  </section>
+
+  <section class="endpoint">
+    <div class="centerText">
+      <strong>Endpoint - Check TLS certificate</strong>
+    </div>
+    <div class="leftText">
+      <strong>HTTP Request: </strong>
+      <br>
+      <code class="red">GET /v1/tls?domain=example.com</code>
+      <br>
+      Optional <code>port</code> (default 443).
+      <br>
+      <strong>Examples</strong>
+      <br>
+      <code><a href="/v1/tls?domain=example.com" target="_blank" rel="noopener">/v1/tls?domain=example.com</a></code>
+      <br>
+      <code><a href="/v1/tls?domain=expired.badssl.com" target="_blank" rel="noopener">/v1/tls?domain=expired.badssl.com</a></code>
+      <br>
+      <strong>response</strong>
+      <pre class="marginLeft">
+{
+  "domain": "example.com",
+  "port": 443,
+  "tls_version": "TLSv1.3",
+  "cipher": "TLS_AES_256_GCM_SHA384",
+  "cert_subject": "CN=example.com",
+  "cert_issuer": "C=US, O=SSL Corporation, CN=Cloudflare TLS Issuing ECC CA 3",
+  "not_before": "2026-07-29T22:10:08Z",
+  "not_after": "2026-10-27T22:17:21Z",
+  "days_left": 34,
+  "expired": false
+}
+      </pre>
+    </div>
+  </section>
+
+  <section class="endpoint interactive">
+    <div class="centerText"><strong>Try it live</strong></div>
+    <div class="leftText centerText">
+      <form onsubmit="return false">
+      <label for="tlsDomain" class="notSeen">domain</label>
+      <input type="text" id="tlsDomain" placeholder="example.com" size="26">
+      <button id="tlsGo" class="action">Check</button>
+      <button id="tlsCopy" class="action">Copy</button>
+      </form>
+      <pre class="marginLeft" id="tlsOut" style="text-align:left"></pre>
+    </div>
+  </section>
+
+  <br>
+
+  <!-- Footer -->
+  <nav class="guideLinks"><a href="/_tools_guides/">Guides &amp; tutorials</a> &middot; <a href="/_tools_guides/free-ip-geolocation-api-without-key.html">IP geolocation API</a> &middot; <a href="/_tools_guides/free-cors-proxy-for-developers.html">CORS proxy</a> &middot; <a href="/_tools_guides/check-tls-certificate-expiry.html">TLS certificates</a> &middot; <a href="/_tools_guides/count-lines-of-code-github-api.html">Count LOC</a> &middot; <a href="/_tools_guides/github-star-history-api.html">Star history</a> &middot; <a href="/_tools_guides/free-weather-api-no-api-key.html">Weather API</a></nav>
+
+  <section class="related-tools"><h2>Related tools</h2><ul><li><a href="/tools/http-headers/">HTTP Headers</a></li><li><a href="/tools/ip-geolocation/">IP Geolocation</a></li><li><a href="/tools/cors-proxy/">CORS Proxy</a></li></ul></section>
+  <br>
+  <details class="docsWrap" id="tool-docs">
+  <summary class="docsToggle">Documentation &amp; API reference</summary>
+  <section class="docs">
+  <h2>How to use the TLS &amp; Certificate Checker</h2>
+  <p>Inspect a domain's TLS version, cipher suite, certificate chain, SANs and expiry date without OpenSSL.</p>
+  <h3>Endpoints</h3>
+  <div class="tblScroll"><table class="apiTable"><thead><tr><th>Endpoint</th><th>Returns</th><th>Example</th></tr></thead><tbody>
+  <tr><td><code>/v1/tls</code></td><td>JSON</td><td><a href="https://freetools.one/v1/tls?domain=example.com" rel="nofollow"><code>domain=example.com</code></a></td></tr>
+  </tbody></table></div>
+  <h3>Parameters</h3>
+  <div class="tblScroll"><table class="apiTable"><thead><tr><th>Name</th><th>Type</th><th>Default</th><th>Description</th></tr></thead><tbody>
+  <tr><td><code>domain</code></td><td>string</td><td>required</td><td>Hostname to check. A full URL is accepted and trimmed down to the host.</td></tr>
+  <tr><td><code>port</code></td><td>integer</td><td>443</td><td>Port to connect to, 1-65535. Useful for non-standard HTTPS ports.</td></tr>
+  </tbody></table></div>
+  <h3>Code examples</h3>
+  <div class="tabs codeTabs" role="tablist"><button class="tab active" data-ctab="curl" role="tab" aria-selected="true">cURL</button><button class="tab" data-ctab="js" role="tab" aria-selected="false">JavaScript</button><button class="tab" data-ctab="py" role="tab" aria-selected="false">Python</button></div>
+  <div class="codePane active" data-cpane="curl"><pre class="code"><code class="lang-curl">curl 'https://freetools.one/v1/tls?domain=example.com'</code></pre></div>
+  <div class="codePane" data-cpane="js"><pre class="code"><code class="lang-js">const t = await (await fetch('https://freetools.one/v1/tls?domain=example.com')).json();
+console.log(t.tls_version, t.cipher_strength, t.days_left + ' days left');</code></pre></div>
+  <div class="codePane" data-cpane="py"><pre class="code"><code class="lang-py">import requests
+
+t = requests.get('https://freetools.one/v1/tls', params={'domain': 'example.com'}).json()
+print(t['tls_version'], t['cipher_strength'], t['days_left'], 'days left')</code></pre></div>
+  <h3>Example response</h3>
+  <pre class="code"><code class="lang-json">{
+  "domain": "example.com",
+  "port": 443,
+  "tls_version": "TLSv1.3",
+  "cipher": "TLS_AES_256_GCM_SHA384",
+  "cipher_strength": "strong",
+  "cert_issuer": "C=US, O=Let's Encrypt, CN=R11",
+  "san": ["example.com", "www.example.com"],
+  "days_left": 89,
+  "expired": false
+}</code></pre>
+  <h3>Frequently asked questions</h3>
+  <div class="faqList">
+  <details class="faqItem"><summary>How do I check when a TLS certificate expires?</summary><p>Call /v1/tls?domain=example.com and read the days_left and not_after fields. The checker performs a real handshake, so it reports the certificate the server actually presents.</p></details>
+  <details class="faqItem"><summary>Does the TLS checker support non-standard ports?</summary><p>Yes. Pass port=8443 (or any port from 1 to 65535) and the probe connects there instead of 443.</p></details>
+  <details class="faqItem"><summary>Is a weak cipher flagged automatically?</summary><p>Yes. Each negotiated cipher is rated strong, good, moderate, legacy or weak, so outdated suites are easy to spot in monitoring.</p></details>
+  <details class="faqItem"><summary>Do I need to install OpenSSL?</summary><p>No. The TLS handshake and certificate parsing happen inside the API, so it works from any platform with plain HTTPS.</p></details>
+  </div>
+  </section>
+  </details>
+
+  <span id="footer"></span>
+
+  <script type="module">
+    import { head, footer, data } from "./../templates.js?v=5"
+    document.getElementById("head").innerHTML = head
+    document.getElementById("footer").innerHTML = footer
+    data.init()
+    // code-example tabs
+    document.querySelectorAll(".codeTabs").forEach(function (nav) {
+      nav.addEventListener("click", function (e) {
+        var b = e.target.closest(".tab");
+        if (!b) return;
+        var box = nav.parentNode;
+        nav.querySelectorAll(".tab").forEach(function (x) {
+          var on = x === b;
+          x.classList.toggle("active", on);
+          x.setAttribute("aria-selected", on ? "true" : "false");
+        });
+        box.querySelectorAll(".codePane").forEach(function (p) {
+          p.classList.toggle("active", p.dataset.cpane === b.dataset.ctab);
+        });
+      });
+    });
+
+    const run = async () => {
+      const out = document.getElementById("tlsOut");
+      const d = document.getElementById("tlsDomain").value.trim() || "example.com";
+      out.textContent = "checking… (takes a few seconds)";
+      try {
+        const r = await fetch("/v1/tls?domain=" + encodeURIComponent(d));
+        const ms = r.headers.get("x-elapsed-ms");
+        const j = await r.json();
+        window.__tlsMs = ms ? "\n\n(" + ms + " ms server-side)" : "";
+        const tail = window.__tlsMs || "";
+        if (j.expired === true) {
+          out.textContent = "⚠ EXPIRED " + Math.abs(j.days_left) + " days ago\n\n" + JSON.stringify(j, null, 2) + tail;
+        } else if (typeof j.days_left === "number" && j.days_left < 30) {
+          out.textContent = "⚠ expires in " + j.days_left + " days — renew soon\n\n" + JSON.stringify(j, null, 2) + tail;
+        } else {
+          out.textContent = JSON.stringify(j, null, 2) + tail;
+        }
+      } catch (e) { out.textContent = "request failed"; }
+    };
+    document.getElementById("tlsGo").onclick = run;
+    document.getElementById("tlsCopy").onclick = (e) => data.copyOut("tlsOut", e.target);
+    try {
+      const qp = new URLSearchParams(window.location.search);
+      const d = (qp.get("domain") || "").trim();
+      if (d) { document.getElementById("tlsDomain").value = d; run(); }
+    } catch (e) { /* ignore bad query */ }
+  </script>
+
+</body>
+
+</html>

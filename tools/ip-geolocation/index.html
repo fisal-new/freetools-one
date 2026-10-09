@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Geolocate any IPv4, IPv6 or hostname. JSON and XML. Free, no key or signup.">
+  <meta name="theme-color" content="#f6f8fa" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0d1117" media="(prefers-color-scheme: dark)">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="canonical" href="https://freetools.one/ip-geolocation/ip-geolocation.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="FreeTools">
+  <meta property="og:title" content="Free IP Geolocation API — No Signup | FreeTools">
+  <meta property="og:description" content="Geolocate any IPv4, IPv6 or hostname. JSON and XML. Free, no key or signup.">
+  <meta property="og:url" content="https://freetools.one/ip-geolocation/ip-geolocation.html">
+  <meta property="og:image" content="https://freetools.one/_public/og-image.jpeg">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:image" content="https://freetools.one/_public/og-image.jpeg">
+  <meta name="twitter:title" content="Free IP Geolocation API — No Signup | FreeTools">
+  <meta name="twitter:description" content="Geolocate any IPv4, IPv6 or hostname. JSON and XML. Free, no key or signup.">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebApplication","name":"Free IP Geolocation API","url":"https://freetools.one/ip-geolocation/ip-geolocation.html","applicationCategory":"DeveloperApplication","operatingSystem":"Any","description":"Geolocate any IPv4, IPv6 or hostname. JSON and XML. Free, no key or signup.","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+  </script>
+
+  <script type="application/ld+json">
+  {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is the FreeTools IP geolocation API really free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. There is no API key, no account and no request signing. You only need to send the request."}}, {"@type": "Question", "name": "Do I need an API key to use it?", "acceptedAnswer": {"@type": "Answer", "text": "No. Every endpoint on FreeTools is a plain GET request. Drop in the URL and it works."}}, {"@type": "Question", "name": "Can I look up my own IP address?", "acceptedAnswer": {"@type": "Answer", "text": "Call /v1/geolocation/json without the q parameter and the service locates the caller's public IP address."}}, {"@type": "Question", "name": "Does it support IPv6?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. IPv4, IPv6 and hostnames are all accepted, and hostnames are resolved before the lookup."}}]}
+  </script>
+  <script type="application/ld+json">
+  {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://freetools.one/"}, {"@type": "ListItem", "position": 2, "name": "IP Geolocation", "item": "https://freetools.one/ip-geolocation/ip-geolocation.html"}]}
+  </script>
+  <link rel="stylesheet" href="/theme.css?v=8">
+  <link rel="stylesheet" type="text/css" href="./ip-geolocation.css?v=6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css"
+    integrity="sha384-sHL9NAb7lN7rfvG5lfHpm643Xkcjzp4jFvuavGOndn6pjVqS6ny56CAt3nsEVT4H" crossorigin="" />
+  <title>Free IP Geolocation API — No Signup | FreeTools</title>
+
+  <!--Head -->
+  <span id="head"></span>
+
+</head>
+
+<body class="toolPage">
+
+  <header class="header pageHeader">
+    <h1>
+      <img class="verticalImage" alt="FreeTools logo" src="/_public/logo.jpeg" width="36" height="36" style="border-radius:50%">
+      <span>IP GeoLocation</span>
+    </h1>
+  </header>
+  <p class="toolHint">Use the form above. Parameters, code examples and FAQ are grouped in the documentation section below.</p>
+  <br>
+  <section class="data">
+    <div class="data1">
+      <form class="form">
+        <input type="text" id="q" name="q" class="qInput" placeholder="IP or hostname" aria-label="IP address or hostname" autofocus>
+        <button type="submit" class="action">Search</button>
+        <div id="geoError" class="red centerText" role="alert"></div>
+      </form>
+      <table class="table">
+        <tr class="row">
+          <td class="key">IP</td>
+          <td class="value" id="value1"></td>
+        </tr>
+        <tr class="row">
+          <td class="key">City</td>
+          <td class="value" id="value2"></td>
+        </tr>
+        <tr class="row">
+          <td class="key">Region</td>
+          <td class="value" id="value3"></td>
+        </tr>
+        <tr class="row">
+          <td class="key">Country/Code</td>
+          <td class="value" id="value4"></td>
+        </tr>
+        <tr class="row">
+          <td class="key">Zip Code</td>
+          <td class="value" id="value5"></td>
+        </tr>
+        <tr class="row">
+          <td class="key">Time Zone</td>
+          <td class="value" id="value6"></td>
+        </tr>
+        <tr class="row">
+          <td class="key">Lat/Lon</td>
+          <td class="value" id="value7"></td>
+        </tr>
+      </table>
+    </div>
+    <div class="data2">
+      <div class="map">
+        <div id="mapid"></div>
+      </div>
+    </div>
+  </section>
+
+  <br>
+
+  <section class="description">
+    <div class="centerText">
+      <strong>Description</strong>
+    </div>
+    <div class="leftText">
+      <span>
+        - This API requires <span class="red">no key or signup</span>.
+      </span>
+      <br>
+      <span>
+        -
+<span class="red">Limit</span> : 30 requests per minute. Once reached subsequent requests will result in
+        error 429 (too many requests)
+        until your quota is cleared.
+        <br>
+      </span>
+      <span>
+        - Supported formats : <span class="red">json</span> and <span class="red">xml</span>
+      </span>
+      <br>
+      <span>
+        - If no IP or hostname is provided it retrieves your own IP
+      </span>
+      <br>
+      <span>
+        - <span class="red">IPv4</span> and <span class="red">IPv6</span> supported
+      </span>
+      <br>
+      <span>
+        - <span class="red">CORS support</span> out of the box makes this perfect for your frontend apps or websites
+      </span>
+      <br>
+      <span>
+        - XML responses use <code>&lt;output&gt;</code> as root element
+      </span>
+      <br>
+    </div>
+  </section>
+
+  <section class="endpoint">
+    <div class="centerText">
+      <strong>Endpoint - Get IP or Hostname IP Geolocation</strong>
+      <br>This endpoint retrieves geolocation information from any IPv4, IPv6 or hostname in JSON or XML format
+    </div>
+    <div class="leftText">
+      <strong>HTTP Request: </strong>
+      <code class="red">
+          GET /v1/geolocation/format?q=ip4|ip6|hostname 
+        </code>
+      <br>
+      <strong>examples : </strong>
+      <br>
+      <code>-<a class="hard" href="/v1/geolocation/json"> /v1/geolocation/json</a></code>
+      <br>
+      <code>-<a class="hard" href="/v1/geolocation/json?q=example.com"> /v1/geolocation/json?q=example.com</a></code>
+      <br>
+      <code>-<a class="hard" href="/v1/geolocation/xml?q=8.8.8.8"> /v1/geolocation/xml?q=8.8.8.8</a></code>
+      <br>
+      <code>-<a class="hard" href="/v1/geolocation/xml?q=2a00:1450:4006:803::200e"> /v1/geolocation/xml?q=2a00:1450:4006:803::200e</a></code>
+      <br>
+      <strong>response : </strong>
+      <pre class="marginLeft">
+        {
+          "ip": "8.8.8.8",
+          "country_code": "US",
+          "country_name": "United States",
+          "region_name": "Virginia",
+          "city": "Ashburn",
+          "zip_code": "20149",
+          "time_zone": "America/New_York",
+          "latitude": 39.03,
+          "longitude": -77.5
+        }
+            </pre>
+    </div>
+  </section>
+
+  <br>
+
+
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"
+    integrity="sha384-cxOPjt7s7Iz04uaHJceBmS+qpjv2JkIHNVcuOrM+YHwZOmJGBXI00mdUXEq65HTH" crossorigin=""></script>
+
+  <!-- Footer -->
+  <nav class="guideLinks"><a href="/_tools_guides/">Guides &amp; tutorials</a> &middot; <a href="/_tools_guides/free-ip-geolocation-api-without-key.html">IP geolocation API</a> &middot; <a href="/_tools_guides/free-cors-proxy-for-developers.html">CORS proxy</a> &middot; <a href="/_tools_guides/check-tls-certificate-expiry.html">TLS certificates</a> &middot; <a href="/_tools_guides/count-lines-of-code-github-api.html">Count LOC</a> &middot; <a href="/_tools_guides/github-star-history-api.html">Star history</a> &middot; <a href="/_tools_guides/free-weather-api-no-api-key.html">Weather API</a></nav>
+
+  <section class="related-tools"><h2>Related tools</h2><ul><li><a href="/tools/weather/">Weather</a></li><li><a href="/tools/http-headers/">HTTP Headers</a></li><li><a href="/tools/tls-checker/">TLS Checker</a></li></ul></section>
+  <br>
+  <details class="docsWrap" id="tool-docs">
+  <summary class="docsToggle">Documentation &amp; API reference</summary>
+  <section class="docs">
+  <h2>How to use the IP Geolocation API</h2>
+  <p>Look up the country, region, city, timezone and coordinates behind any IPv4 or IPv6 address.</p>
+  <h3>Endpoints</h3>
+  <div class="tblScroll"><table class="apiTable"><thead><tr><th>Endpoint</th><th>Returns</th><th>Example</th></tr></thead><tbody>
+  <tr><td><code>/v1/geolocation/json</code></td><td>JSON</td><td><a href="https://freetools.one/v1/geolocation/json?q=8.8.8.8" rel="nofollow"><code>q=8.8.8.8</code></a></td></tr>
+  <tr><td><code>/v1/geolocation/xml</code></td><td>XML</td><td><a href="https://freetools.one/v1/geolocation/xml?q=8.8.8.8" rel="nofollow"><code>q=8.8.8.8</code></a></td></tr>
+  </tbody></table></div>
+  <h3>Parameters</h3>
+  <div class="tblScroll"><table class="apiTable"><thead><tr><th>Name</th><th>Type</th><th>Default</th><th>Description</th></tr></thead><tbody>
+  <tr><td><code>q</code></td><td>string</td><td>optional</td><td>IPv4, IPv6 or hostname. Leave empty to use the caller's own public IP.</td></tr>
+  </tbody></table></div>
+  <h3>Code examples</h3>
+  <div class="tabs codeTabs" role="tablist"><button class="tab active" data-ctab="curl" role="tab" aria-selected="true">cURL</button><button class="tab" data-ctab="js" role="tab" aria-selected="false">JavaScript</button><button class="tab" data-ctab="py" role="tab" aria-selected="false">Python</button></div>
+  <div class="codePane active" data-cpane="curl"><pre class="code"><code class="lang-curl">curl 'https://freetools.one/v1/geolocation/json?q=8.8.8.8'</code></pre></div>
+  <div class="codePane" data-cpane="js"><pre class="code"><code class="lang-js">const r = await fetch('https://freetools.one/v1/geolocation/json?q=8.8.8.8');
+const g = await r.json();
+console.log(g.city, g.country_name, g.latitude, g.longitude);</code></pre></div>
+  <div class="codePane" data-cpane="py"><pre class="code"><code class="lang-py">import requests
+
+g = requests.get('https://freetools.one/v1/geolocation/json', params={'q': '8.8.8.8'}).json()
+print(g['city'], g['country_name'], g['latitude'], g['longitude'])</code></pre></div>
+  <h3>Example response</h3>
+  <pre class="code"><code class="lang-json">{
+  "ip": "8.8.8.8",
+  "country_code": "US",
+  "country_name": "United States",
+  "region_name": "Virginia",
+  "city": "Ashburn",
+  "zip_code": "20149",
+  "time_zone": "America/New_York",
+  "latitude": 39.03,
+  "longitude": -77.5
+}</code></pre>
+  <h3>Frequently asked questions</h3>
+  <div class="faqList">
+  <details class="faqItem"><summary>Is the FreeTools IP geolocation API really free?</summary><p>Yes. There is no API key, no account and no request signing. You only need to send the request.</p></details>
+  <details class="faqItem"><summary>Do I need an API key to use it?</summary><p>No. Every endpoint on FreeTools is a plain GET request. Drop in the URL and it works.</p></details>
+  <details class="faqItem"><summary>Can I look up my own IP address?</summary><p>Call /v1/geolocation/json without the q parameter and the service locates the caller's public IP address.</p></details>
+  <details class="faqItem"><summary>Does it support IPv6?</summary><p>Yes. IPv4, IPv6 and hostnames are all accepted, and hostnames are resolved before the lookup.</p></details>
+  </div>
+  </section>
+  </details>
+
+  <span id="footerIP"></span>
+
+  <script type="module">
+    import { head, footerIP, data } from "./../templates.js?v=5"
+    document.getElementById("head").innerHTML = head
+    document.getElementById("footerIP").innerHTML = footerIP
+    data.init()
+    // code-example tabs
+    document.querySelectorAll(".codeTabs").forEach(function (nav) {
+      nav.addEventListener("click", function (e) {
+        var b = e.target.closest(".tab");
+        if (!b) return;
+        var box = nav.parentNode;
+        nav.querySelectorAll(".tab").forEach(function (x) {
+          var on = x === b;
+          x.classList.toggle("active", on);
+          x.setAttribute("aria-selected", on ? "true" : "false");
+        });
+        box.querySelectorAll(".codePane").forEach(function (p) {
+          p.classList.toggle("active", p.dataset.cpane === b.dataset.ctab);
+        });
+      });
+    });
+
+    import { init } from './ipGeolocation.js';
+    init();
+  </script>
+</body>
+
+</html>

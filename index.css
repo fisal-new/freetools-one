@@ -139,28 +139,6 @@ a:hover { color: #9cc0ff; }
 .notes li { margin-bottom: 8px; }
 .notes li:last-child { margin-bottom: 0; }
 
-/* ---------- ad slot ---------- */
-.adslot {
-  position: relative;
-  border: 1px dashed var(--line);
-  border-radius: 12px;
-  background: #0f1219;
-  min-height: 96px;
-  margin: 26px 0;
-  padding: 18px;
-  text-align: center;
-}
-
-.adlabel {
-  position: absolute;
-  top: 7px;
-  left: 10px;
-  font-size: 10px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #5c6675;
-}
-
 /* ---------- footer ---------- */
 footer {
   margin-top: 34px;

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GitHub Star History API: Chart Repo Growth for Free</title>
+  <meta name="description" content="Track and visualise GitHub star growth over time. Get star history as JSON or as an embeddable SVG chart image, with a free API and no key required.">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="canonical" href="https://freetools.one/_tools_guides/github-star-history-api.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="FreeTools">
+  <meta property="og:title" content="GitHub Star History API: Chart Repo Growth for Free">
+  <meta property="og:description" content="Track and visualise GitHub star growth over time. Get star history as JSON or as an embeddable SVG chart image, with a free API and no key required.">
+  <meta property="og:url" content="https://freetools.one/_tools_guides/github-star-history-api.html">
+  <meta property="og:image" content="https://freetools.one/_public/og-image.jpeg">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:image" content="https://freetools.one/_public/og-image.jpeg">
+  <meta name="twitter:title" content="GitHub Star History API: Chart Repo Growth for Free">
+  <meta name="twitter:description" content="Track and visualise GitHub star growth over time. Get star history as JSON or as an embeddable SVG chart image, with a free API and no key required.">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "GitHub Star History API: Chart Repo Growth for Free",
+  "description": "Track and visualise GitHub star growth over time. Get star history as JSON or as an embeddable SVG chart image, with a free API and no key required.",
+  "url": "https://freetools.one/_tools_guides/github-star-history-api.html",
+  "datePublished": "2026-09-25",
+  "dateModified": "2026-09-25",
+  "author": {
+    "@type": "Organization",
+    "name": "FreeTools"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "FreeTools",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://freetools.one/_public/logo.jpeg"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://freetools.one/_tools_guides/github-star-history-api.html"
+  },
+  "inLanguage": "en"
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://freetools.one/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Guides",
+      "item": "https://freetools.one/tools/guides/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Star History",
+      "item": "https://freetools.one/_tools_guides/github-star-history-api.html"
+    }
+  ]
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I get a GitHub star history chart for my repository?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Use the SVG endpoint in a Markdown image tag: ![Star History](https://freetools.one/v1/stars/chart?github=your/repo). It returns a 1200x630 image that updates automatically as your stars grow."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why is the GitHub star history weekly rather than daily?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "GitHub restricts its stargazer listing to admins and collaborators and requires authentication since July 2026. FreeTools uses GitHub's official weekly history endpoint and anchors the series to the live star total, so the last point is exact."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I compare star growth across several repositories?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Repeat the github or gitlab parameter up to six times on both /v1/stars and /v1/stars/chart. GitHub and GitLab repositories can be mixed in the same chart."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does the star history API need a key?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. It is a plain GET endpoint with no authentication. Results are cached for six hours, so repeated calls are fast and the 30 requests per minute limit is rarely reached."
+      }
+    }
+  ]
+}
+  </script>
+  <link rel="stylesheet" href="/theme.css?v=8">
+  <link rel="stylesheet" type="text/css" href="/apis.css?v=8">
+  <style>
+    article{max-width:760px;margin:0 auto;padding:0 14px}
+    article h1{font-size:1.6em;line-height:1.25em;margin:10px 0 4px}
+    article h2{font-size:1.12em;margin:22px 0 6px;color:var(--accent)}
+    article h3{font-size:1em;margin:16px 0 4px}
+    article p,article li{line-height:1.65em;font-size:.95em}
+    article pre{background:var(--card);border:1px solid var(--input-border);border-radius:6px;
+      padding:10px 12px;overflow-x:auto;font-size:.8em;line-height:1.5em;white-space:pre}
+    article code{background:var(--table-even,#f6f8fa);border-radius:4px;padding:1px 4px}
+    article pre code{background:none;padding:0}
+    .meta{opacity:.7;font-size:.85em;margin-bottom:10px}
+    .tldr{border:1px solid var(--input-border);border-left:4px solid var(--accent);border-radius:6px;
+      background:var(--card);padding:10px 14px;margin:10px 0}
+    .toolCta{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:14px 0}
+    .toolCta a{display:inline-block;padding:7px 14px;border:1px solid var(--input-border);
+      border-radius:6px;background:var(--card);text-decoration:none;font-weight:600;font-size:.9em}
+    .toolCta a:hover{border-color:var(--accent);color:var(--accent)}
+    table{width:100%;border-collapse:collapse;font-size:.86em;margin:8px 0}
+    th,td{padding:5px 8px;border-bottom:1px solid var(--input-border);text-align:left}
+    .upNext{margin-top:26px;border-top:1px solid var(--input-border);padding-top:12px}
+  </style>
+</head>
+<body>
+  <header class="header pageHeader">
+    <p class="siteMark">
+      <img class="verticalImage" alt="FreeTools logo" src="/_public/logo.jpeg" width="30" height="30" style="border-radius:50%">
+      <span>FreeTools Guides</span>
+    </p>
+  </header>
+  <article>
+    <h1>Track <strong>GitHub star growth</strong> and embed the chart in your README</h1>
+    <p class="meta">Updated 2026-09-25 · FreeTools</p>
+
+    <p class="tldr"><strong>In short:</strong>
+    <code>curl 'https://freetools.one/v1/stars?github=torvalds/linux'</code> returns the cumulative
+    star count over time, and <code>/v1/stars/chart?github=torvalds/linux</code> returns a
+    ready-made SVG image you can put in a README with one line of Markdown.</p>
+
+    <p>Stars are the closest thing GitHub has to a popularity metric, but a star count on its own
+    is a snapshot. What you usually want to know is how fast it is growing, when it spiked, and
+    whether that spike is still going. That needs a series, and building one from the stargazer
+    list is harder than it looks — GitHub restricts that endpoint.</p>
+
+    <h2>Getting the data</h2>
+    <pre><code>curl 'https://freetools.one/v1/stars?github=torvalds/linux'</code></pre>
+    <p>You get a flat array of <code>{"x": "2011-09-04", "y": 0}</code> points, where
+    <code>y</code> is the running total. The last point always matches the repository's current star
+    count.</p>
+    <pre><code>const h = await (await fetch('https://freetools.one/v1/stars?github=cli/cli')).json();
+console.log(h.at(-1));   // { x: '2026-09-25', y: 54912 }</code></pre>
+
+    <h2>Embedding the chart in a README</h2>
+    <p>This is the part that pays off, because the image stays current without you doing anything:</p>
+    <pre><code>![Star History](https://freetools.one/v1/stars/chart?github=torvalds/linux)</code></pre>
+    <p>The endpoint returns SVG at 1200×630, which is exactly the aspect ratio GitHub renders well.
+    Add <code>&amp;theme=dark</code> for a dark variant.</p>
+
+    <h2>Comparing several repositories</h2>
+    <p>Repeat the parameter to overlay up to six repositories, from GitHub and GitLab mixed:</p>
+    <pre><code>![Stars](https://freetools.one/v1/stars/chart?github=torvalds/linux&amp;github=cli/cli&amp;theme=dark)</code></pre>
+    <p>Each series gets its own colour, and the interactive version on the
+    <a href="/github-stars/github-star-history.html">star history tool</a> adds totals, 7/30-day
+    growth per repository, log scale, PNG and CSV export.</p>
+
+    <h2>How the data is obtained</h2>
+    <p>GitHub restricts the stargazer listing to repository admins and collaborators, and since July
+    2026 it requires authentication. FreeTools uses GitHub's official weekly star-history endpoint
+    instead and anchors the series to the live total, so the final point is always accurate. GitLab
+    publishes per-day history, so those series are daily.</p>
+
+    <h2>Monitoring growth in CI</h2>
+    <pre><code>python3 - &lt;&lt;'PY'
+import json, urllib.request
+h = json.load(urllib.request.urlopen(
+    'https://freetools.one/v1/stars?github=torvalds/linux'))
+print('stars now:', h[-1]['y'])
+PY</code></pre>
+
+    <h2>Caching and limits</h2>
+    <p>Star history moves slowly, so results are cached for six hours and refreshed in the
+    background. Repeat calls return in about 50&nbsp;ms and the limit is 30 requests per minute per
+    IP address.</p>
+
+    <div class="toolCta">
+      <a href="/github-stars/github-star-history.html">Open the star history tool</a>
+      <a href="/_tools_guides/count-lines-of-code-github-api.html">Count LOC in a repo</a>
+    </div>
+
+<h2>What the shape of the data tells you</h2>
+    <p>Because the series is cumulative and never decreases, the slope between two points is the
+    growth rate for that period. A steep segment means a spike — a launch, a blog post, a
+    conference talk. Long flat sections mean a repository that found its audience and then settled.</p>
+    <p>This is why the chart is more useful than the number: "12,000 stars" says nothing, while
+    "grew 4,000 in the six weeks after a Hacker News post" is actionable.</p>
+
+    <h2>Downloading the CSV</h2>
+    <p>If you want to chart the series somewhere else, the interactive tool exports CSV directly.
+    The JSON endpoint is the source if you would rather pull it yourself:</p>
+    <pre><code>curl -s 'https://freetools.one/v1/stars?github=cli/cli' \
+  | jq -r '.[] | "\(.x),\(.y)"' &gt; cli-stars.csv</code></pre>
+
+    <h2>Comparing growth rather than totals</h2>
+    <p>Totals are unfair between projects of different ages. To compare momentum, measure the change
+    over a fixed recent window instead:</p>
+    <pre><code>import requests, datetime
+
+def growth(repo, days=90):
+    h = requests.get('https://freetools.one/v1/stars',
+                     params={'github': repo}).json()
+    now = h[-1]['y']
+    cutoff = (datetime.date.fromisoformat(h[-1]['x'])
+              - datetime.timedelta(days=days)).isoformat()
+    then = next((p['y'] for p in h if p['x'] &gt;= cutoff), 0)
+    return now - then
+
+for r in ('cli/cli', 'BurntSushi/ripgrep', 'sharkdp/bat'):
+    print(f"{r:24} +{{growth(r)}} stars in 90 days")</code></pre>
+
+    <h2>Embedding options compared</h2>
+    <table>
+      <thead><tr><th>Approach</th><th>Updates itself</th><th>Best for</th></tr></thead>
+      <tbody>
+        <tr><td>SVG endpoint in Markdown</td><td>Yes</td><td>READMEs — the usual choice</td></tr>
+        <tr><td>Interactive tool</td><td>Yes</td><td>Comparing several repositories, exporting PNG/CSV</td></tr>
+        <tr><td>JSON endpoint</td><td>Yes</td><td>Your own charts, alerts and analysis</td></tr>
+        <tr><td>Downloaded PNG</td><td>No</td><td>Slides and documents</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Rate limits and caching</h2>
+    <p>History is requested from GitHub and cached for six hours with a background refresh, so the
+    limit of 30 requests per minute is not a practical constraint. Each response reports
+    <code>X-Cache: HIT</code>, <code>STALE</code> or <code>MISS</code>, and cached responses return
+    in roughly 50&nbsp;ms.</p>
+
+    <h2>Using the same chart in your own tooling</h2>
+    <p>The SVG is a plain XML document, so you can post-process it — recolour the lines, change the
+    title or drop the watermark — before committing it to a repository. Request
+    <code>theme=dark</code> if your README uses a dark background.</p>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faqList">
+    <details class="faqItem"><summary>How do I get a GitHub star history chart for my repository?</summary><p>Use the SVG endpoint in a Markdown image tag: ![Star History](https://freetools.one/v1/stars/chart?github=your/repo). It returns a 1200x630 image that updates automatically as your stars grow.</p></details>
+    <details class="faqItem"><summary>Why is the GitHub star history weekly rather than daily?</summary><p>GitHub restricts its stargazer listing to admins and collaborators and requires authentication since July 2026. FreeTools uses GitHub's official weekly history endpoint and anchors the series to the live star total, so the last point is exact.</p></details>
+    <details class="faqItem"><summary>Can I compare star growth across several repositories?</summary><p>Yes. Repeat the github or gitlab parameter up to six times on both /v1/stars and /v1/stars/chart. GitHub and GitLab repositories can be mixed in the same chart.</p></details>
+    <details class="faqItem"><summary>Does the star history API need a key?</summary><p>No. It is a plain GET endpoint with no authentication. Results are cached for six hours, so repeated calls are fast and the 30 requests per minute limit is rarely reached.</p></details>
+    </div>
+  </article>
+  <br>
+  <nav class="guideLinks"><a href="/tools/guides/">Guides &amp; tutorials</a> &middot; <a href="/_tools_guides/free-ip-geolocation-api-without-key.html">IP geolocation API</a> &middot; <a href="/_tools_guides/free-cors-proxy-for-developers.html">CORS proxy</a> &middot; <a href="/_tools_guides/check-tls-certificate-expiry.html">TLS certificates</a> &middot; <a href="/_tools_guides/count-lines-of-code-github-api.html">Count LOC</a> &middot; <a href="/_tools_guides/github-star-history-api.html">Star history</a> &middot; <a href="/_tools_guides/free-weather-api-no-api-key.html">Weather API</a></nav>
+
+  <section class="related-tools"><h2>More guides</h2><ul><li><a href="/_tools_guides/free-ip-geolocation-api-without-key.html">Free IP Geolocation API With No Key (2026 Guide)</a></li><li><a href="/_tools_guides/count-lines-of-code-github-api.html">Count Lines of Code in a GitHub Repository with a Free API</a></li><li><a href="/_tools_guides/free-cors-proxy-for-developers.html">Free CORS Proxy for Developers: Bypass Cross-Origin Errors Safely</a></li><li><a href="/_tools_guides/check-tls-certificate-expiry.html">How to Check TLS Certificate Expiry with a Free API</a></li><li><a href="/_tools_guides/free-weather-api-no-api-key.html">Free Weather API With No API Key (City or IP Lookup)</a></li></ul></section>
+  <br>
+  <span id="footer"></span>
+  <script type="module">
+    import { head, footer, data } from "/templates.js?v=5"
+    document.getElementById("head").innerHTML = head
+    document.getElementById("footer").innerHTML = footer
+    data.init()
+  </script>
+</body>
+</html>

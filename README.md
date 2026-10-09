@@ -55,3 +55,31 @@ that will not take a reader function.
   gating it meant nobody could start.
 - The two scripts behind `/k/get/` are device bound and session bound. See the
   key service repository for how that is enforced.
+
+## Added since
+
+```
+tools/            the eight developer tools, each at tools/<name>/
+_tools_guides/    the guides. The underscore is in the path because that is
+                  where the files are, and every link says /_tools_guides/ to
+                  match. Renaming the directory means rewriting the links.
+_error/           the 404 page
+_public/          fonts, icons, images
+apis.css          shared by the tool pages
+theme.css         shared by the guides
+```
+
+The tools were moved under `tools/` and the pages kept the links they had before
+the move, so each one linked to itself at a path that 404s and every page linked
+to a `/guides/` index that does not exist. The links now name the files that are
+actually there.
+
+The front page hands out one line, the loader, and nothing that reaches past it.
+It used to hand out raw.githubusercontent.com loadstrings for both scripts, which
+meant anyone reading the page source had both files with no key at all.
+
+## Checks
+
+`site_gates.py` crawls the live site and follows every link on every page. It goes
+four requests at a time and waits out a 429, because the site answers 429 past 30
+requests a minute and a crawler that ignores that measures its own rate limit.

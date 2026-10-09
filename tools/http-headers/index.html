@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Inspect HTTP response headers and redirect chains of any URL. Free API, no signup.">
+  <meta name="theme-color" content="#f6f8fa" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0d1117" media="(prefers-color-scheme: dark)">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="canonical" href="https://freetools.one/http-headers/headers.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="FreeTools">
+  <meta property="og:title" content="Free HTTP Headers Checker API | FreeTools">
+  <meta property="og:description" content="Inspect HTTP response headers and redirect chains of any URL. Free API, no signup.">
+  <meta property="og:url" content="https://freetools.one/http-headers/headers.html">
+  <meta property="og:image" content="https://freetools.one/_public/og-image.jpeg">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:image" content="https://freetools.one/_public/og-image.jpeg">
+  <meta name="twitter:title" content="Free HTTP Headers Checker API | FreeTools">
+  <meta name="twitter:description" content="Inspect HTTP response headers and redirect chains of any URL. Free API, no signup.">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebApplication","name":"Free HTTP Headers Checker API","url":"https://freetools.one/http-headers/headers.html","applicationCategory":"DeveloperApplication","operatingSystem":"Any","description":"Inspect HTTP response headers and redirect chains of any URL. Free API, no signup.","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+  </script>
+
+  <script type="application/ld+json">
+  {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How do I see the response headers of a website?", "acceptedAnswer": {"@type": "Answer", "text": "Call /v1/headers?domain=example.com. The response contains every response header as a key/value pair, plus a Final-URL field showing where the request ended up."}}, {"@type": "Question", "name": "Does it show the full redirect chain?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Each redirect is followed and reported as a separate entry, up to five hops, so you can spot redirect loops and slow chains."}}, {"@type": "Question", "name": "Can I inspect a URL that redirects to another domain?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Every hop in the chain is returned, including the final destination, and each host is re-checked against the SSRF guard."}}, {"@type": "Question", "name": "What security headers should I look for?", "acceptedAnswer": {"@type": "Answer", "text": "Check for Strict-Transport-Security, Content-Security-Policy, X-Content-Type-Options, Referrer-Policy and Permissions-Policy in the returned header map."}}]}
+  </script>
+  <script type="application/ld+json">
+  {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://freetools.one/"}, {"@type": "ListItem", "position": 2, "name": "HTTP Headers", "item": "https://freetools.one/http-headers/headers.html"}]}
+  </script>
+  <link rel="stylesheet" href="/theme.css?v=8">
+  <link rel="stylesheet" type="text/css" href="./../apis.css?v=8">
+  <title>Free HTTP Headers Checker API | FreeTools</title>
+
+  <!--Head -->
+  <span id="head"></span>
+
+</head>
+
+<body class="toolPage">
+
+  <header class="header pageHeader">
+    <h1>
+      <img class="verticalImage" alt="FreeTools logo" src="/_public/logo.jpeg" width="36" height="36" style="border-radius:50%">
+      <span> Http Headers</span>
+    </h1>
+  </header>
+  <p class="toolHint">Use the form above. Parameters, code examples and FAQ are grouped in the documentation section below.</p>
+
+  <section class="form" id="addForm">
+    <form class="addUrl" onsubmit="return false">
+      <input type="text" required id="urlName" placeholder="Enter url" aria-label="URL to inspect">
+      <button type="button" id="addUrl" class="action">Get Headers</button>
+    </form>
+  </section>
+
+  <div class="loader" id="hdrLoader"></div>
+
+  <div class="centerText">
+    <button id="hdrCopy" class="action">Copy result</button>
+    <span id="hdrMs" class="muted"></span>
+  </div>
+
+  <div class="result" id="result">
+  </div>
+
+  <br>
+
+  <section class="description">
+    <div class="centerText">
+      <strong>Description</strong>
+    </div>
+    <div class="leftText">
+      <span>
+        - Tool to get list of response headers including redirect chain of a http connection.
+      </span>
+      <br>
+      <span>
+        -
+<span class="red">Limit</span> : 30 requests per minute. Once reached subsequent requests will result in
+        error 429 (too many requests)
+        until your quota is cleared.
+        <br>
+      </span>
+    </div>
+  </section>
+
+  <section class="endpoint">
+    <div class="centerText">
+      <strong>Endpoint - Get list of response headers</strong>
+      <br>This endpoint retrieves list of response headers including redirect chain of a Http connection in JSON format
+    </div>
+    <div class="leftText">
+      <strong>HTTP Request: </strong>
+      <code class="red">
+          GET /v1/headers?domain=domain.tld 
+        </code>
+      <br>
+      <strong>examples : </strong>
+      <br>
+      <code>
+          <a href="/v1/headers?domain=https://github.com" target="_blank" rel="noopener"> /v1/headers?domain=https://github.com</a> 
+          <br>
+          <a href="/v1/headers?domain=www.github.com" target="_blank" rel="noopener"> /v1/headers?domain=www.github.com</a> 
+            </code>
+      <br>
+      <strong>response : </strong>
+      <pre class="marginLeft">
+[
+  {
+    "HTTP": "301 Moved Permanently",
+    "Final-URL": "http://github.com/",
+    "location": "https://github.com/"
+  },
+  {
+    "HTTP": "200 OK",
+    "Final-URL": "https://github.com/",
+    "content-type": "text/html; charset=utf-8",
+    "strict-transport-security": "max-age=31536000; includeSubdomains"
+  }
+]
+      </pre>
+    </div>
+  </section>
+
+  <br>
+
+  <!-- Footer -->
+  <nav class="guideLinks"><a href="/_tools_guides/">Guides &amp; tutorials</a> &middot; <a href="/_tools_guides/free-ip-geolocation-api-without-key.html">IP geolocation API</a> &middot; <a href="/_tools_guides/free-cors-proxy-for-developers.html">CORS proxy</a> &middot; <a href="/_tools_guides/check-tls-certificate-expiry.html">TLS certificates</a> &middot; <a href="/_tools_guides/count-lines-of-code-github-api.html">Count LOC</a> &middot; <a href="/_tools_guides/github-star-history-api.html">Star history</a> &middot; <a href="/_tools_guides/free-weather-api-no-api-key.html">Weather API</a></nav>
+
+  <section class="related-tools"><h2>Related tools</h2><ul><li><a href="/tools/tls-checker/">TLS Checker</a></li><li><a href="/tools/cors-proxy/">CORS Proxy</a></li><li><a href="/tools/ip-geolocation/">IP Geolocation</a></li></ul></section>
+  <br>
+  <details class="docsWrap" id="tool-docs">
+  <summary class="docsToggle">Documentation &amp; API reference</summary>
+  <section class="docs">
+  <h2>How to use the HTTP Headers Checker</h2>
+  <p>Inspect every HTTP response header a URL returns and follow the whole redirect chain hop by hop.</p>
+  <h3>Endpoints</h3>
+  <div class="tblScroll"><table class="apiTable"><thead><tr><th>Endpoint</th><th>Returns</th><th>Example</th></tr></thead><tbody>
+  <tr><td><code>/v1/headers</code></td><td>JSON</td><td><a href="https://freetools.one/v1/headers?domain=example.com" rel="nofollow"><code>domain=example.com</code></a></td></tr>
+  </tbody></table></div>
+  <h3>Parameters</h3>
+  <div class="tblScroll"><table class="apiTable"><thead><tr><th>Name</th><th>Type</th><th>Default</th><th>Description</th></tr></thead><tbody>
+  <tr><td><code>domain</code></td><td>string</td><td>required</td><td>Domain or full URL. Defaults to https:// when no scheme is given.</td></tr>
+  </tbody></table></div>
+  <h3>Code examples</h3>
+  <div class="tabs codeTabs" role="tablist"><button class="tab active" data-ctab="curl" role="tab" aria-selected="true">cURL</button><button class="tab" data-ctab="js" role="tab" aria-selected="false">JavaScript</button><button class="tab" data-ctab="py" role="tab" aria-selected="false">Python</button></div>
+  <div class="codePane active" data-cpane="curl"><pre class="code"><code class="lang-curl">curl 'https://freetools.one/v1/headers?domain=example.com'</code></pre></div>
+  <div class="codePane" data-cpane="js"><pre class="code"><code class="lang-js">const hops = await (await fetch('https://freetools.one/v1/headers?domain=http://github.com')).json();
+hops.forEach((h, i) =&gt; console.log(i, h.HTTP, h['Final-URL']));</code></pre></div>
+  <div class="codePane" data-cpane="py"><pre class="code"><code class="lang-py">import requests
+
+hops = requests.get('https://freetools.one/v1/headers',
+                  params={'domain': 'http://github.com'}).json()
+for i, h in enumerate(hops):
+    print(i, h['HTTP'], h['Final-URL'])</code></pre></div>
+  <h3>Example response</h3>
+  <pre class="code"><code class="lang-json">[
+  {
+    "HTTP": "301 Moved Permanently",
+    "Location": "https://github.com/",
+    "Final-URL": "http://github.com/",
+    "server": "GitHub.com"
+  }
+]</code></pre>
+  <h3>Frequently asked questions</h3>
+  <div class="faqList">
+  <details class="faqItem"><summary>How do I see the response headers of a website?</summary><p>Call /v1/headers?domain=example.com. The response contains every response header as a key/value pair, plus a Final-URL field showing where the request ended up.</p></details>
+  <details class="faqItem"><summary>Does it show the full redirect chain?</summary><p>Yes. Each redirect is followed and reported as a separate entry, up to five hops, so you can spot redirect loops and slow chains.</p></details>
+  <details class="faqItem"><summary>Can I inspect a URL that redirects to another domain?</summary><p>Yes. Every hop in the chain is returned, including the final destination, and each host is re-checked against the SSRF guard.</p></details>
+  <details class="faqItem"><summary>What security headers should I look for?</summary><p>Check for Strict-Transport-Security, Content-Security-Policy, X-Content-Type-Options, Referrer-Policy and Permissions-Policy in the returned header map.</p></details>
+  </div>
+  </section>
+  </details>
+
+  <span id="footer"></span>
+
+
+  <script type="module">
+    import { head, footer, data } from "./../templates.js?v=5"
+    document.getElementById("head").innerHTML = head
+    document.getElementById("footer").innerHTML = footer
+    data.init()
+    // code-example tabs
+    document.querySelectorAll(".codeTabs").forEach(function (nav) {
+      nav.addEventListener("click", function (e) {
+        var b = e.target.closest(".tab");
+        if (!b) return;
+        var box = nav.parentNode;
+        nav.querySelectorAll(".tab").forEach(function (x) {
+          var on = x === b;
+          x.classList.toggle("active", on);
+          x.setAttribute("aria-selected", on ? "true" : "false");
+        });
+        box.querySelectorAll(".codePane").forEach(function (p) {
+          p.classList.toggle("active", p.dataset.cpane === b.dataset.ctab);
+        });
+      });
+    });
+
+    import { init } from './headers.js';
+    init();
+    document.getElementById("hdrCopy").onclick = (e) => data.copyOut("result", e.target);
+  </script>
+
+</body>
+
+</html>

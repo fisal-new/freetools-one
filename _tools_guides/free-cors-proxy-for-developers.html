@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Free CORS Proxy for Developers: Bypass Cross-Origin Errors Safely</title>
+  <meta name="description" content="Use a free CORS proxy to fix browser cross-origin errors in JavaScript fetch. Learn how it works, when to use it, and the security risks to avoid.">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="canonical" href="https://freetools.one/_tools_guides/free-cors-proxy-for-developers.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="FreeTools">
+  <meta property="og:title" content="Free CORS Proxy for Developers: Bypass Cross-Origin Errors Safely">
+  <meta property="og:description" content="Use a free CORS proxy to fix browser cross-origin errors in JavaScript fetch. Learn how it works, when to use it, and the security risks to avoid.">
+  <meta property="og:url" content="https://freetools.one/_tools_guides/free-cors-proxy-for-developers.html">
+  <meta property="og:image" content="https://freetools.one/_public/og-image.jpeg">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:image" content="https://freetools.one/_public/og-image.jpeg">
+  <meta name="twitter:title" content="Free CORS Proxy for Developers: Bypass Cross-Origin Errors Safely">
+  <meta name="twitter:description" content="Use a free CORS proxy to fix browser cross-origin errors in JavaScript fetch. Learn how it works, when to use it, and the security risks to avoid.">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "Free CORS Proxy for Developers: Bypass Cross-Origin Errors Safely",
+  "description": "Use a free CORS proxy to fix browser cross-origin errors in JavaScript fetch. Learn how it works, when to use it, and the security risks to avoid.",
+  "url": "https://freetools.one/_tools_guides/free-cors-proxy-for-developers.html",
+  "datePublished": "2026-09-25",
+  "dateModified": "2026-09-25",
+  "author": {
+    "@type": "Organization",
+    "name": "FreeTools"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "FreeTools",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://freetools.one/_public/logo.jpeg"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://freetools.one/_tools_guides/free-cors-proxy-for-developers.html"
+  },
+  "inLanguage": "en"
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://freetools.one/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Guides",
+      "item": "https://freetools.one/tools/guides/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "CORS Proxy",
+      "item": "https://freetools.one/_tools_guides/free-cors-proxy-for-developers.html"
+    }
+  ]
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I bypass a CORS error in JavaScript?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Route the request through a CORS proxy: call https://freetools.one/v1/proxy?quest=&lt;URL-encoded target&gt;. The proxy fetches the target server-side and returns a response with CORS headers your browser accepts."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why does my API work in cURL but fail in the browser?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "cURL does not enforce the same-origin policy, but browsers do. The browser only exposes a cross-origin response if the server sends Access-Control-Allow-Origin, which is why the identical URL behaves differently in each."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is a public CORS proxy safe to use?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Only for public, non-sensitive requests. The proxy can see everything you send through it, so never send API keys, cookies or bearer tokens. For production, proxy from your own server instead."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does the FreeTools proxy protect against SSRF?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. It resolves each hostname and blocks loopback, link-local, private and cloud metadata addresses, and it repeats the check on every redirect hop so a public URL cannot bounce to an internal service."
+      }
+    }
+  ]
+}
+  </script>
+  <link rel="stylesheet" href="/theme.css?v=8">
+  <link rel="stylesheet" type="text/css" href="/apis.css?v=8">
+  <style>
+    article{max-width:760px;margin:0 auto;padding:0 14px}
+    article h1{font-size:1.6em;line-height:1.25em;margin:10px 0 4px}
+    article h2{font-size:1.12em;margin:22px 0 6px;color:var(--accent)}
+    article h3{font-size:1em;margin:16px 0 4px}
+    article p,article li{line-height:1.65em;font-size:.95em}
+    article pre{background:var(--card);border:1px solid var(--input-border);border-radius:6px;
+      padding:10px 12px;overflow-x:auto;font-size:.8em;line-height:1.5em;white-space:pre}
+    article code{background:var(--table-even,#f6f8fa);border-radius:4px;padding:1px 4px}
+    article pre code{background:none;padding:0}
+    .meta{opacity:.7;font-size:.85em;margin-bottom:10px}
+    .tldr{border:1px solid var(--input-border);border-left:4px solid var(--accent);border-radius:6px;
+      background:var(--card);padding:10px 14px;margin:10px 0}
+    .toolCta{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:14px 0}
+    .toolCta a{display:inline-block;padding:7px 14px;border:1px solid var(--input-border);
+      border-radius:6px;background:var(--card);text-decoration:none;font-weight:600;font-size:.9em}
+    .toolCta a:hover{border-color:var(--accent);color:var(--accent)}
+    table{width:100%;border-collapse:collapse;font-size:.86em;margin:8px 0}
+    th,td{padding:5px 8px;border-bottom:1px solid var(--input-border);text-align:left}
+    .upNext{margin-top:26px;border-top:1px solid var(--input-border);padding-top:12px}
+  </style>
+</head>
+<body>
+  <header class="header pageHeader">
+    <p class="siteMark">
+      <img class="verticalImage" alt="FreeTools logo" src="/_public/logo.jpeg" width="30" height="30" style="border-radius:50%">
+      <span>FreeTools Guides</span>
+    </p>
+  </header>
+  <article>
+    <h1>Fixing <strong>CORS errors</strong> with a free proxy</h1>
+    <p class="meta">Updated 2026-09-25 · FreeTools</p>
+
+    <p class="tldr"><strong>In short:</strong> send your request to
+    <code>/v1/proxy?quest=&lt;encoded URL&gt;</code> instead of the target host. FreeTools fetches it
+    server-side and returns it with CORS headers, so the browser accepts the response.</p>
+
+    <p>"Access to fetch at ... from origin ... has been blocked by CORS policy" is one of the most
+    common errors in front-end development, and one of the most misunderstood. CORS is not a bug in
+    your code and it is not something the client can bypass. It is the server declining to allow
+    another origin to read its response.</p>
+
+    <h2>Why the error happens</h2>
+    <p>When JavaScript calls <code>fetch()</code>, the browser sends a request and the target server
+    replies with headers. If those headers do not include
+    <code>Access-Control-Allow-Origin</code> naming your site, the browser discards the response
+    before your code ever sees it. The request still reached the server — the browser just refuses
+    to hand you the answer.</p>
+    <p>That is why the same URL works perfectly in cURL and fails in the browser. cURL does not
+    enforce the same-origin policy.</p>
+
+    <h2>The proxy approach</h2>
+    <pre><code>// fails: the API sends no CORS headers
+await fetch('https://api.example.com/data')
+
+// works: the proxy is same-origin for you, and it adds CORS headers
+await fetch('https://freetools.one/v1/proxy?quest=' +
+            encodeURIComponent('https://api.example.com/data'))</code></pre>
+    <p>URL-encode the target. If you interpolate the URL raw, any <code>&amp;</code> in it will be
+    read as a separate query parameter and the request will be silently truncated.</p>
+
+    <h2>When a proxy is the right answer</h2>
+    <ul>
+      <li>You control the client but not the API, and the API will not add CORS headers.</li>
+      <li>You are prototyping and cannot wait for the API owner to enable CORS.</li>
+      <li>You need to reach a legacy internal endpoint from a one-off script.</li>
+    </ul>
+    <h2>When it is not</h2>
+    <ul>
+      <li><strong>Production traffic.</strong> You are adding a hop, a latency cost and a single
+          point of failure to every request.</li>
+      <li><strong>Anything secret.</strong> A proxy sees the full request, including headers and
+          cookies. Never send API keys or bearer tokens through a third-party proxy.</li>
+      <li><strong>When the API supports CORS.</strong> Most modern APIs do — check first.</li>
+    </ul>
+
+    <h2>Server-side proxying in Node</h2>
+    <p>For anything you control, a two-line server route is safer than a public proxy, because
+    credentials never leave your infrastructure:</p>
+    <pre><code>app.get('/api/proxy', async (req, res) => {
+  const r = await fetch(req.query.url);
+  res.set('Access-Control-Allow-Origin', 'https://your-site.example');
+  res.json(await r.json());
+});</code></pre>
+
+    <h2>Limits and safeguards</h2>
+    <p>The FreeTools proxy caps responses at 5&nbsp;MB and follows at most 5 redirects. More
+    importantly, it resolves the hostname and rejects loopback, link-local, private and cloud
+    metadata ranges — and it re-validates every redirect destination, so a public URL cannot be
+    used to reach an internal service. That check is the whole point: an open proxy on the public
+    internet is one of the most commonly abused server misconfigurations there is.</p>
+
+    <div class="toolCta">
+      <a href="/cors-proxy/cors-proxy.html">Open the CORS proxy</a>
+      <a href="/_tools_guides/check-tls-certificate-expiry.html">Check a site's TLS setup</a>
+    </div>
+
+<h2>Diagnosing the error first</h2>
+    <p>Before reaching for a proxy, it is worth confirming that CORS is really the problem. Open the
+    browser developer console and look for the exact message:</p>
+    <ul>
+      <li><strong>"blocked by CORS policy: No 'Access-Control-Allow-Origin' header"</strong> — the
+          server did not allow your origin. A proxy helps.</li>
+      <li><strong>"preflight ... did not succeed"</strong> — the <code>OPTIONS</code> request failed
+          because the server does not handle preflight, or does not allow the
+          <code>Access-Control-Request-Headers</code> you sent.</li>
+      <li><strong>"net::ERR_FAILED" with no CORS message</strong> — usually a network, DNS or
+          certificate problem, not CORS at all.</li>
+    </ul>
+    <p>Only the first two are genuinely solved by a proxy. A DNS failure will fail identically
+    through the proxy, and chasing it as a CORS problem wastes an afternoon.</p>
+
+    <h2>Understanding preflight</h2>
+    <p>Browsers send a <code>OPTIONS</code> request before the real call when the request is not
+    "simple" — anything with a custom header, a JSON content type, or a method other than
+    GET/HEAD/POST. The server must answer that preflight with the right
+    <code>Access-Control-Allow-Methods</code> and <code>Access-Control-Allow-Headers</code>. Many
+    servers are not configured for this at all, which is why adding
+    <code>Content-Type: application/json</code> can break a call that worked with form data.</p>
+
+    <h2>Alternatives to a public proxy</h2>
+    <table>
+      <thead><tr><th>Approach</th><th>Effort</th><th>Use when</th></tr></thead>
+      <tbody>
+        <tr><td>Server-side route you control</td><td>Low</td><td>Production, or anything with secrets</td></tr>
+        <tr><td>JSONP (legacy)</td><td>Very low</td><td>Old script tags only; effectively obsolete</td></tr>
+        <tr><td>Public CORS proxy</td><td>None</td><td>Prototyping, public data, throwaway scripts</td></tr>
+        <tr><td>Ask the API owner</td><td>One email</td><td>Anything that matters long-term</td></tr>
+      </tbody>
+    </table>
+
+    <h2>What not to proxy</h2>
+    <p>There is a short list of things that should never travel through a third-party proxy:</p>
+    <ul>
+      <li>API keys, bearer tokens and session cookies — the proxy can read all of them.</li>
+      <li>Requests to internal services — which is exactly the SSRF the guard blocks.</li>
+      <li>Anything regulated by data residency rules, where an extra hop changes the compliance story.</li>
+    </ul>
+
+    <h2>Rate limits</h2>
+    <p>The FreeTools proxy sits behind a 30 requests per minute per IP limit and a 5&nbsp;MB response
+    cap. Those limits apply to the proxied response, so a large file will fail with HTTP 413 even
+    though the upstream URL itself is perfectly valid. If you need to move bigger payloads, fetch
+    them server-side and store them yourself.</p>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faqList">
+    <details class="faqItem"><summary>How do I bypass a CORS error in JavaScript?</summary><p>Route the request through a CORS proxy: call https://freetools.one/v1/proxy?quest=&lt;URL-encoded target&gt;. The proxy fetches the target server-side and returns a response with CORS headers your browser accepts.</p></details>
+    <details class="faqItem"><summary>Why does my API work in cURL but fail in the browser?</summary><p>cURL does not enforce the same-origin policy, but browsers do. The browser only exposes a cross-origin response if the server sends Access-Control-Allow-Origin, which is why the identical URL behaves differently in each.</p></details>
+    <details class="faqItem"><summary>Is a public CORS proxy safe to use?</summary><p>Only for public, non-sensitive requests. The proxy can see everything you send through it, so never send API keys, cookies or bearer tokens. For production, proxy from your own server instead.</p></details>
+    <details class="faqItem"><summary>Does the FreeTools proxy protect against SSRF?</summary><p>Yes. It resolves each hostname and blocks loopback, link-local, private and cloud metadata addresses, and it repeats the check on every redirect hop so a public URL cannot bounce to an internal service.</p></details>
+    </div>
+  </article>
+  <br>
+  <nav class="guideLinks"><a href="/tools/guides/">Guides &amp; tutorials</a> &middot; <a href="/_tools_guides/free-ip-geolocation-api-without-key.html">IP geolocation API</a> &middot; <a href="/_tools_guides/free-cors-proxy-for-developers.html">CORS proxy</a> &middot; <a href="/_tools_guides/check-tls-certificate-expiry.html">TLS certificates</a> &middot; <a href="/_tools_guides/count-lines-of-code-github-api.html">Count LOC</a> &middot; <a href="/_tools_guides/github-star-history-api.html">Star history</a> &middot; <a href="/_tools_guides/free-weather-api-no-api-key.html">Weather API</a></nav>
+
+  <section class="related-tools"><h2>More guides</h2><ul><li><a href="/_tools_guides/free-ip-geolocation-api-without-key.html">Free IP Geolocation API With No Key (2026 Guide)</a></li><li><a href="/_tools_guides/count-lines-of-code-github-api.html">Count Lines of Code in a GitHub Repository with a Free API</a></li><li><a href="/_tools_guides/check-tls-certificate-expiry.html">How to Check TLS Certificate Expiry with a Free API</a></li><li><a href="/_tools_guides/github-star-history-api.html">GitHub Star History API: Chart Repo Growth for Free</a></li><li><a href="/_tools_guides/free-weather-api-no-api-key.html">Free Weather API With No API Key (City or IP Lookup)</a></li></ul></section>
+  <br>
+  <span id="footer"></span>
+  <script type="module">
+    import { head, footer, data } from "/templates.js?v=5"
+    document.getElementById("head").innerHTML = head
+    document.getElementById("footer").innerHTML = footer
+    data.init()
+  </script>
+</body>
+</html>

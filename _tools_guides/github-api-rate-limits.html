@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GitHub API Rate Limits: 5000 Requests an Hour, Explained</title>
+  <meta name="description" content="Understand GitHub's 60 and 5000 hourly rate limits, why authentication raises them, and how ETags and conditional requests make repeat calls free.">
+  <link rel="stylesheet" href="/theme.css?v=8">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="canonical" href="https://freetools.one/_tools_guides/github-api-rate-limits.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="FreeTools">
+  <meta property="og:title" content="GitHub API Rate Limits: 5000 Requests an Hour, Explained">
+  <meta property="og:description" content="Understand GitHub's 60 and 5000 hourly rate limits, why authentication raises them, and how ETags and conditional requests make repeat calls free.">
+  <meta property="og:url" content="https://freetools.one/_tools_guides/github-api-rate-limits.html">
+  <meta property="og:image" content="https://freetools.one/_public/og-image.jpeg">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:image" content="https://freetools.one/_public/og-image.jpeg">
+  <meta name="twitter:title" content="GitHub API Rate Limits: 5000 Requests an Hour, Explained">
+  <meta name="twitter:description" content="Understand GitHub's 60 and 5000 hourly rate limits, why authentication raises them, and how ETags and conditional requests make repeat calls free.">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "GitHub API Rate Limits: 5000 Requests an Hour, Explained",
+  "description": "Understand GitHub's 60 and 5000 hourly rate limits, why authentication raises them, and how ETags and conditional requests make repeat calls free.",
+  "url": "https://freetools.one/_tools_guides/github-api-rate-limits.html",
+  "datePublished": "2026-09-25",
+  "dateModified": "2026-09-25",
+  "author": {
+    "@type": "Organization",
+    "name": "FreeTools"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "FreeTools",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://freetools.one/_public/logo.jpeg"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://freetools.one/_tools_guides/github-api-rate-limits.html"
+  },
+  "inLanguage": "en"
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://freetools.one/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Guides",
+      "item": "https://freetools.one/tools/guides/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "GitHub API Rate Limits",
+      "item": "https://freetools.one/_tools_guides/github-api-rate-limits.html"
+    }
+  ]
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is the GitHub API rate limit?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Unauthenticated requests are limited to 60 per hour per IP address. Authenticated requests with any token get 5,000 per hour. The search API has a separate, much lower limit of 30 requests per minute even when authenticated."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do conditional requests count against the GitHub rate limit?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. A request that includes If-None-Match with a previously stored ETag and receives 304 Not Modified does not count against your hourly quota, which makes ETag caching the most effective way to poll without exhausting the limit."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I check my remaining GitHub API quota?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Request https://api.github.com/rate_limit and read the X-RateLimit-Limit, X-RateLimit-Remaining and X-RateLimit-Reset response headers. They report the window total, what is left and when it resets."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why do I get a 403 from GitHub when the limit says I have requests left?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A 403 can also be a secondary abuse limit on rapid repository creation or repeated search calls. Back off, read the X-RateLimit-Reset header to wait for the primary window, and add exponential backoff with jitter."
+      }
+    }
+  ]
+}
+  </script>
+  <link rel="stylesheet" href="/apis.css?v=8">
+  <style>
+    article{max-width:760px;margin:0 auto;padding:0 4px}
+    article h1{font-size:1.55em;line-height:1.25em;margin:10px 0 4px}
+    article h2{font-size:1.1em;margin:22px 0 6px;color:var(--accent)}
+    article h3{font-size:.98em;margin:16px 0 4px}
+    article p,article li{line-height:1.65em;font-size:.94em}
+    article pre.code{margin:6px 0 0;white-space:pre}
+    .meta{color:var(--muted);font-size:.84em;margin-bottom:10px}
+    .tldr{border:1px solid var(--input-border);border-left:4px solid var(--accent);
+      border-radius:var(--radius);background:var(--card);padding:10px 14px;margin:12px 0}
+    .cta{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:16px 0}
+    .cta a{display:inline-block;padding:7px 14px;border:1px solid var(--input-border);
+      border-radius:var(--radius-sm);background:var(--card);text-decoration:none;
+      font-weight:600;font-size:.9em;color:var(--link)}
+    .cta a:hover{border-color:var(--accent)}
+    .hdrTable{width:100%;border-collapse:collapse;font-size:.84em;margin:8px 0;
+      display:block;overflow-x:auto}
+    .hdrTable th,.hdrTable td{padding:5px 8px;border-bottom:1px solid var(--divider);
+      text-align:left;white-space:nowrap}
+    .hdrTable th{color:var(--muted);font-size:.92em;text-transform:uppercase;letter-spacing:.03em}
+    .yes{color:var(--success);font-weight:600}
+    .no{color:var(--danger);font-weight:600}
+    .warn{color:var(--warn);font-weight:600}
+    code{background:var(--card-alt);border-radius:4px;padding:1px 4px;font-size:.9em}
+    .upNext{margin-top:26px;border-top:1px solid var(--divider);padding-top:12px}
+  </style>
+</head>
+<body>
+  <header class="header pageHeader">
+    <p class="siteMark">
+      <img class="verticalImage" alt="FreeTools logo" src="/_public/logo.jpeg" width="30" height="30" style="border-radius:50%">
+      <span>FreeTools Guides</span>
+    </p>
+  </header>
+  <article>
+    <h1>GitHub API rate limits, and how to stop <strong>wasting them</strong></h1>
+    <p class="meta">Updated 2026-09-25 &middot; FreeTools</p>
+
+    <p class="tldr"><strong>In short:</strong> unauthenticated GitHub API calls get 60 requests per
+    hour per IP; authenticated calls get 5,000. Conditional requests with
+    <code>If-None-Match</code> return <code>304</code> and <strong>do not count against the
+    limit</strong>, so caching an ETag turns a polling loop into almost nothing.</p>
+
+    <p>Rate limits are the most common reason a GitHub integration breaks in production. The
+    request that fails is rarely the expensive one — it is the one that should not have been made
+    at all.</p>
+
+    <h2>The two limits</h2>
+    <table class="hdrTable">
+      <thead><tr><th>Caller</th><th>Limit</th><th>Window</th></tr></thead>
+      <tbody>
+        <tr><td>Unauthenticated (by IP)</td><td>60 requests</td><td>1 hour</td></tr>
+        <tr><td>Authenticated (any token)</td><td>5,000 requests</td><td>1 hour</td></tr>
+        <tr><td>GitHub Enterprise Cloud</td><td>15,000 / 25,000+</td><td>1 hour</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Read your remaining quota before you hit it</h2>
+    <pre class="code"><code>curl -sI https://api.github.com/rate_limit | grep -i x-ratelimit</code></pre>
+
+    <p>The headers tell you the limit, what is left, and when the window resets, so a poller can
+    back off intelligently instead of guessing.</p>
+
+    <h2>ETags: the single biggest win</h2>
+    <p>Every GitHub response carries an <code>ETag</code>. Send it back on the next request and
+    GitHub answers <code>304 Not Modified</code> with an empty body if nothing changed — and
+    crucially, that request is <strong>not counted</strong> against your hourly limit.</p>
+    <pre class="code"><code>etag=$(curl -sI https://api.github.com/repos/cli/cli | grep -i '^etag:' | tr -d '\r' | cut -d' ' -f2)
+curl -sI -H "If-None-Match: $etag" https://api.github.com/repos/cli/cli | head -1
+# HTTP/2 304</code></pre>
+
+    <p>This is why a tool that caches ETags can poll every few minutes indefinitely without ever
+    approaching the limit, while one that refetches blind will exhaust 5,000 requests in minutes.</p>
+
+    <h2>Cache what rarely changes</h2>
+    <ul>
+      <li><strong>Repository metadata</strong> — default branch, size, description. Changes rarely.</li>
+      <li><strong>Stargazer history</strong> — queried once every few hours at most.</li>
+      <li><strong>Language stats</strong> — recompute on a schedule, not per request.</li>
+    </ul>
+    <p>FreeTools caches repository results for six hours and refreshes them in the background, serving a stale
+    answer while the refresh runs. That is the stale-while-revalidate pattern, and it is why repeat
+    repository calls return quickly and do not touch GitHub again.</p>
+
+    <h2>Handle 403 and 429 properly</h2>
+    <pre class="code"><code>if response.status in (403, 429):
+    reset = int(response.headers.get("X-RateLimit-Reset", 0))
+    sleep_until(reset)          # primary: wait for the window
+    # secondary: exponential backoff + jitter</code></pre>
+
+    <p>A 403 from GitHub usually means the rate limit, not a permissions problem, so retrying
+    immediately makes things worse. Read <code>X-RateLimit-Reset</code> and wait for the window to
+    roll over.</p>
+
+    <h2>Secondary limits</h2>
+    <p>Beyond the hourly cap, GitHub throttles abuse patterns: creating repositories in a loop or
+    hitting the search endpoint repeatedly. Search is limited to 30 requests per minute even for
+    authenticated users, and that limit is the one that catches people out.</p>
+
+    <h2>Which token to use</h2>
+    <p>A classic token with no scopes at all is enough for 5,000 requests an hour, and a
+    fine-grained token with public-repository read access is the better choice for anything new.
+    Do not grant write scopes to a tool that only reads.</p>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faqList">
+    <details class="faqItem"><summary>What is the GitHub API rate limit?</summary><p>Unauthenticated requests are limited to 60 per hour per IP address. Authenticated requests with any token get 5,000 per hour. The search API has a separate, much lower limit of 30 requests per minute even when authenticated.</p></details>
+    <details class="faqItem"><summary>Do conditional requests count against the GitHub rate limit?</summary><p>No. A request that includes If-None-Match with a previously stored ETag and receives 304 Not Modified does not count against your hourly quota, which makes ETag caching the most effective way to poll without exhausting the limit.</p></details>
+    <details class="faqItem"><summary>How do I check my remaining GitHub API quota?</summary><p>Request https://api.github.com/rate_limit and read the X-RateLimit-Limit, X-RateLimit-Remaining and X-RateLimit-Reset response headers. They report the window total, what is left and when it resets.</p></details>
+    <details class="faqItem"><summary>Why do I get a 403 from GitHub when the limit says I have requests left?</summary><p>A 403 can also be a secondary abuse limit on rapid repository creation or repeated search calls. Back off, read the X-RateLimit-Reset header to wait for the primary window, and add exponential backoff with jitter.</p></details>
+    </div>
+    <div class="cta"><a href="/github-stars/github-star-history.html">Star history tool</a><a href="/count-loc/count-loc-online.html">Count LOC</a></div>
+  </article>
+  <br>
+  <section class="related-tools"><h2>More guides</h2><ul><li><a href="/_tools_guides/check-tls-certificate-expiry.html">How to Check TLS Certificate Expiry with a Free API</a></li><li><a href="/_tools_guides/count-lines-of-code-github-api.html">Count Lines of Code in a GitHub Repository with a Free API</a></li><li><a href="/_tools_guides/free-cors-proxy-for-developers.html">Free CORS Proxy for Developers: Bypass Cross-Origin Errors Safely</a></li><li><a href="/_tools_guides/free-developer-tools-for-open-source.html">Free Developer Tools for Open Source Maintainers (No Signup)</a></li><li><a href="/_tools_guides/free-ip-geolocation-api-without-key.html">Free IP Geolocation API With No Key (2026 Guide)</a></li><li><a href="/_tools_guides/free-weather-api-no-api-key.html">Free Weather API With No API Key (City or IP Lookup)</a></li><li><a href="/_tools_guides/github-star-history-api.html">GitHub Star History API: Chart Repo Growth for Free</a></li><li><a href="/_tools_guides/http-security-headers-checklist.html">HTTP Security Headers Checklist: CSP, HSTS and CORS (2026)</a></li><li><a href="/_tools_guides/readme-badges-for-your-repo.html">README Badges and Widgets for Your GitHub Repository</a></li><li><a href="/_tools_guides/ssrf-prevention-for-public-apis.html">SSRF Prevention for APIs: Block Server-Side Request Forgery</a></li></ul></section>
+  <br>
+  <span id="footer"></span>
+  <script type="module">
+    import { head, footer, data } from "/templates.js?v=5"
+    document.getElementById("head").innerHTML = head
+    document.getElementById("footer").innerHTML = footer
+    data.init()
+  </script>
+</body>
+</html>

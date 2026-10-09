@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Free weather API by city name. Current temperature in C and F. No key or signup.">
+  <meta name="theme-color" content="#f6f8fa" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0d1117" media="(prefers-color-scheme: dark)">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="canonical" href="https://freetools.one/weather/weather.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="FreeTools">
+  <meta property="og:title" content="Free Weather API — No Key or Signup | FreeTools">
+  <meta property="og:description" content="Free weather API by city name. Current temperature in C and F. No key or signup.">
+  <meta property="og:url" content="https://freetools.one/weather/weather.html">
+  <meta property="og:image" content="https://freetools.one/_public/og-image.jpeg">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:image" content="https://freetools.one/_public/og-image.jpeg">
+  <meta name="twitter:title" content="Free Weather API — No Key or Signup | FreeTools">
+  <meta name="twitter:description" content="Free weather API by city name. Current temperature in C and F. No key or signup.">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebApplication","name":"Free Weather API","url":"https://freetools.one/weather/weather.html","applicationCategory":"DeveloperApplication","operatingSystem":"Any","description":"Free weather API by city name. Current temperature in C and F. No key or signup.","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+  </script>
+
+  <script type="application/ld+json">
+  {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is there a free weather API with no key?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. /v1/weather?city=london returns the current temperature without any registration, API key or quota signup. It is backed by Open-Meteo."}}, {"@type": "Question", "name": "What units does the weather API return?", "acceptedAnswer": {"@type": "Answer", "text": "Both. Every response includes tempC in Celsius and tempF in Fahrenheit, so you never have to convert manually."}}, {"@type": "Question", "name": "How accurate is the geocoding?", "acceptedAnswer": {"@type": "Answer", "text": "The city name is resolved through Open-Meteo's geocoding API, which returns the matched city, country and exact coordinates used for the forecast."}}, {"@type": "Question", "name": "Can I get weather in XML?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Add format=xml to get an <output> element instead of JSON."}}]}
+  </script>
+  <script type="application/ld+json">
+  {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://freetools.one/"}, {"@type": "ListItem", "position": 2, "name": "Weather", "item": "https://freetools.one/weather/weather.html"}]}
+  </script>
+  <link rel="stylesheet" href="/theme.css?v=8">
+  <link rel="stylesheet" type="text/css" href="./../apis.css?v=8">
+  <title>Free Weather API — No Key or Signup | FreeTools</title>
+
+  <!--Head -->
+  <span id="head"></span>
+
+</head>
+
+<body class="toolPage">
+
+  <header class="header pageHeader">
+    <h1>
+      <img class="verticalImage" alt="FreeTools logo" src="/_public/logo.jpeg" width="36" height="36" style="border-radius:50%">
+      <span>Weather API</span>
+    </h1>
+  </header>
+  <p class="toolHint">Use the form above. Parameters, code examples and FAQ are grouped in the documentation section below.</p>
+
+  <section class="description">
+    <div class="centerText">
+      <strong>Description</strong>
+    </div>
+    <div class="leftText">
+      <span>- CORS is enabled allowing JavaScript to make requests across domain boundaries</span>
+      <br>
+      <span>
+        - API URL =>
+        <code class="red">/v1/weather</code>
+      </span>
+      <br>
+      <span>
+        - JSON format is used by default. To get data in XML set up
+        <code class="red">format=xml</code> (root element <code>&lt;output&gt;</code>).
+      </span>
+      <br>
+      <span>
+        -
+<span class="red">Limit</span> : 30 requests per minute. Once reached subsequent requests will result in
+        error 429 (too many requests)
+        until your quota is cleared.
+        <br>
+      </span>
+    </div>
+  </section>
+
+  <section class="endpoint">
+    <div class="centerText">
+      <strong>Endpoint - Get your local temp</strong>
+      <br> This endpoint retrieves the actual temperature based on your public IP geolocation.
+    </div>
+    <div class="leftText">
+      <strong>HTTP Request: </strong>
+      <code class="red">
+        GET /v1/weather 
+      </code>
+      <br>
+      <strong>parameter "&format="</strong> values are json(by default or if parameter is empty) or xml
+      <br>
+      <strong>examples : </strong>
+      <br>
+      <code>
+        <a href="/v1/weather" target="_blank" rel="noopener">
+          /v1/weather</a>
+        <br>
+        <a href="/v1/weather?format=xml" target="_blank" rel="noopener">
+          /v1/weather?format=xml</a>
+      </code>
+      <br>
+      <strong>response : </strong>
+      <pre class="marginLeft">
+{
+  "tempC": 21.6,
+  "tempF": 70.9,
+  "city": "Paris",
+  "country": "France",
+  "latitude": 48.8566,
+  "longitude": 2.3522
+}
+      </pre>
+    </div>
+  </section>
+
+  <section class="endpoint">
+    <div class="centerText">
+      <strong>Endpoint - Get temp from any location</strong>
+      <br>This endpoint retrieves the actual temperature from the city passed as a parameter.
+    </div>
+    <div class="leftText">
+      <strong>HTTP Request: </strong>
+      <code class="red">
+        GET /v1/weather?city=paris
+      </code>
+      <br>
+      <strong>parameter "&format="</strong> values are json(by default or if parameter is empty) or xml
+      <br>
+      <strong>parameter "&city="</strong> the city you want to know the temperature of.
+      <br>
+      <code>
+        <a href="/v1/weather?city=london" target="_blank" rel="noopener"> /v1/weather?city=london</a>
+        <br>
+        <a href="/v1/weather?city=london&format=xml" target="_blank" rel="noopener">  /v1/weather?city=london&format=xml
+        </a>
+      </code>
+      <br>
+      <strong>response : </strong>
+      <pre class="marginLeft">
+{
+  "tempC": 9.2,
+  "tempF": 48.6,
+  "city": "London",
+  "country": "United Kingdom",
+  "latitude": 51.5085,
+  "longitude": -0.1257
+}
+          </pre>
+    </div>
+  </section>
+
+  <section class="endpoint interactive">
+    <div class="centerText"><strong>Try it live</strong></div>
+    <div class="leftText centerText">
+      <form onsubmit="return false">
+      <label for="wxCity" class="notSeen">city</label>
+      <input type="text" id="wxCity" placeholder="city (empty = your IP)">
+      <button id="wxGo" class="action">Get temp</button>
+      <button id="wxCopy" class="action">Copy</button>
+      </form>
+      <pre class="marginLeft" id="wxOut" style="text-align:left"></pre>
+    </div>
+  </section>
+
+  <br>
+
+  <!-- Footer -->
+  <nav class="guideLinks"><a href="/_tools_guides/">Guides &amp; tutorials</a> &middot; <a href="/_tools_guides/free-ip-geolocation-api-without-key.html">IP geolocation API</a> &middot; <a href="/_tools_guides/free-cors-proxy-for-developers.html">CORS proxy</a> &middot; <a href="/_tools_guides/check-tls-certificate-expiry.html">TLS certificates</a> &middot; <a href="/_tools_guides/count-lines-of-code-github-api.html">Count LOC</a> &middot; <a href="/_tools_guides/github-star-history-api.html">Star history</a> &middot; <a href="/_tools_guides/free-weather-api-no-api-key.html">Weather API</a></nav>
+
+  <section class="related-tools"><h2>Related tools</h2><ul><li><a href="/tools/ip-geolocation/">IP Geolocation</a></li><li><a href="/tools/random-data/">Random Data API</a></li><li><a href="/tools/github-stars/">Star History</a></li></ul></section>
+  <br>
+  <details class="docsWrap" id="tool-docs">
+  <summary class="docsToggle">Documentation &amp; API reference</summary>
+  <section class="docs">
+  <h2>How to use the Weather API</h2>
+  <p>Get the current temperature for any city in Celsius and Fahrenheit, geocoded from the city name.</p>
+  <h3>Endpoints</h3>
+  <div class="tblScroll"><table class="apiTable"><thead><tr><th>Endpoint</th><th>Returns</th><th>Example</th></tr></thead><tbody>
+  <tr><td><code>/v1/weather</code></td><td>JSON or XML</td><td><a href="https://freetools.one/v1/weather?city=london" rel="nofollow"><code>city=london</code></a></td></tr>
+  </tbody></table></div>
+  <h3>Parameters</h3>
+  <div class="tblScroll"><table class="apiTable"><thead><tr><th>Name</th><th>Type</th><th>Default</th><th>Description</th></tr></thead><tbody>
+  <tr><td><code>city</code></td><td>string</td><td>optional</td><td>City name to look up, e.g. london. Leave empty to use the caller's IP location.</td></tr>
+  <tr><td><code>format</code></td><td>string</td><td>json</td><td>Response format: json or xml.</td></tr>
+  </tbody></table></div>
+  <h3>Code examples</h3>
+  <div class="tabs codeTabs" role="tablist"><button class="tab active" data-ctab="curl" role="tab" aria-selected="true">cURL</button><button class="tab" data-ctab="js" role="tab" aria-selected="false">JavaScript</button><button class="tab" data-ctab="py" role="tab" aria-selected="false">Python</button></div>
+  <div class="codePane active" data-cpane="curl"><pre class="code"><code class="lang-curl">curl 'https://freetools.one/v1/weather?city=london'</code></pre></div>
+  <div class="codePane" data-cpane="js"><pre class="code"><code class="lang-js">const w = await (await fetch('https://freetools.one/v1/weather?city=paris')).json();
+console.log(w.city, w.country, w.tempC + 'C', w.tempF + 'F');</code></pre></div>
+  <div class="codePane" data-cpane="py"><pre class="code"><code class="lang-py">import requests
+
+w = requests.get('https://freetools.one/v1/weather', params={'city': 'paris'}).json()
+print(w['city'], w['country'], w['tempC'], 'C')</code></pre></div>
+  <h3>Example response</h3>
+  <pre class="code"><code class="lang-json">{
+  "tempC": 15.0,
+  "tempF": 59.0,
+  "city": "London",
+  "country": "United Kingdom",
+  "latitude": 51.50853,
+  "longitude": -0.12574
+}</code></pre>
+  <h3>Frequently asked questions</h3>
+  <div class="faqList">
+  <details class="faqItem"><summary>Is there a free weather API with no key?</summary><p>Yes. /v1/weather?city=london returns the current temperature without any registration, API key or quota signup. It is backed by Open-Meteo.</p></details>
+  <details class="faqItem"><summary>What units does the weather API return?</summary><p>Both. Every response includes tempC in Celsius and tempF in Fahrenheit, so you never have to convert manually.</p></details>
+  <details class="faqItem"><summary>How accurate is the geocoding?</summary><p>The city name is resolved through Open-Meteo's geocoding API, which returns the matched city, country and exact coordinates used for the forecast.</p></details>
+  <details class="faqItem"><summary>Can I get weather in XML?</summary><p>Yes. Add format=xml to get an &lt;output&gt; element instead of JSON.</p></details>
+  </div>
+  </section>
+  </details>
+
+  <span id="footer"></span>
+
+
+  <script type="module">
+    import { head, footer, data } from "./../templates.js?v=5"
+    document.getElementById("head").innerHTML = head
+    document.getElementById("footer").innerHTML = footer
+    data.init()
+    // code-example tabs
+    document.querySelectorAll(".codeTabs").forEach(function (nav) {
+      nav.addEventListener("click", function (e) {
+        var b = e.target.closest(".tab");
+        if (!b) return;
+        var box = nav.parentNode;
+        nav.querySelectorAll(".tab").forEach(function (x) {
+          var on = x === b;
+          x.classList.toggle("active", on);
+          x.setAttribute("aria-selected", on ? "true" : "false");
+        });
+        box.querySelectorAll(".codePane").forEach(function (p) {
+          p.classList.toggle("active", p.dataset.cpane === b.dataset.ctab);
+        });
+      });
+    });
+
+    const go = document.getElementById("wxGo");
+    if (go) go.addEventListener("click", async () => {
+      const out = document.getElementById("wxOut");
+      const city = document.getElementById("wxCity").value.trim();
+      out.textContent = "loading…";
+      try {
+        const r = await fetch("/v1/weather" + (city ? "?city=" + encodeURIComponent(city) : ""));
+        const ms = r.headers.get("x-elapsed-ms");
+        out.textContent = JSON.stringify(await r.json(), null, 2) + (ms ? "\n\n(" + ms + " ms server-side)" : "");
+      } catch (e) { out.textContent = "request failed"; }
+    });
+    document.getElementById("wxCopy").onclick = (e) => data.copyOut("wxOut", e.target);
+  </script>
+
+</body>
+
+</html>

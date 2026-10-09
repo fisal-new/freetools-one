@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>README Badges and Widgets for Your GitHub Repository</title>
+  <meta name="description" content="Add live star history charts, line of code counts and build status badges to your README with free APIs and one line of Markdown. No key required.">
+  <link rel="stylesheet" href="/theme.css?v=8">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="canonical" href="https://freetools.one/_tools_guides/readme-badges-for-your-repo.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="FreeTools">
+  <meta property="og:title" content="README Badges and Widgets for Your GitHub Repository">
+  <meta property="og:description" content="Add live star history charts, line of code counts and build status badges to your README with free APIs and one line of Markdown. No key required.">
+  <meta property="og:url" content="https://freetools.one/_tools_guides/readme-badges-for-your-repo.html">
+  <meta property="og:image" content="https://freetools.one/_public/og-image.jpeg">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:image" content="https://freetools.one/_public/og-image.jpeg">
+  <meta name="twitter:title" content="README Badges and Widgets for Your GitHub Repository">
+  <meta name="twitter:description" content="Add live star history charts, line of code counts and build status badges to your README with free APIs and one line of Markdown. No key required.">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "README Badges and Widgets for Your GitHub Repository",
+  "description": "Add live star history charts, line of code counts and build status badges to your README with free APIs and one line of Markdown. No key required.",
+  "url": "https://freetools.one/_tools_guides/readme-badges-for-your-repo.html",
+  "datePublished": "2026-09-25",
+  "dateModified": "2026-09-25",
+  "author": {
+    "@type": "Organization",
+    "name": "FreeTools"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "FreeTools",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://freetools.one/_public/logo.jpeg"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://freetools.one/_tools_guides/readme-badges-for-your-repo.html"
+  },
+  "inLanguage": "en"
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://freetools.one/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Guides",
+      "item": "https://freetools.one/tools/guides/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "README Badges",
+      "item": "https://freetools.one/_tools_guides/readme-badges-for-your-repo.html"
+    }
+  ]
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I add a star history chart to my GitHub README?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Add one Markdown image line pointing at the SVG endpoint: ![Star History](https://freetools.one/v1/stars/chart?github=YOUR_USER/YOUR_REPO). It renders at 1200x630, updates automatically and needs no key or build step."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do README badges need an API key?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Not with these endpoints. A badge is just an image in Markdown, so it can point at any HTTPS URL. The star history and line-of-code endpoints accept plain GET requests with no authentication."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Will a live badge slow down my repository page?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Only if it queries a rate-limited API on every render, because each visitor triggers a request. A cached endpoint is safe because the expensive work runs once every six hours rather than once per page view."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I compare multiple repositories in one badge or chart?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Repeat the github parameter up to six times on the star history chart endpoint, for example /v1/stars/chart?github=org/one&github=org/two, and each series gets its own colour."
+      }
+    }
+  ]
+}
+  </script>
+  <link rel="stylesheet" href="/apis.css?v=8">
+  <style>
+    article{max-width:760px;margin:0 auto;padding:0 4px}
+    article h1{font-size:1.55em;line-height:1.25em;margin:10px 0 4px}
+    article h2{font-size:1.1em;margin:22px 0 6px;color:var(--accent)}
+    article h3{font-size:.98em;margin:16px 0 4px}
+    article p,article li{line-height:1.65em;font-size:.94em}
+    article pre.code{margin:6px 0 0;white-space:pre}
+    .meta{color:var(--muted);font-size:.84em;margin-bottom:10px}
+    .tldr{border:1px solid var(--input-border);border-left:4px solid var(--accent);
+      border-radius:var(--radius);background:var(--card);padding:10px 14px;margin:12px 0}
+    .cta{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:16px 0}
+    .cta a{display:inline-block;padding:7px 14px;border:1px solid var(--input-border);
+      border-radius:var(--radius-sm);background:var(--card);text-decoration:none;
+      font-weight:600;font-size:.9em;color:var(--link)}
+    .cta a:hover{border-color:var(--accent)}
+    .hdrTable{width:100%;border-collapse:collapse;font-size:.84em;margin:8px 0;
+      display:block;overflow-x:auto}
+    .hdrTable th,.hdrTable td{padding:5px 8px;border-bottom:1px solid var(--divider);
+      text-align:left;white-space:nowrap}
+    .hdrTable th{color:var(--muted);font-size:.92em;text-transform:uppercase;letter-spacing:.03em}
+    .yes{color:var(--success);font-weight:600}
+    .no{color:var(--danger);font-weight:600}
+    .warn{color:var(--warn);font-weight:600}
+    code{background:var(--card-alt);border-radius:4px;padding:1px 4px;font-size:.9em}
+    .upNext{margin-top:26px;border-top:1px solid var(--divider);padding-top:12px}
+  </style>
+</head>
+<body>
+  <header class="header pageHeader">
+    <p class="siteMark">
+      <img class="verticalImage" alt="FreeTools logo" src="/_public/logo.jpeg" width="30" height="30" style="border-radius:50%">
+      <span>FreeTools Guides</span>
+    </p>
+  </header>
+  <article>
+    <h1>Live badges and widgets for your <strong>README</strong></h1>
+    <p class="meta">Updated 2026-09-25 &middot; FreeTools</p>
+
+    <p class="tldr"><strong>In short:</strong> a README badge is just an image in Markdown, so
+    pointing one at a live endpoint gives you a permanently up-to-date chart or counter. The star
+    history image below is exactly that — one line, no key, no build step.</p>
+
+    <p>Static badges go stale the moment you paste them. Anything served from an endpoint stays
+    correct without you doing anything, which is why live badges have largely replaced screenshots
+    of charts.</p>
+
+    <h2>A live star history chart</h2>
+    <pre class="code"><code>![Star History](https://freetools.one/v1/stars/chart?github=YOUR_USER/YOUR_REPO)</code></pre>
+
+    <p>The endpoint returns SVG at 1200×630, renders on a transparent background and follows your
+    repository's colour scheme with a theme parameter:</p>
+    <pre class="code"><code>![Star History](https://freetools.one/v1/stars/chart?github=YOUR_USER/YOUR_REPO&amp;theme=dark)</code></pre>
+
+    <h2>Comparing several repositories</h2>
+    <p>Repeat the parameter to overlay up to six projects — useful for a monorepo, or for comparing
+    a project against a dependency:</p>
+    <pre class="code"><code>![Stars](https://freetools.one/v1/stars/chart?github=org/api&amp;github=org/cli&amp;theme=dark)</code></pre>
+
+    <h2>Line-of-code badges with Shields.io</h2>
+    <p>Charts are images, but a single number works well as a badge. Shields.io can call the LOC
+    endpoint and format the result:</p>
+    <pre class="code"><code>![LOC](https://img.shields.io/endpoint?url=https%3A%2F%2Ffreetools.one%2Fv1%2Flocbadge%3Fgithub%3DYOUR_USER%2FYOUR_REPO)</code></pre>
+
+    <p>The badge endpoint returns just the number, so the badge stays small and readable. Call the
+    full API yourself if you need the per-language breakdown rather than a single total.</p>
+
+    <h2>A few good badges for any repository</h2>
+    <ul>
+      <li><strong>Licence</strong> — a link to the licence file.</li>
+      <li><strong>Latest release</strong> — shields pulls it from the GitHub releases API.</li>
+      <li><strong>Contributors</strong> — number of people who have committed.</li>
+      <li><strong>Activity</strong> — commits in the last month, which says more than raw total.</li>
+    </ul>
+
+    <h2>Keep images small</h2>
+    <p>Charts are the heaviest element on most READMEs. A few habits keep it fast:</p>
+    <ul>
+      <li>Use SVG rather than PNG — it scales and compresses better.</li>
+      <li>Give the image explicit dimensions so the page does not shift while it loads.</li>
+      <li>Do not stack three charts above the fold; one is plenty.</li>
+    </ul>
+
+    <h2>What to avoid</h2>
+    <p>Badges that query a rate-limited API on every page render become your problem, because
+    every visitor to your repository triggers a request. A cached endpoint like the star chart is
+    safe precisely because the heavy work happens once every six hours, not once per view.</p>
+
+    <h2>Other places these work</h2>
+    <p>The same image URL works anywhere Markdown is rendered: GitHub Gists, GitLab READMEs,
+    documentation sites, or a project homepage. Because it is a plain HTTPS image with no session
+    or key, there is nothing to configure on the embedding side.</p>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faqList">
+    <details class="faqItem"><summary>How do I add a star history chart to my GitHub README?</summary><p>Add one Markdown image line pointing at the SVG endpoint: ![Star History](https://freetools.one/v1/stars/chart?github=YOUR_USER/YOUR_REPO). It renders at 1200x630, updates automatically and needs no key or build step.</p></details>
+    <details class="faqItem"><summary>Do README badges need an API key?</summary><p>Not with these endpoints. A badge is just an image in Markdown, so it can point at any HTTPS URL. The star history and line-of-code endpoints accept plain GET requests with no authentication.</p></details>
+    <details class="faqItem"><summary>Will a live badge slow down my repository page?</summary><p>Only if it queries a rate-limited API on every render, because each visitor triggers a request. A cached endpoint is safe because the expensive work runs once every six hours rather than once per page view.</p></details>
+    <details class="faqItem"><summary>Can I compare multiple repositories in one badge or chart?</summary><p>Yes. Repeat the github parameter up to six times on the star history chart endpoint, for example /v1/stars/chart?github=org/one&amp;github=org/two, and each series gets its own colour.</p></details>
+    </div>
+    <div class="cta"><a href="/github-stars/github-star-history.html">Star history tool</a><a href="/count-loc/count-loc-online.html">Count LOC tool</a></div>
+  </article>
+  <br>
+  <section class="related-tools"><h2>More guides</h2><ul><li><a href="/_tools_guides/check-tls-certificate-expiry.html">How to Check TLS Certificate Expiry with a Free API</a></li><li><a href="/_tools_guides/count-lines-of-code-github-api.html">Count Lines of Code in a GitHub Repository with a Free API</a></li><li><a href="/_tools_guides/free-cors-proxy-for-developers.html">Free CORS Proxy for Developers: Bypass Cross-Origin Errors Safely</a></li><li><a href="/_tools_guides/free-developer-tools-for-open-source.html">Free Developer Tools for Open Source Maintainers (No Signup)</a></li><li><a href="/_tools_guides/free-ip-geolocation-api-without-key.html">Free IP Geolocation API With No Key (2026 Guide)</a></li><li><a href="/_tools_guides/free-weather-api-no-api-key.html">Free Weather API With No API Key (City or IP Lookup)</a></li><li><a href="/_tools_guides/github-api-rate-limits.html">GitHub API Rate Limits: 5000 Requests an Hour, Explained</a></li><li><a href="/_tools_guides/github-star-history-api.html">GitHub Star History API: Chart Repo Growth for Free</a></li><li><a href="/_tools_guides/http-security-headers-checklist.html">HTTP Security Headers Checklist: CSP, HSTS and CORS (2026)</a></li><li><a href="/_tools_guides/ssrf-prevention-for-public-apis.html">SSRF Prevention for APIs: Block Server-Side Request Forgery</a></li></ul></section>
+  <br>
+  <span id="footer"></span>
+  <script type="module">
+    import { head, footer, data } from "/templates.js?v=5"
+    document.getElementById("head").innerHTML = head
+    document.getElementById("footer").innerHTML = footer
+    data.init()
+  </script>
+</body>
+</html>

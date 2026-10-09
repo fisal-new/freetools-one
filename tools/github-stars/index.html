@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Free GitHub and GitLab star history charts. Compare up to 6 repos, export SVG, PNG or CSV, and embed the graph in your README. No signup.">
+  <meta name="theme-color" content="#f6f8fa" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0d1117" media="(prefers-color-scheme: dark)">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="canonical" href="https://freetools.one/github-stars/github-star-history.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="FreeTools">
+  <meta property="og:title" content="GitHub Star History — Free Online Chart &amp; API | FreeTools">
+  <meta property="og:description" content="Compare GitHub and GitLab star history charts. Free, no signup, with API.">
+  <meta property="og:url" content="https://freetools.one/github-stars/github-star-history.html">
+  <meta property="og:image" content="https://freetools.one/_public/og-image.jpeg">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:image" content="https://freetools.one/_public/og-image.jpeg">
+  <meta name="twitter:title" content="GitHub Star History — Free Online Chart &amp; API | FreeTools">
+  <meta name="twitter:description" content="Compare GitHub and GitLab star history charts. Free, no signup, with API.">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebApplication","name":"Star History","url":"https://freetools.one/github-stars/github-star-history.html","applicationCategory":"DeveloperApplication","operatingSystem":"Any","description":"GitHub and GitLab star history graph","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+  </script>
+
+  <script type="application/ld+json">
+  {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How do I get a GitHub star history chart?", "acceptedAnswer": {"@type": "Answer", "text": "Enter user/repo in the box above, or call /v1/stars?github=user/repo for the raw data and /v1/stars/chart?github=user/repo for a ready-to-embed SVG image."}}, {"@type": "Question", "name": "Can I compare two repositories at once?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Add up to six repositories, from GitHub and GitLab mixed, and each gets its own colour, total and 30-day growth figure."}}, {"@type": "Question", "name": "How can I put the chart in my README?", "acceptedAnswer": {"@type": "Answer", "text": "Use the SVG endpoint as a Markdown image: ![Star History](https://freetools.one/v1/stars/chart?github=your/repo). It updates automatically as the repository grows."}}, {"@type": "Question", "name": "Why are GitHub points weekly?", "acceptedAnswer": {"@type": "Answer", "text": "GitHub restricts its stargazer list and publishes a weekly history endpoint. FreeTools uses that official endpoint and anchors the series to the live star total, so the last point always matches the current star count."}}]}
+  </script>
+  <script type="application/ld+json">
+  {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://freetools.one/"}, {"@type": "ListItem", "position": 2, "name": "Star History", "item": "https://freetools.one/github-stars/github-star-history.html"}]}
+  </script>
+  <link rel="stylesheet" href="/theme.css?v=8">
+  <link rel="stylesheet" type="text/css" href="./stars.css?v=13">
+  <title>GitHub Star History — Free Online Chart &amp; API | FreeTools</title>
+
+  <!--Head -->
+  <span id="head"></span>
+
+</head>
+
+<body class="toolPage">
+
+  <header class="header starsHeader">
+    <h1>
+      <img class="verticalImage" alt="FreeTools logo" src="/_public/logo.jpeg" width="36" height="36" style="border-radius:50%">
+      <span>GitHub Star History</span>
+    </h1>
+    <p class="starsSub">GitHub &amp; GitLab star growth charts — free, no signup.</p>
+  </header>
+  <p class="toolHint">Use the form above. Parameters, code examples and FAQ are grouped in the documentation section below.</p>
+
+  <section class="container">
+  <p class="centerText headerText">Free <strong>GitHub star history</strong> graph: compare star growth of up to 6 GitHub or GitLab repos on one chart. Free star history API, embeddable SVG chart, CSV and PNG export.</p>
+
+    <div id="addForm">
+      <form class="addRepo big" onsubmit="return false">
+        <select name="source" aria-label="Repository source">
+          <option value="01">GitHub</option>
+          <option value="02">GitLab</option>
+        </select>
+        <label for="repoName" class="notSeen">user/repo</label>
+        <input type="text" required id="repoName" placeholder="user/repo">
+        <button type="button" id="addRepo" class="action">ADD</button>
+        <button type="button" id="clearAll" class="action">CLEAR</button>
+      </form>
+      <form class="addRepo small" onsubmit="return false">
+        <div>
+          <select name="source" aria-label="Repository source">
+            <option value="01">GitHub</option>
+            <option value="02">GitLab</option>
+          </select>
+        </div>
+        <div>
+          <label for="repoNameM" class="notSeen">user/repo</label>
+          <input type="text" required id="repoNameM" placeholder="user/repo">
+        </div>
+        <div class="actionBtns">
+          <button type="button" id="addRepo2" class="action">ADD</button>
+          <button type="button" id="clearAll2" class="action">CLEAR</button>
+        </div>
+      </form>
+    </div>
+    <div id="repoChips" class="chips"></div>
+    <div id="chartControls" class="controls">
+      <button type="button" id="copyLink">Copy link</button>
+      <button type="button" id="dlCsv">CSV</button>
+      <button type="button" id="dlPng">PNG</button>
+    </div>
+    <div id="inlineMsg" class="inlineMsg" style="display:none"></div>
+  </section>
+
+  <div class="loader"></div>
+  <div id="chartEmpty" class="chartEmpty">📈 Enter <span>user/repo</span> above and press <strong>ADD</strong> to draw its star history</div>
+  <div class="chartBox" id="chartBox" style="display:none">
+    <svg id="myChart" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Star history chart"></svg>
+    <div id="tooltip" class="tip"></div>
+  </div>
+
+  <div id="statsTable"></div>
+
+  <br>
+
+  <section class="endpoint">
+    <div class="centerText">
+      <strong>Endpoint - Star history API</strong>
+    </div>
+    <div class="leftText">
+      <strong>HTTP Request: </strong>
+      <br>
+      <code class="red">GET /v1/stars?github=user/repo</code>
+      <br>
+      <code class="red">GET /v1/stars?gitlab=user/repo</code>
+      <br>
+      Legacy form (same result): <code class="red">GET /v1/stars?repo=01user/repo</code> (01 = GitHub, 02 = GitLab)
+      <br>
+      <strong>Examples</strong>
+      <br>
+      <code><a href="/v1/stars?github=octocat/Hello-World" target="_blank" rel="noopener">/v1/stars?github=octocat/Hello-World</a></code>
+      <br>
+      <strong>Chart image (SVG, embeddable in README): </strong>
+      <br>
+      <code><a href="/v1/stars/chart?github=octocat/Hello-World" target="_blank" rel="noopener">/v1/stars/chart?github=octocat/Hello-World</a></code>
+      <br>Repeat <code>github=</code>/<code>gitlab=</code> to compare (max 6). Add <code>&amp;theme=dark</code> for dark mode.
+      <br>
+      <strong>response : </strong> cumulative stars per day
+      <br>GitHub history is weekly (official star-history endpoint), anchored to the live star total.
+      <br><strong>Rate limit:</strong> 30 requests/minute (HTTP 429 when exceeded).
+      <pre class="marginLeft">
+[
+  { "x": "2011-01-26", "y": 0 },
+  { "x": "2026-09-23", "y": 3822 }
+]
+      </pre>
+    </div>
+  </section>
+
+  <br>
+
+  <!-- FAQ -->
+  <section class="description">
+    <div class="centerText"><strong>Star history FAQ</strong></div>
+    <div class="leftText">
+      <strong>How do I see a GitHub repo star history?</strong><br>
+      Type <span>user/repo</span> above and press ADD — for example <span>torvalds/linux</span>. The chart draws every week from the repo creation day to today.
+      <br><strong>Can I compare multiple repos?</strong><br>
+      Yes, add up to 6 GitHub or GitLab repos. Each gets its own color, totals and 30-day growth in the stats table.
+      <br><strong>Is there a star history API?</strong><br>
+      Yes: <code>/v1/stars?github=user/repo</code> returns JSON, and <code>/v1/stars/chart?github=user/repo</code> returns an SVG image you can embed in a README.
+    </div>
+  </section>
+
+  <br>
+
+  <nav class="guideLinks"><a href="/_tools_guides/">Guides &amp; tutorials</a> &middot; <a href="/_tools_guides/free-ip-geolocation-api-without-key.html">IP geolocation API</a> &middot; <a href="/_tools_guides/free-cors-proxy-for-developers.html">CORS proxy</a> &middot; <a href="/_tools_guides/check-tls-certificate-expiry.html">TLS certificates</a> &middot; <a href="/_tools_guides/count-lines-of-code-github-api.html">Count LOC</a> &middot; <a href="/_tools_guides/github-star-history-api.html">Star history</a> &middot; <a href="/_tools_guides/free-weather-api-no-api-key.html">Weather API</a></nav>
+
+  <section class="related-tools"><h2>Related tools</h2><ul><li><a href="/tools/count-loc/">GitHub LOC Counter</a></li><li><a href="/tools/random-data/">Random Data API (integers, names)</a></li><li><a href="/tools/http-headers/">HTTP Headers Checker</a></li></ul></section>
+  <br>
+  <details class="docsWrap" id="tool-docs">
+  <summary class="docsToggle">Documentation &amp; API reference</summary>
+  <section class="docs">
+  <h2>How to use the Star History</h2>
+  <p>Chart how a GitHub or GitLab repository's stars grew over time, compare up to six repos, and export the result as SVG, PNG or CSV.</p>
+  <h3>Endpoints</h3>
+  <div class="tblScroll"><table class="apiTable"><thead><tr><th>Endpoint</th><th>Returns</th><th>Example</th></tr></thead><tbody>
+  <tr><td><code>/v1/stars</code></td><td>JSON</td><td><a href="https://freetools.one/v1/stars?github=torvalds/linux" rel="nofollow"><code>github=torvalds/linux</code></a></td></tr>
+  <tr><td><code>/v1/stars/chart</code></td><td>SVG image</td><td><a href="https://freetools.one/v1/stars/chart?github=torvalds/linux" rel="nofollow"><code>github=torvalds/linux</code></a></td></tr>
+  </tbody></table></div>
+  <h3>Parameters</h3>
+  <div class="tblScroll"><table class="apiTable"><thead><tr><th>Name</th><th>Type</th><th>Default</th><th>Description</th></tr></thead><tbody>
+  <tr><td><code>github</code></td><td>string</td><td>required</td><td>Repository as user/repo. Repeatable for comparisons.</td></tr>
+  <tr><td><code>gitlab</code></td><td>string</td><td>required</td><td>Repository as group/repo. Repeatable for comparisons.</td></tr>
+  <tr><td><code>theme</code></td><td>string</td><td>light</td><td>For /v1/stars/chart only: light or dark.</td></tr>
+  </tbody></table></div>
+  <h3>Code examples</h3>
+  <div class="tabs codeTabs" role="tablist"><button class="tab active" data-ctab="curl" role="tab" aria-selected="true">cURL</button><button class="tab" data-ctab="js" role="tab" aria-selected="false">JavaScript</button><button class="tab" data-ctab="py" role="tab" aria-selected="false">Python</button></div>
+  <div class="codePane active" data-cpane="curl"><pre class="code"><code class="lang-curl">curl 'https://freetools.one/v1/stars?github=torvalds/linux'</code></pre></div>
+  <div class="codePane" data-cpane="js"><pre class="code"><code class="lang-js">const h = await (await fetch('https://freetools.one/v1/stars?github=cli/cli')).json();
+console.log(h.at(-1)); // { x: '2026-09-25', y: 54912 }</code></pre></div>
+  <div class="codePane" data-cpane="py"><pre class="code"><code class="lang-py">import requests
+
+h = requests.get('https://freetools.one/v1/stars', params={'github': 'cli/cli'}).json()
+print(h[-1])  # {'x': '2026-09-25', 'y': 54912}</code></pre></div>
+  <h3>Example response</h3>
+  <pre class="code"><code class="lang-json">[
+  { "x": "2011-01-23", "y": 0 },
+  { "x": "2022-02-20", "y": 1210 },
+  { "x": "2026-09-25", "y": 54912 }
+]</code></pre>
+  <h3>Frequently asked questions</h3>
+  <div class="faqList">
+  <details class="faqItem"><summary>How do I get a GitHub star history chart?</summary><p>Enter user/repo in the box above, or call /v1/stars?github=user/repo for the raw data and /v1/stars/chart?github=user/repo for a ready-to-embed SVG image.</p></details>
+  <details class="faqItem"><summary>Can I compare two repositories at once?</summary><p>Yes. Add up to six repositories, from GitHub and GitLab mixed, and each gets its own colour, total and 30-day growth figure.</p></details>
+  <details class="faqItem"><summary>How can I put the chart in my README?</summary><p>Use the SVG endpoint as a Markdown image: ![Star History](https://freetools.one/v1/stars/chart?github=your/repo). It updates automatically as the repository grows.</p></details>
+  <details class="faqItem"><summary>Why are GitHub points weekly?</summary><p>GitHub restricts its stargazer list and publishes a weekly history endpoint. FreeTools uses that official endpoint and anchors the series to the live star total, so the last point always matches the current star count.</p></details>
+  </div>
+  </section>
+  </details>
+
+  <span id="footer"></span>
+
+
+
+
+  <script type="module">
+    import { head, footer, data } from "./../templates.js?v=5"
+    document.getElementById("head").innerHTML = head
+    document.getElementById("footer").innerHTML = footer
+    data.init()
+    // code-example tabs
+    document.querySelectorAll(".codeTabs").forEach(function (nav) {
+      nav.addEventListener("click", function (e) {
+        var b = e.target.closest(".tab");
+        if (!b) return;
+        var box = nav.parentNode;
+        nav.querySelectorAll(".tab").forEach(function (x) {
+          var on = x === b;
+          x.classList.toggle("active", on);
+          x.setAttribute("aria-selected", on ? "true" : "false");
+        });
+        box.querySelectorAll(".codePane").forEach(function (p) {
+          p.classList.toggle("active", p.dataset.cpane === b.dataset.ctab);
+        });
+      });
+    });
+
+    import { init } from './stars.js?v=18';
+    init();
+  </script>
+
+</body>
+
+</html>

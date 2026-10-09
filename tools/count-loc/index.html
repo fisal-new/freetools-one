@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Count lines of code from any GitHub or GitLab repo. Free online tool + API, no key or signup.">
+  <meta name="theme-color" content="#f6f8fa" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0d1117" media="(prefers-color-scheme: dark)">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="canonical" href="https://freetools.one/count-loc/count-loc-online.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="FreeTools">
+  <meta property="og:title" content="Count Lines of Code Online (GitHub/GitLab) — FreeTools">
+  <meta property="og:description" content="Count lines of code from any GitHub or GitLab repo. Free online tool + API, no key or signup.">
+  <meta property="og:url" content="https://freetools.one/count-loc/count-loc-online.html">
+  <meta property="og:image" content="https://freetools.one/_public/og-image.jpeg">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:image" content="https://freetools.one/_public/og-image.jpeg">
+  <meta name="twitter:title" content="Count Lines of Code Online (GitHub/GitLab) — FreeTools">
+  <meta name="twitter:description" content="Count lines of code from any GitHub or GitLab repo. Free online tool + API, no key or signup.">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebApplication","name":"Count Lines of Code Online (GitHub/GitLab)","url":"https://freetools.one/count-loc/count-loc-online.html","applicationCategory":"DeveloperApplication","operatingSystem":"Any","description":"Count lines of code from any GitHub or GitLab repo. Free online tool + API, no key or signup.","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+  </script>
+
+  <script type="application/ld+json">
+  {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How do I count lines of code of a GitHub repository?", "acceptedAnswer": {"@type": "Answer", "text": "Call /v1/loc?github=user/repo. The response breaks the repository down by language and reports files, lines, blanks, comments and lines of code for each one."}}, {"@type": "Question", "name": "Can I count the lines of code of a single file?", "acceptedAnswer": {"@type": "Answer", "text": "The tool counts whole repositories because it works from the source archive. For one file, request detail=1 and filter the files[] array by path, or use ignored= to exclude everything else."}}, {"@type": "Question", "name": "Which files are skipped automatically?", "acceptedAnswer": {"@type": "Answer", "text": "vendor, dist, build, target, out, node_modules, .next, coverage, venv and .venv directories, generated bundles such as *.min.js, and any file containing binary data."}}, {"@type": "Question", "name": "How large a repository can it handle?", "acceptedAnswer": {"@type": "Answer", "text": "Up to 300 MB compressed and 1.5 GB uncompressed, with a ceiling of 200,000 files. Larger archives are rejected with HTTP 413 rather than timing out."}}]}
+  </script>
+  <script type="application/ld+json">
+  {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://freetools.one/"}, {"@type": "ListItem", "position": 2, "name": "Count LOC", "item": "https://freetools.one/count-loc/count-loc-online.html"}]}
+  </script>
+  <link rel="stylesheet" href="/theme.css?v=8">
+  <link rel="stylesheet" type="text/css" href="./count.css?v=9">
+  <title>GitHub LOC Counter — Count Lines of Code Online Free | FreeTools</title>
+
+  <!--Head -->
+  <span id="head"></span>
+
+</head>
+
+<body class="toolPage">
+
+  <header class="header pageHeader">
+    <h1>
+      <img class="verticalImage" alt="FreeTools logo" src="/_public/logo.jpeg" width="36" height="36" style="border-radius:50%">
+      <span> Count LOC</span>
+    </h1>
+  </header>
+  <p class="toolHint">Use the form above. Parameters, code examples and FAQ are grouped in the documentation section below.</p>
+
+  <div class="container">
+
+    <p class="centerText headerText">Free <strong>GitHub LOC counter</strong>: count lines of code (LOC) of any GitHub or GitLab repository by programming language — files, blanks, comments and code share. No signup, no install, with a free LOC API.</p>
+
+    <section id="addForm">
+      <form class="addRepo" onsubmit="return false">
+        <select name="source" aria-label="Repository source">
+          <option value="github">GitHub</option>
+          <option value="gitlab">GitLab</option>
+        </select>
+        <input type="text" required id="repoName" placeholder="user/repo" aria-label="GitHub or GitLab repository">
+        <input type="text" id="branch" placeholder="main (empty=auto)" aria-label="Repository branch">
+        <button type="button" id="addRepo" class="action">ADD</button>
+      </form>
+    </section>
+
+    <div class="ignore">
+      <input type="text" id="ignored" placeholder="ignore files/dirs comma separated" aria-label="Ignored files and directories">
+    </div>
+
+    <div id="inlineMsg" class="inlineMsg" style="display:none"></div>
+
+    <div class="loader"></div>
+
+    <section class="pie">
+      <div id="donut"></div>
+      <div class="actionRow">
+        <button id="toggle" class="action">Include comments in chart</button>
+      </div>
+    </section>
+
+    <nav class="tabs" id="tabs" style="display:none" role="tablist">
+      <button class="tab active" data-tab="langs" role="tab" aria-selected="true">Languages</button>
+      <button class="tab" data-tab="exts" role="tab" aria-selected="false">File types</button>
+      <button class="tab" data-tab="files" role="tab" aria-selected="false">Files</button>
+    </nav>
+
+    <section class="tabpane active" id="pane-langs"><div id="totalResume"></div></section>
+    <section class="tabpane" id="pane-exts"><ul class="extList" id="extList"></ul></section>
+    <section class="tabpane" id="pane-files"><div id="fileExplorer"></div></section>
+
+  </div>
+
+  <section class="description">
+    <div class="centerText">
+      <strong>Description</strong>
+    </div>
+    <div class="leftText">
+      <span>
+        - Tool for counting lines of code from github/gitlab repositories.
+        <br> - Max repo size: 300 MB (compressed) / 1.5 GB uncompressed, 200k files. Bigger repos will not work.
+        <br> - Default branch is auto-detected; pick another one with the branch box or <code>&amp;branch=name</code>.
+        <br> - Ignore files or directories by writing them comma-separated in the ignore box.
+        <br> - Click a legend entry to hide that language; the table totals update to match.
+        <br> - Click a pie slice to recolor it. Colours follow the GitHub linguist palette.
+        <br> - Recognises ~35 languages; vendor, dist, build, target, <code>*.min.js</code> and binary files are skipped.
+      </span>
+      <br>
+      <span>
+        -
+<span class="red">Limit</span> : 30 requests per minute. Once reached subsequent requests will result in
+        error 429 (too many requests)
+        until your quota is cleared.
+        <br>
+      </span>
+    </div>
+  </section>
+
+  <section class="description">
+    <div class="centerText"><strong>LOC counter FAQ</strong></div>
+    <div class="leftText">
+      <strong>How do I count lines of code of a GitHub repo?</strong><br>
+      Select GitHub, type <span>user/repo</span> and press ADD. You get per-language files, lines, blanks, comments and lines of code with percentages.
+      <br><strong>Can I count LOC of a single file?</strong><br>
+      The tool counts whole repositories (it downloads the repo archive). For a single file, use the per-language table to find its language share, or the <code>/v1/loc</code> API and filter the JSON.
+      <br><strong>Is there a LOC API?</strong><br>
+      Yes: <code>/v1/loc?github=user/repo</code> returns JSON per language, with an optional <code>branch</code> parameter.
+    </div>
+  </section>
+
+  <br>
+
+  <section class="endpoint">
+    <div class="centerText">
+      <strong>Endpoint - Get Lines of Code from GitHub repo</strong>
+      <br> This endpoint retrieves LOC from any github repo based on programming language.
+    </div>
+    <div class="leftText">
+      <strong>HTTP Request: </strong><br>
+      <code class="red">curl /v1/loc?github=username/reponame</code><br>
+      <strong>HTTP Request: </strong><br>
+      <code class="red"> GET /v1/loc?github=username/reponame 
+        </code><br>
+      <code class="red"> GET /v1/loc?gitlab=username/reponame 
+        </code>
+      <br>
+      <strong>Select branch</strong><br>If you want a branch other than the repository default<br>
+      <code class="red">/v1/loc?SOURCE=USERNAME/REPONAME&branch=branchName</code><br>
+      <strong>Ignore files or directories</strong><br>Can ignore files or directories using param ignored<br>
+      <code
+        class="red">/v1/loc?SOURCE=USERNAME/REPONAME&ignored=DIRNAME1,DIRNAME2,FILENAME</code><br>
+      <strong>example : </strong>
+      <br>
+      <code>
+        <a href="/v1/loc?github=cli/cli" target="_blank" rel="noopener">/v1/loc?github=cli/cli</a>  
+      </code>
+      <br>
+      <code>
+        <a href="/v1/loc?gitlab=gitlab-org/gitlab-runner" target="_blank" rel="noopener">/v1/loc?gitlab=gitlab-org/gitlab-runner</a>  
+      </code>
+      <br>
+      <code>
+        <a href="/v1/loc?github=ImageMagick/ImageMagick&branch=main" target="_blank" rel="noopener">/v1/loc?github=ImageMagick/ImageMagick&branch=main</a>  
+      </code>
+      <br>
+      <code>
+        <a href="/v1/loc?github=cli/cli&ignored=docs,website" target="_blank" rel="noopener">/v1/loc?github=cli/cli&ignored=docs,website</a>  
+      </code>
+      <br>
+      <strong>Detail mode (file explorer + file types):</strong><br>
+      Add <code>detail=1</code> to also get every file and a per-extension breakdown.<br>
+      <code class="red">/v1/loc?github=username/reponame&amp;detail=1</code>
+      <br>
+      <strong>response :</strong>
+      <pre class="marginLeft">
+  [{
+    "language": "JavaScript",
+    "files": 1,
+    "lines": 176,
+    "blanks": 14,
+    "comments": 6,
+    "linesOfCode": 156
+  },   
+  ... more languages
+  {
+    "language": "Total",
+    "files": 8,
+    "lines": 921,
+    "blanks": 148,
+    "comments": 46,
+    "linesOfCode": 743
+  }] 
+        </pre>
+    </div>
+  </section>
+
+  <br>
+
+  <!-- Footer -->
+  <nav class="guideLinks"><a href="/_tools_guides/">Guides &amp; tutorials</a> &middot; <a href="/_tools_guides/free-ip-geolocation-api-without-key.html">IP geolocation API</a> &middot; <a href="/_tools_guides/free-cors-proxy-for-developers.html">CORS proxy</a> &middot; <a href="/_tools_guides/check-tls-certificate-expiry.html">TLS certificates</a> &middot; <a href="/_tools_guides/count-lines-of-code-github-api.html">Count LOC</a> &middot; <a href="/_tools_guides/github-star-history-api.html">Star history</a> &middot; <a href="/_tools_guides/free-weather-api-no-api-key.html">Weather API</a></nav>
+
+  <section class="related-tools"><h2>Related tools</h2><ul><li><a href="/tools/github-stars/">GitHub Star History Chart</a></li><li><a href="/tools/http-headers/">HTTP Headers Checker</a></li><li><a href="/tools/cors-proxy/">Free CORS Proxy</a></li></ul></section>
+  <br>
+  <details class="docsWrap" id="tool-docs">
+  <summary class="docsToggle">Documentation &amp; API reference</summary>
+  <section class="docs">
+  <h2>How to use the Count LOC</h2>
+  <p>Count lines of code in any public GitHub or GitLab repository, broken down by language, plus per-file and per-extension detail.</p>
+  <h3>Endpoints</h3>
+  <div class="tblScroll"><table class="apiTable"><thead><tr><th>Endpoint</th><th>Returns</th><th>Example</th></tr></thead><tbody>
+  <tr><td><code>/v1/loc</code></td><td>JSON</td><td><a href="https://freetools.one/v1/loc?github=torvalds/linux" rel="nofollow"><code>github=torvalds/linux</code></a></td></tr>
+  </tbody></table></div>
+  <h3>Parameters</h3>
+  <div class="tblScroll"><table class="apiTable"><thead><tr><th>Name</th><th>Type</th><th>Default</th><th>Description</th></tr></thead><tbody>
+  <tr><td><code>github</code></td><td>string</td><td>required</td><td>Repository as user/repo. Use gitlab for GitLab instead.</td></tr>
+  <tr><td><code>gitlab</code></td><td>string</td><td>required</td><td>Repository as group[/subgroup]/repo. Use github for GitHub instead.</td></tr>
+  <tr><td><code>branch</code></td><td>string</td><td>auto</td><td>Branch to count. Defaults to the repository default branch.</td></tr>
+  <tr><td><code>ignored</code></td><td>string</td><td>-</td><td>Comma-separated files or directories to exclude, e.g. vendor,dist,*.snap.</td></tr>
+  <tr><td><code>detail</code></td><td>string</td><td>-</td><td>Set to 1 to also return extensions[] and files[].</td></tr>
+  </tbody></table></div>
+  <h3>Code examples</h3>
+  <div class="tabs codeTabs" role="tablist"><button class="tab active" data-ctab="curl" role="tab" aria-selected="true">cURL</button><button class="tab" data-ctab="js" role="tab" aria-selected="false">JavaScript</button><button class="tab" data-ctab="py" role="tab" aria-selected="false">Python</button></div>
+  <div class="codePane active" data-cpane="curl"><pre class="code"><code class="lang-curl">curl 'https://freetools.one/v1/loc?github=torvalds/linux'</code></pre></div>
+  <div class="codePane" data-cpane="js"><pre class="code"><code class="lang-js">const stats = await (await fetch('https://freetools.one/v1/loc?github=cli/cli')).json();
+const total = stats.find(l =&gt; l.language === 'Total');
+console.log(total.linesOfCode, 'LOC in', total.files, 'files');</code></pre></div>
+  <div class="codePane" data-cpane="py"><pre class="code"><code class="lang-py">import requests
+
+stats = requests.get('https://freetools.one/v1/loc',
+                   params={'github': 'cli/cli'}).json()
+total = [s for s in stats if s['language'] == 'Total'][0]
+print(total['linesOfCode'], 'LOC in', total['files'], 'files')</code></pre></div>
+  <h3>Example response</h3>
+  <pre class="code"><code class="lang-json">[
+  {
+    "language": "Rust",
+    "files": 300,
+    "lines": 40000,
+    "blanks": 3000,
+    "comments": 2000,
+    "linesOfCode": 35000,
+    "percent": 91.9
+  },
+  {
+    "language": "Total",
+    "files": 512,
+    "lines": 43500,
+    "blanks": 3200,
+    "comments": 2300,
+    "linesOfCode": 38000,
+    "percent": 100.0
+  }
+]</code></pre>
+  <h3>Frequently asked questions</h3>
+  <div class="faqList">
+  <details class="faqItem"><summary>How do I count lines of code of a GitHub repository?</summary><p>Call /v1/loc?github=user/repo. The response breaks the repository down by language and reports files, lines, blanks, comments and lines of code for each one.</p></details>
+  <details class="faqItem"><summary>Can I count the lines of code of a single file?</summary><p>The tool counts whole repositories because it works from the source archive. For one file, request detail=1 and filter the files[] array by path, or use ignored= to exclude everything else.</p></details>
+  <details class="faqItem"><summary>Which files are skipped automatically?</summary><p>vendor, dist, build, target, out, node_modules, .next, coverage, venv and .venv directories, generated bundles such as *.min.js, and any file containing binary data.</p></details>
+  <details class="faqItem"><summary>How large a repository can it handle?</summary><p>Up to 300 MB compressed and 1.5 GB uncompressed, with a ceiling of 200,000 files. Larger archives are rejected with HTTP 413 rather than timing out.</p></details>
+  </div>
+  </section>
+  </details>
+
+  <span id="footerLoc"></span>
+
+
+  <script type="module">
+    import { head, footerLoc, data } from "./../templates.js?v=5"
+    document.getElementById("head").innerHTML = head
+    document.getElementById("footerLoc").innerHTML = footerLoc
+    data.init()
+    // code-example tabs
+    document.querySelectorAll(".codeTabs").forEach(function (nav) {
+      nav.addEventListener("click", function (e) {
+        var b = e.target.closest(".tab");
+        if (!b) return;
+        var box = nav.parentNode;
+        nav.querySelectorAll(".tab").forEach(function (x) {
+          var on = x === b;
+          x.classList.toggle("active", on);
+          x.setAttribute("aria-selected", on ? "true" : "false");
+        });
+        box.querySelectorAll(".codePane").forEach(function (p) {
+          p.classList.toggle("active", p.dataset.cpane === b.dataset.ctab);
+        });
+      });
+    });
+
+    import { init } from './count.js?v=5';
+    init();
+  </script>
+
+</body>
+
+</html>
